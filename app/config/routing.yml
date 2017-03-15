@@ -1,3 +1,18 @@
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+user:
+    resource: "@UserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+front:
+    resource: "@FrontBundle/Resources/config/routing.yml"
+    prefix:   /
+
+admin:
+    resource: "@AdminBundle/Resources/config/routing.yml"
+    prefix:   /admin
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+# app:
+#     resource: "@AppBundle/Controller/"
+#     type:     annotation
