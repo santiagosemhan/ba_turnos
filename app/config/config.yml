@@ -82,3 +82,11 @@ fos_user:
     from_email:
         address: no-reply@admin.com.ar
         sender_name: No Reply Admin
+
+
+#doctrine extentions
+stof_doctrine_extensions:
+    orm:
+        default:
+            timestampable: true
+            blameable: true        
