@@ -7,7 +7,7 @@ namespace AdminBundle\Entity\Base;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use UsuarioBundle\Entity\Usuario;
+use UserBundle\Entity\User;
 
 abstract class BaseClass
 {
@@ -39,7 +39,7 @@ abstract class BaseClass
      *
      * @Gedmo\Blameable(on="create")
      *
-     * @ORM\ManyToOne(targetEntity="UsuarioBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     protected $creadoPor;
@@ -49,7 +49,7 @@ abstract class BaseClass
      *
      * @Gedmo\Blameable(on="update")
      *
-     * @ORM\ManyToOne(targetEntity="UsuarioBundle\Entity\Usuario")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     protected $actualizadoPor;
