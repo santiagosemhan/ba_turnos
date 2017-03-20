@@ -13,38 +13,38 @@ class TipoTramite extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=120, nullable=false)
+     * @ORM\Column(name="descripcion",type="string", length=120, nullable=false)
      */
     private $descripcion;
 
     /**
-     * @ORM\Column(type="string", length=2000, nullable=true)
+     * @ORM\Column(name="texto",type="string", length=2000, nullable=true)
      */
     private $texto;
 
     /**
-     * @ORM\Column(type="string", length=120, nullable=true)
+     * @ORM\Column(name="documento1",type="string", length=120, nullable=true)
      */
     private $documento1;
 
     /**
-     * @ORM\Column(type="string", length=120, nullable=true)
+     * @ORM\Column(name="documento2",type="string", length=120, nullable=true)
      */
     private $documento2;
 
     /**
-     * @ORM\Column(type="string", length=120, nullable=true)
+     * @ORM\Column(name="documento3",type="string", length=120, nullable=true)
      */
     private $documento3;
 
     /**
-     * @ORM\Column(type="string", length=120, nullable=true)
+     * @ORM\Column(name="documento4",type="string", length=120, nullable=true)
      */
     private $documento4;
 

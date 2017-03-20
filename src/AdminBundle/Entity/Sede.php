@@ -13,28 +13,28 @@ class Sede extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=2000, nullable=true)
+     * @ORM\Column(name="sede",type="string", length=2000, nullable=true)
      */
     private $sede;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(name="direccion",nullable=true)
      */
     private $direccion;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\Column(name="letra",type="string", length=2, nullable=true)
      */
     private $letra;
 
     /**
-     * @ORM\Column(type="integer", length=10, nullable=true)
+     * @ORM\Column(name="ultimo_turno",type="integer", length=10, nullable=true)
      */
     private $ultimoTurno;
 

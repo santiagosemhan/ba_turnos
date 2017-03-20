@@ -13,73 +13,73 @@ class TurnosSede extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="lunes",type="boolean", nullable=true)
      */
     private $lunes;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="martes",type="boolean", nullable=true)
      */
     private $martes;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="miercoles",type="boolean", nullable=true)
      */
     private $miercoles;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="jueves",type="boolean", nullable=true)
      */
     private $jueves;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="viernes",type="boolean", nullable=true)
      */
     private $viernes;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="sabado",type="boolean", nullable=true)
      */
     private $sabado;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="hora_turnos_desde",type="string", nullable=true)
      */
     private $horaTurnosDesde;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="hora_turnos_hasta",type="string", nullable=true)
      */
     private $horaTurnosHasta;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_turnos",type="integer", nullable=true)
      */
     private $cantidadTurnos;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_frecuencia",type="integer", nullable=true)
      */
     private $cantidadFrecuencia;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="frecuncia_turno_control",type="integer", nullable=true)
      */
     private $frecunciaTurnoControl;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="vigencia_desde",type="date", nullable=true)
      */
     private $vigenciaDesde;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="vigencia_hasta",type="date", nullable=true)
      */
     private $vigenciaHasta;
 

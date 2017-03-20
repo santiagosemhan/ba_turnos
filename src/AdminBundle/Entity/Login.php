@@ -14,25 +14,25 @@ class Login extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha",type="date", nullable=true)
      */
     private $fecha;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="ip",type="string", nullable=true)
      */
     private $ip;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="nombre_pc",type="string", nullable=true)
      */
-    private $nombre_pc;
+    private $nombrePc;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sede", inversedBy="Login")
@@ -41,8 +41,8 @@ class Login extends BaseClass
     private $sede;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="Login")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="Login")
      * @ORM\JoinColumn(name="usuario", referencedColumnName="id")
      */
-    private $user;
+    private $userio;
 }

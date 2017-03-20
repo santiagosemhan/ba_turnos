@@ -9,7 +9,7 @@ use UserBundle\Entity\User;
 /**
  * @ORM\Table(
  *     name="cola_turno",
- *     indexes={@ORM\Index(name="Index1", columns={"fechaTurno","atendido","sedeId"})}
+ *     indexes={@ORM\Index(name="Index1", columns={"fecha_turno","atendido","sede_id"})}
  *     )
  * @ORM\Entity(repositoryClass="AdminBundle\Repository\ColaTurnoRepository")
  */
@@ -17,48 +17,48 @@ class ColaTurno extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="prioritario",type="boolean", nullable=true)
      */
     private $prioritario;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_turno",type="date", nullable=true)
      */
     private $fechaTurno;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\Column(name="letra",type="string", length=2, nullable=true)
      */
     private $letra;
 
     /**
-     * @ORM\Column(type="integer", length=2, nullable=true)
+     * @ORM\Column(name="numero",type="integer", length=2, nullable=true)
      */
     private $numero;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="llamado",type="boolean", nullable=true)
      */
     private $llamado;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_llamado",type="date", nullable=true)
      */
     private $fechaLlamado;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="atendido",type="boolean", nullable=true)
      */
     private $atendido;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_atendido",type="date", nullable=true)
      */
     private $fechaAtendido;
 
@@ -81,8 +81,8 @@ class ColaTurno extends BaseClass
     private $sede;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="colaTurno")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="colaTurno")
      * @ORM\JoinColumn(name="usuario_atendido", referencedColumnName="id")
      */
-    private $user;
+    private $userioAtendido;
 }

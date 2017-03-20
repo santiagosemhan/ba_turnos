@@ -14,43 +14,43 @@ class Mail extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="email",type="string", nullable=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="nombre",type="string", nullable=true)
      */
     private $nombre;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="asunto",type="string", nullable=true)
      */
     private $asunto;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="texto",type="string", nullable=true)
      */
     private $texto;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="enviado",type="boolean", nullable=true)
      */
     private $enviado;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_programado",type="date", nullable=true)
      */
     private $fechaProgramado;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_enviado",type="date", nullable=true)
      */
     private $fechaEnviado;
 

@@ -20,8 +20,8 @@ class UsuarioSede extends BaseClass
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="usuarioSede")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="usuarioSede")
      * @ORM\JoinColumn(name="usuario", referencedColumnName="id")
      */
-    private $user;
+    private $userio;
 }

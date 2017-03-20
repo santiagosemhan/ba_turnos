@@ -13,13 +13,13 @@ class TurnoTramite extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="cantidad_turno",type="integer", nullable=true)
      */
     private $cantidadTurno;
 
@@ -31,7 +31,7 @@ class TurnoTramite extends BaseClass
 
     /**
      * @ORM\ManyToOne(targetEntity="TurnosSede", inversedBy="turnoTramite")
-     * @ORM\JoinColumn(name="turno_ssede_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="turno_sede_id", referencedColumnName="id")
      */
     private $turnosSede;
 }

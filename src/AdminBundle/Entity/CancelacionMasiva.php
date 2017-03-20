@@ -13,18 +13,18 @@ class CancelacionMasiva extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=2000, nullable=false)
+     * @ORM\Column(name="motivo",type="string", length=2000, nullable=false)
      */
     private $motivo;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha",type="date", nullable=true)
      */
     private $fecha;
 

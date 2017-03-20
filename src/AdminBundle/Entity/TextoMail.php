@@ -13,23 +13,23 @@ class TextoMail extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="accion",type="string", nullable=true)
      */
     private $accion;
 
     /**
-     * @ORM\Column(type="string", length=120, nullable=true)
+     * @ORM\Column(name="asunto",type="string", length=120, nullable=true)
      */
     private $asunto;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
+     * @ORM\Column(name="texto",type="blob", nullable=true)
      */
     private $texto;
 

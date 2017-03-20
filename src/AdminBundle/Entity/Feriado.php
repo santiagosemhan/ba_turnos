@@ -13,18 +13,18 @@ class Feriado extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha",type="date", nullable=true)
      */
     private $fecha;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="repite_anio",type="boolean", nullable=true)
      */
     private $repiteAnio;
 

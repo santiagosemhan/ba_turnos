@@ -11,7 +11,7 @@ use UserBundle\Entity\User;
  *     name="turno",
  *     indexes={
  *         @ORM\Index(name="Index1", columns={"id"}),
- *         @ORM\Index(name="Index2", columns={"tipoTramiteId","fechaTurno","horaTurno","sedeId","fechaCancelado"})
+ *         @ORM\Index(name="Index2", columns={"tipo_tramite_id","fecha_turno","hora_turno","sede_id","fecha_cancelado"})
  *     })
  * @ORM\Entity(repositoryClass="AdminBundle\Repository\TurnoRepository")
  */
@@ -19,69 +19,69 @@ class Turno extends BaseClass
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="nombre_apellido",type="string", nullable=true)
      */
     private $nombreApellido;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="telefono",type="string", nullable=true)
      */
     private $telefono;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="cuit",type="string", nullable=true)
      */
     private $cuit;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="mail1",type="string", nullable=true)
      */
     private $mail1;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="mail2",type="string", nullable=true)
      */
     private $mail2;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_turno",type="date", nullable=true)
      */
     private $fechaTurno;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="hora_turno",type="string", nullable=true)
      */
     private $horaTurno;
 
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="numero",type="integer", nullable=true)
      */
     private $numero;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="via_mostrador",type="boolean", nullable=true)
      */
     private $viaMostrador;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_confirmacion",type="date", nullable=true)
      */
     private $fechaConfirmacion;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(name="fecha_cancelado",type="date", nullable=true)
      */
     private $fechaCancelado;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="cancelado_web",type="boolean", nullable=true)
      */
     private $canceladoWeb;
 
@@ -114,8 +114,8 @@ class Turno extends BaseClass
     private $cancelacionMasiva;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="turno")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="turno")
      * @ORM\JoinColumn(name="usuario_confirmacion", referencedColumnName="id")
      */
-    private $user;
+    private $userioConfirmacion;
 }
