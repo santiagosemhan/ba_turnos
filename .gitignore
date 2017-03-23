@@ -49,7 +49,7 @@
 /web/uploads/
 
 # Assets managed by Bower
-/web/assets/vendor/
+#/web/assets/vendor/
 
 # PHPUnit
 /app/phpunit.xml
@@ -63,3 +63,6 @@
 
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
+
+#reactjs modules
+/reactjs/node_modules/
