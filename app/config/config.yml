@@ -9,7 +9,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: es
 
 framework:
     #esi:             ~
@@ -43,6 +43,10 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+            #resources: ['bootstrap_3_layout.html.twig']
+            - 'bootstrap_3_horizontal_layout.html.twig'
+            - 'VichUploaderBundle:Form:fields.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -90,3 +94,29 @@ stof_doctrine_extensions:
         default:
             timestampable: true
             blameable: true        
+
+
+#KNPpaginator
+knp_paginator:
+    page_range:              10                      # default page range used in pagination control
+    default_options:
+        page_name:           page                # page query parameter name
+        sort_field_name:     sort         # sort field query parameter name
+        sort_direction_name: direction    # sort direction query parameter name
+        distinct:            true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
+    template:
+        pagination: AdminBundle:pager:sliding.html.twig     # sliding pagination controls template
+        sortable:   KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+
+
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        tramites_file:
+            uri_prefix:         /upload/tramites
+            upload_destination: '%kernel.root_dir%/../web/upload/tramites'
+
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
