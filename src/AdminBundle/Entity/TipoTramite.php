@@ -5,9 +5,13 @@ use AdminBundle\Entity\Base\BaseClass;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * @ORM\Table(name="tipo_tramite")
  * @ORM\Entity(repositoryClass="AdminBundle\Repository\TipoTramiteRepository")
+ * @Vich\Uploadable
  */
 class TipoTramite extends BaseClass implements \JsonSerializable
 {
@@ -84,6 +88,55 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      * @ORM\OneToMany(targetEntity="TurnoTramite", mappedBy="tipoTramite")
      */
     private $turnoTramite;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento1")
+     *
+     * @var File
+     */
+    private $documento1File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento2")
+     *
+     * @var File
+     */
+    private $documento2File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento3")
+     *
+     * @var File
+     */
+    private $documento3File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento4")
+     *
+     * @var File
+     */
+    private $documento4File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento5")
+     *
+     * @var File
+     */
+    private $documento5File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento6")
+     *
+     * @var File
+     */
+    private $documento6File;
+
     /**
      * Constructor
      */
@@ -319,8 +372,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this->documento6;
     }
 
-    /**
-     * Set slug
+    /** Set slug
      *
      * @param string $slug
      *
@@ -491,6 +543,178 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this;
     }
 
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento1File(File $file = null)
+    {
+        $this->documento1File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento1File()
+    {
+        return $this->documento1File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento2File(File $file = null)
+    {
+        $this->documento2File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento2File()
+    {
+        return $this->documento2File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento3File(File $file = null)
+    {
+        $this->documento3File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento3File()
+    {
+        return $this->documento3File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento4File(File $file = null)
+    {
+        $this->documento4File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento4File()
+    {
+        return $this->documento4File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento5File(File $file = null)
+    {
+        $this->documento5File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento5File()
+    {
+        return $this->documento5File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento6File(File $file = null)
+    {
+        $this->documento6File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento6File()
+    {
+        return $this->documento6File;
+    }
+
+    /**
+     * toString
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getDescripcion();
+    }
 
     public function jsonSerialize()
     {

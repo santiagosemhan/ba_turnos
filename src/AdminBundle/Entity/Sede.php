@@ -86,87 +86,24 @@ class Sede extends BaseClass
 
 
     /**
-     * @return bool
+     * Constructor
      */
-    public function isActivo()
+    public function __construct()
     {
-        return $this->activo;
+        $this->feriado = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->box = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->cancelacionMasiva = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->turno = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->login = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->usuarioSede = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->turnosSede = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->colaTurno = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @param bool $activo
-     */
-    public function setActivo($activo)
-    {
-        $this->activo = $activo;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFechaCreacion()
-    {
-        return $this->fechaCreacion;
-    }
-
-    /**
-     * @param \DateTime $fechaCreacion
-     */
-    public function setFechaCreacion($fechaCreacion)
-    {
-        $this->fechaCreacion = $fechaCreacion;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFechaActualizacion()
-    {
-        return $this->fechaActualizacion;
-    }
-
-    /**
-     * @param \DateTime $fechaActualizacion
-     */
-    public function setFechaActualizacion($fechaActualizacion)
-    {
-        $this->fechaActualizacion = $fechaActualizacion;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreadoPor()
-    {
-        return $this->creadoPor;
-    }
-
-    /**
-     * @param string $creadoPor
-     */
-    public function setCreadoPor($creadoPor)
-    {
-        $this->creadoPor = $creadoPor;
-    }
-
-    /**
-     * @return string
-     */
-    public function getActualizadoPor()
-    {
-        return $this->actualizadoPor;
-    }
-
-    /**
-     * @param string $actualizadoPor
-     */
-    public function setActualizadoPor($actualizadoPor)
-    {
-        $this->actualizadoPor = $actualizadoPor;
-    }
-
-    /**
-     * @return mixed
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -174,15 +111,23 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $id
+     * Set sede
+     *
+     * @param string $sede
+     *
+     * @return Sede
      */
-    public function setId($id)
+    public function setSede($sede)
     {
-        $this->id = $id;
+        $this->sede = $sede;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get sede
+     *
+     * @return string
      */
     public function getSede()
     {
@@ -190,15 +135,23 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $sede
+     * Set direccion
+     *
+     * @param string $direccion
+     *
+     * @return Sede
      */
-    public function setSede($sede)
+    public function setDireccion($direccion)
     {
-        $this->sede = $sede;
+        $this->direccion = $direccion;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get direccion
+     *
+     * @return string
      */
     public function getDireccion()
     {
@@ -206,15 +159,23 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $direccion
+     * Set letra
+     *
+     * @param string $letra
+     *
+     * @return Sede
      */
-    public function setDireccion($direccion)
+    public function setLetra($letra)
     {
-        $this->direccion = $direccion;
+        $this->letra = $letra;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get letra
+     *
+     * @return string
      */
     public function getLetra()
     {
@@ -222,15 +183,23 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $letra
+     * Set ultimoTurno
+     *
+     * @param integer $ultimoTurno
+     *
+     * @return Sede
      */
-    public function setLetra($letra)
+    public function setUltimoTurno($ultimoTurno)
     {
-        $this->letra = $letra;
+        $this->ultimoTurno = $ultimoTurno;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get ultimoTurno
+     *
+     * @return integer
      */
     public function getUltimoTurno()
     {
@@ -238,15 +207,51 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $ultimoTurno
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return Sede
      */
-    public function setUltimoTurno($ultimoTurno)
+    public function setFechaCreacion($fechaCreacion)
     {
-        $this->ultimoTurno = $ultimoTurno;
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Set fechaActualizacion
+     *
+     * @param \DateTime $fechaActualizacion
+     *
+     * @return Sede
+     */
+    public function setFechaActualizacion($fechaActualizacion)
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
+
+        return $this;
+    }
+
+    /**
+     * Set sedeTipoTramite
+     *
+     * @param \AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite
+     *
+     * @return Sede
+     */
+    public function setSedeTipoTramite(\AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite = null)
+    {
+        $this->sedeTipoTramite = $sedeTipoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Get sedeTipoTramite
+     *
+     * @return \AdminBundle\Entity\SedeTipoTramite
      */
     public function getSedeTipoTramite()
     {
@@ -254,15 +259,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $sedeTipoTramite
+     * Add feriado
+     *
+     * @param \AdminBundle\Entity\Feriado $feriado
+     *
+     * @return Sede
      */
-    public function setSedeTipoTramite($sedeTipoTramite)
+    public function addFeriado(\AdminBundle\Entity\Feriado $feriado)
     {
-        $this->sedeTipoTramite = $sedeTipoTramite;
+        $this->feriado[] = $feriado;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove feriado
+     *
+     * @param \AdminBundle\Entity\Feriado $feriado
+     */
+    public function removeFeriado(\AdminBundle\Entity\Feriado $feriado)
+    {
+        $this->feriado->removeElement($feriado);
+    }
+
+    /**
+     * Get feriado
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFeriado()
     {
@@ -270,15 +293,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $feriado
+     * Add box
+     *
+     * @param \AdminBundle\Entity\Box $box
+     *
+     * @return Sede
      */
-    public function setFeriado($feriado)
+    public function addBox(\AdminBundle\Entity\Box $box)
     {
-        $this->feriado = $feriado;
+        $this->box[] = $box;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove box
+     *
+     * @param \AdminBundle\Entity\Box $box
+     */
+    public function removeBox(\AdminBundle\Entity\Box $box)
+    {
+        $this->box->removeElement($box);
+    }
+
+    /**
+     * Get box
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getBox()
     {
@@ -286,15 +327,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $box
+     * Add cancelacionMasiva
+     *
+     * @param \AdminBundle\Entity\CancelacionMasiva $cancelacionMasiva
+     *
+     * @return Sede
      */
-    public function setBox($box)
+    public function addCancelacionMasiva(\AdminBundle\Entity\CancelacionMasiva $cancelacionMasiva)
     {
-        $this->box = $box;
+        $this->cancelacionMasiva[] = $cancelacionMasiva;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove cancelacionMasiva
+     *
+     * @param \AdminBundle\Entity\CancelacionMasiva $cancelacionMasiva
+     */
+    public function removeCancelacionMasiva(\AdminBundle\Entity\CancelacionMasiva $cancelacionMasiva)
+    {
+        $this->cancelacionMasiva->removeElement($cancelacionMasiva);
+    }
+
+    /**
+     * Get cancelacionMasiva
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCancelacionMasiva()
     {
@@ -302,15 +361,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $cancelacionMasiva
+     * Add turno
+     *
+     * @param \AdminBundle\Entity\Turno $turno
+     *
+     * @return Sede
      */
-    public function setCancelacionMasiva($cancelacionMasiva)
+    public function addTurno(\AdminBundle\Entity\Turno $turno)
     {
-        $this->cancelacionMasiva = $cancelacionMasiva;
+        $this->turno[] = $turno;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove turno
+     *
+     * @param \AdminBundle\Entity\Turno $turno
+     */
+    public function removeTurno(\AdminBundle\Entity\Turno $turno)
+    {
+        $this->turno->removeElement($turno);
+    }
+
+    /**
+     * Get turno
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTurno()
     {
@@ -318,15 +395,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $turno
+     * Add login
+     *
+     * @param \AdminBundle\Entity\Login $login
+     *
+     * @return Sede
      */
-    public function setTurno($turno)
+    public function addLogin(\AdminBundle\Entity\Login $login)
     {
-        $this->turno = $turno;
+        $this->login[] = $login;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove login
+     *
+     * @param \AdminBundle\Entity\Login $login
+     */
+    public function removeLogin(\AdminBundle\Entity\Login $login)
+    {
+        $this->login->removeElement($login);
+    }
+
+    /**
+     * Get login
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLogin()
     {
@@ -334,15 +429,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $login
+     * Add usuarioSede
+     *
+     * @param \AdminBundle\Entity\UsuarioSede $usuarioSede
+     *
+     * @return Sede
      */
-    public function setLogin($login)
+    public function addUsuarioSede(\AdminBundle\Entity\UsuarioSede $usuarioSede)
     {
-        $this->login = $login;
+        $this->usuarioSede[] = $usuarioSede;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove usuarioSede
+     *
+     * @param \AdminBundle\Entity\UsuarioSede $usuarioSede
+     */
+    public function removeUsuarioSede(\AdminBundle\Entity\UsuarioSede $usuarioSede)
+    {
+        $this->usuarioSede->removeElement($usuarioSede);
+    }
+
+    /**
+     * Get usuarioSede
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUsuarioSede()
     {
@@ -350,15 +463,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $usuarioSede
+     * Add turnosSede
+     *
+     * @param \AdminBundle\Entity\TurnosSede $turnosSede
+     *
+     * @return Sede
      */
-    public function setUsuarioSede($usuarioSede)
+    public function addTurnosSede(\AdminBundle\Entity\TurnosSede $turnosSede)
     {
-        $this->usuarioSede = $usuarioSede;
+        $this->turnosSede[] = $turnosSede;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove turnosSede
+     *
+     * @param \AdminBundle\Entity\TurnosSede $turnosSede
+     */
+    public function removeTurnosSede(\AdminBundle\Entity\TurnosSede $turnosSede)
+    {
+        $this->turnosSede->removeElement($turnosSede);
+    }
+
+    /**
+     * Get turnosSede
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTurnosSede()
     {
@@ -366,15 +497,33 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $turnosSede
+     * Add colaTurno
+     *
+     * @param \AdminBundle\Entity\ColaTurno $colaTurno
+     *
+     * @return Sede
      */
-    public function setTurnosSede($turnosSede)
+    public function addColaTurno(\AdminBundle\Entity\ColaTurno $colaTurno)
     {
-        $this->turnosSede = $turnosSede;
+        $this->colaTurno[] = $colaTurno;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove colaTurno
+     *
+     * @param \AdminBundle\Entity\ColaTurno $colaTurno
+     */
+    public function removeColaTurno(\AdminBundle\Entity\ColaTurno $colaTurno)
+    {
+        $this->colaTurno->removeElement($colaTurno);
+    }
+
+    /**
+     * Get colaTurno
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getColaTurno()
     {
@@ -382,23 +531,35 @@ class Sede extends BaseClass
     }
 
     /**
-     * @param mixed $colaTurno
+     * Set creadoPor
+     *
+     * @param \UserBundle\Entity\User $creadoPor
+     *
+     * @return Sede
      */
-    public function setColaTurno($colaTurno)
+    public function setCreadoPor(\UserBundle\Entity\User $creadoPor = null)
     {
-        $this->colaTurno = $colaTurno;
+        $this->creadoPor = $creadoPor;
+
+        return $this;
     }
 
     /**
-    * Get __toString
-    *
-    * @return mixed
-    */
+     * Set actualizadoPor
+     *
+     * @param \UserBundle\Entity\User $actualizadoPor
+     *
+     * @return Sede
+     */
+    public function setActualizadoPor(\UserBundle\Entity\User $actualizadoPor = null)
+    {
+        $this->actualizadoPor = $actualizadoPor;
+
+        return $this;
+    }
+
     public function __toString()
     {
         return $this->getSede();
     }
-
-
-
 }
