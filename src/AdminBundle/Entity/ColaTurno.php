@@ -28,7 +28,7 @@ class ColaTurno extends BaseClass
     private $prioritario;
 
     /**
-     * @ORM\Column(name="fecha_turno",type="date", nullable=true)
+     * @ORM\Column(name="fecha_turno",type="datetime", nullable=true)
      */
     private $fechaTurno;
 
