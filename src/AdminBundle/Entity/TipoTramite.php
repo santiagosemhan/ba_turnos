@@ -5,9 +5,14 @@ use AdminBundle\Entity\Base\BaseClass;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
+
 /**
  * @ORM\Table(name="tipo_tramite")
  * @ORM\Entity(repositoryClass="AdminBundle\Repository\TipoTramiteRepository")
+ * @Vich\Uploadable
  */
 class TipoTramite extends BaseClass
 {
@@ -81,87 +86,67 @@ class TipoTramite extends BaseClass
     private $turnoTramite;
 
     /**
-     * @return bool
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento1")
+     *
+     * @var File
      */
-    public function isActivo()
+    private $documento1File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento2")
+     *
+     * @var File
+     */
+    private $documento2File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento3")
+     *
+     * @var File
+     */
+    private $documento3File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento4")
+     *
+     * @var File
+     */
+    private $documento4File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento5")
+     *
+     * @var File
+     */
+    private $documento5File;
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento6")
+     *
+     * @var File
+     */
+    private $documento6File;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        return $this->activo;
+        $this->turno = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->turnoTramite = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @param bool $activo
-     */
-    public function setActivo($activo)
-    {
-        $this->activo = $activo;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFechaCreacion()
-    {
-        return $this->fechaCreacion;
-    }
-
-    /**
-     * @param \DateTime $fechaCreacion
-     */
-    public function setFechaCreacion($fechaCreacion)
-    {
-        $this->fechaCreacion = $fechaCreacion;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFechaActualizacion()
-    {
-        return $this->fechaActualizacion;
-    }
-
-    /**
-     * @param \DateTime $fechaActualizacion
-     */
-    public function setFechaActualizacion($fechaActualizacion)
-    {
-        $this->fechaActualizacion = $fechaActualizacion;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreadoPor()
-    {
-        return $this->creadoPor;
-    }
-
-    /**
-     * @param string $creadoPor
-     */
-    public function setCreadoPor($creadoPor)
-    {
-        $this->creadoPor = $creadoPor;
-    }
-
-    /**
-     * @return string
-     */
-    public function getActualizadoPor()
-    {
-        return $this->actualizadoPor;
-    }
-
-    /**
-     * @param string $actualizadoPor
-     */
-    public function setActualizadoPor($actualizadoPor)
-    {
-        $this->actualizadoPor = $actualizadoPor;
-    }
-
-    /**
-     * @return mixed
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -169,15 +154,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $id
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return TipoTramite
      */
-    public function setId($id)
+    public function setDescripcion($descripcion)
     {
-        $this->id = $id;
+        $this->descripcion = $descripcion;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get descripcion
+     *
+     * @return string
      */
     public function getDescripcion()
     {
@@ -185,15 +178,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $descripcion
+     * Set texto
+     *
+     * @param string $texto
+     *
+     * @return TipoTramite
      */
-    public function setDescripcion($descripcion)
+    public function setTexto($texto)
     {
-        $this->descripcion = $descripcion;
+        $this->texto = $texto;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get texto
+     *
+     * @return string
      */
     public function getTexto()
     {
@@ -201,15 +202,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $texto
+     * Set sinTurno
+     *
+     * @param boolean $sinTurno
+     *
+     * @return TipoTramite
      */
-    public function setTexto($texto)
+    public function setSinTurno($sinTurno)
     {
-        $this->texto = $texto;
+        $this->sinTurno = $sinTurno;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get sinTurno
+     *
+     * @return boolean
      */
     public function getSinTurno()
     {
@@ -217,15 +226,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $sinTurno
+     * Set documento1
+     *
+     * @param string $documento1
+     *
+     * @return TipoTramite
      */
-    public function setSinTurno($sinTurno)
+    public function setDocumento1($documento1)
     {
-        $this->sinTurno = $sinTurno;
+        $this->documento1 = $documento1;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get documento1
+     *
+     * @return string
      */
     public function getDocumento1()
     {
@@ -233,15 +250,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $documento1
+     * Set documento2
+     *
+     * @param string $documento2
+     *
+     * @return TipoTramite
      */
-    public function setDocumento1($documento1)
+    public function setDocumento2($documento2)
     {
-        $this->documento1 = $documento1;
+        $this->documento2 = $documento2;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get documento2
+     *
+     * @return string
      */
     public function getDocumento2()
     {
@@ -249,15 +274,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $documento2
+     * Set documento3
+     *
+     * @param string $documento3
+     *
+     * @return TipoTramite
      */
-    public function setDocumento2($documento2)
+    public function setDocumento3($documento3)
     {
-        $this->documento2 = $documento2;
+        $this->documento3 = $documento3;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get documento3
+     *
+     * @return string
      */
     public function getDocumento3()
     {
@@ -265,15 +298,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $documento3
+     * Set documento4
+     *
+     * @param string $documento4
+     *
+     * @return TipoTramite
      */
-    public function setDocumento3($documento3)
+    public function setDocumento4($documento4)
     {
-        $this->documento3 = $documento3;
+        $this->documento4 = $documento4;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get documento4
+     *
+     * @return string
      */
     public function getDocumento4()
     {
@@ -281,15 +322,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $documento4
+     * Set documento5
+     *
+     * @param string $documento5
+     *
+     * @return TipoTramite
      */
-    public function setDocumento4($documento4)
+    public function setDocumento5($documento5)
     {
-        $this->documento4 = $documento4;
+        $this->documento5 = $documento5;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get documento5
+     *
+     * @return string
      */
     public function getDocumento5()
     {
@@ -297,15 +346,23 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $documento5
+     * Set documento6
+     *
+     * @param string $documento6
+     *
+     * @return TipoTramite
      */
-    public function setDocumento5($documento5)
+    public function setDocumento6($documento6)
     {
-        $this->documento5 = $documento5;
+        $this->documento6 = $documento6;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get documento6
+     *
+     * @return string
      */
     public function getDocumento6()
     {
@@ -313,15 +370,51 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $documento6
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return TipoTramite
      */
-    public function setDocumento6($documento6)
+    public function setFechaCreacion($fechaCreacion)
     {
-        $this->documento6 = $documento6;
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Set fechaActualizacion
+     *
+     * @param \DateTime $fechaActualizacion
+     *
+     * @return TipoTramite
+     */
+    public function setFechaActualizacion($fechaActualizacion)
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
+
+        return $this;
+    }
+
+    /**
+     * Set sedeTipoTramite
+     *
+     * @param \AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite
+     *
+     * @return TipoTramite
+     */
+    public function setSedeTipoTramite(\AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite = null)
+    {
+        $this->sedeTipoTramite = $sedeTipoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Get sedeTipoTramite
+     *
+     * @return \AdminBundle\Entity\SedeTipoTramite
      */
     public function getSedeTipoTramite()
     {
@@ -329,15 +422,33 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $sedeTipoTramite
+     * Add turno
+     *
+     * @param \AdminBundle\Entity\Turno $turno
+     *
+     * @return TipoTramite
      */
-    public function setSedeTipoTramite($sedeTipoTramite)
+    public function addTurno(\AdminBundle\Entity\Turno $turno)
     {
-        $this->sedeTipoTramite = $sedeTipoTramite;
+        $this->turno[] = $turno;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove turno
+     *
+     * @param \AdminBundle\Entity\Turno $turno
+     */
+    public function removeTurno(\AdminBundle\Entity\Turno $turno)
+    {
+        $this->turno->removeElement($turno);
+    }
+
+    /**
+     * Get turno
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTurno()
     {
@@ -345,15 +456,33 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $turno
+     * Add turnoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
+     *
+     * @return TipoTramite
      */
-    public function setTurno($turno)
+    public function addTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
     {
-        $this->turno = $turno;
+        $this->turnoTramite[] = $turnoTramite;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Remove turnoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
+     */
+    public function removeTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
+    {
+        $this->turnoTramite->removeElement($turnoTramite);
+    }
+
+    /**
+     * Get turnoTramite
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTurnoTramite()
     {
@@ -361,12 +490,203 @@ class TipoTramite extends BaseClass
     }
 
     /**
-     * @param mixed $turnoTramite
+     * Set creadoPor
+     *
+     * @param \UserBundle\Entity\User $creadoPor
+     *
+     * @return TipoTramite
      */
-    public function setTurnoTramite($turnoTramite)
+    public function setCreadoPor(\UserBundle\Entity\User $creadoPor = null)
     {
-        $this->turnoTramite = $turnoTramite;
+        $this->creadoPor = $creadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Set actualizadoPor
+     *
+     * @param \UserBundle\Entity\User $actualizadoPor
+     *
+     * @return TipoTramite
+     */
+    public function setActualizadoPor(\UserBundle\Entity\User $actualizadoPor = null)
+    {
+        $this->actualizadoPor = $actualizadoPor;
+
+        return $this;
     }
 
 
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento1File(File $file = null)
+    {
+        $this->documento1File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento1File()
+    {
+        return $this->documento1File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento2File(File $file = null)
+    {
+        $this->documento2File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento2File()
+    {
+        return $this->documento2File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento3File(File $file = null)
+    {
+        $this->documento3File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento3File()
+    {
+        return $this->documento3File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento4File(File $file = null)
+    {
+        $this->documento4File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento4File()
+    {
+        return $this->documento4File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento5File(File $file = null)
+    {
+        $this->documento5File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento5File()
+    {
+        return $this->documento5File;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return TipoTramite
+     */
+    public function setDocumento6File(File $file = null)
+    {
+        $this->documento6File = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getDocumento6File()
+    {
+        return $this->documento6File;
+    }
+
+    /**
+     * toString
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getDescripcion();
+    }
 }

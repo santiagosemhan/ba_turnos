@@ -93,4 +93,447 @@ class TurnosSede extends BaseClass
      * @ORM\JoinColumn(name="sede_id", referencedColumnName="id")
      */
     private $sede;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->turnoTramite = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set lunes
+     *
+     * @param boolean $lunes
+     *
+     * @return TurnosSede
+     */
+    public function setLunes($lunes)
+    {
+        $this->lunes = $lunes;
+
+        return $this;
+    }
+
+    /**
+     * Get lunes
+     *
+     * @return boolean
+     */
+    public function getLunes()
+    {
+        return $this->lunes;
+    }
+
+    /**
+     * Set martes
+     *
+     * @param boolean $martes
+     *
+     * @return TurnosSede
+     */
+    public function setMartes($martes)
+    {
+        $this->martes = $martes;
+
+        return $this;
+    }
+
+    /**
+     * Get martes
+     *
+     * @return boolean
+     */
+    public function getMartes()
+    {
+        return $this->martes;
+    }
+
+    /**
+     * Set miercoles
+     *
+     * @param boolean $miercoles
+     *
+     * @return TurnosSede
+     */
+    public function setMiercoles($miercoles)
+    {
+        $this->miercoles = $miercoles;
+
+        return $this;
+    }
+
+    /**
+     * Get miercoles
+     *
+     * @return boolean
+     */
+    public function getMiercoles()
+    {
+        return $this->miercoles;
+    }
+
+    /**
+     * Set jueves
+     *
+     * @param boolean $jueves
+     *
+     * @return TurnosSede
+     */
+    public function setJueves($jueves)
+    {
+        $this->jueves = $jueves;
+
+        return $this;
+    }
+
+    /**
+     * Get jueves
+     *
+     * @return boolean
+     */
+    public function getJueves()
+    {
+        return $this->jueves;
+    }
+
+    /**
+     * Set viernes
+     *
+     * @param boolean $viernes
+     *
+     * @return TurnosSede
+     */
+    public function setViernes($viernes)
+    {
+        $this->viernes = $viernes;
+
+        return $this;
+    }
+
+    /**
+     * Get viernes
+     *
+     * @return boolean
+     */
+    public function getViernes()
+    {
+        return $this->viernes;
+    }
+
+    /**
+     * Set sabado
+     *
+     * @param boolean $sabado
+     *
+     * @return TurnosSede
+     */
+    public function setSabado($sabado)
+    {
+        $this->sabado = $sabado;
+
+        return $this;
+    }
+
+    /**
+     * Get sabado
+     *
+     * @return boolean
+     */
+    public function getSabado()
+    {
+        return $this->sabado;
+    }
+
+    /**
+     * Set horaTurnosDesde
+     *
+     * @param string $horaTurnosDesde
+     *
+     * @return TurnosSede
+     */
+    public function setHoraTurnosDesde($horaTurnosDesde)
+    {
+        $this->horaTurnosDesde = $horaTurnosDesde;
+
+        return $this;
+    }
+
+    /**
+     * Get horaTurnosDesde
+     *
+     * @return string
+     */
+    public function getHoraTurnosDesde()
+    {
+        return $this->horaTurnosDesde;
+    }
+
+    /**
+     * Set horaTurnosHasta
+     *
+     * @param string $horaTurnosHasta
+     *
+     * @return TurnosSede
+     */
+    public function setHoraTurnosHasta($horaTurnosHasta)
+    {
+        $this->horaTurnosHasta = $horaTurnosHasta;
+
+        return $this;
+    }
+
+    /**
+     * Get horaTurnosHasta
+     *
+     * @return string
+     */
+    public function getHoraTurnosHasta()
+    {
+        return $this->horaTurnosHasta;
+    }
+
+    /**
+     * Set cantidadTurnos
+     *
+     * @param integer $cantidadTurnos
+     *
+     * @return TurnosSede
+     */
+    public function setCantidadTurnos($cantidadTurnos)
+    {
+        $this->cantidadTurnos = $cantidadTurnos;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadTurnos
+     *
+     * @return integer
+     */
+    public function getCantidadTurnos()
+    {
+        return $this->cantidadTurnos;
+    }
+
+    /**
+     * Set cantidadFrecuencia
+     *
+     * @param integer $cantidadFrecuencia
+     *
+     * @return TurnosSede
+     */
+    public function setCantidadFrecuencia($cantidadFrecuencia)
+    {
+        $this->cantidadFrecuencia = $cantidadFrecuencia;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadFrecuencia
+     *
+     * @return integer
+     */
+    public function getCantidadFrecuencia()
+    {
+        return $this->cantidadFrecuencia;
+    }
+
+    /**
+     * Set frecunciaTurnoControl
+     *
+     * @param integer $frecunciaTurnoControl
+     *
+     * @return TurnosSede
+     */
+    public function setFrecunciaTurnoControl($frecunciaTurnoControl)
+    {
+        $this->frecunciaTurnoControl = $frecunciaTurnoControl;
+
+        return $this;
+    }
+
+    /**
+     * Get frecunciaTurnoControl
+     *
+     * @return integer
+     */
+    public function getFrecunciaTurnoControl()
+    {
+        return $this->frecunciaTurnoControl;
+    }
+
+    /**
+     * Set vigenciaDesde
+     *
+     * @param \DateTime $vigenciaDesde
+     *
+     * @return TurnosSede
+     */
+    public function setVigenciaDesde($vigenciaDesde)
+    {
+        $this->vigenciaDesde = $vigenciaDesde;
+
+        return $this;
+    }
+
+    /**
+     * Get vigenciaDesde
+     *
+     * @return \DateTime
+     */
+    public function getVigenciaDesde()
+    {
+        return $this->vigenciaDesde;
+    }
+
+    /**
+     * Set vigenciaHasta
+     *
+     * @param \DateTime $vigenciaHasta
+     *
+     * @return TurnosSede
+     */
+    public function setVigenciaHasta($vigenciaHasta)
+    {
+        $this->vigenciaHasta = $vigenciaHasta;
+
+        return $this;
+    }
+
+    /**
+     * Get vigenciaHasta
+     *
+     * @return \DateTime
+     */
+    public function getVigenciaHasta()
+    {
+        return $this->vigenciaHasta;
+    }
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return TurnosSede
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
+    }
+
+    /**
+     * Set fechaActualizacion
+     *
+     * @param \DateTime $fechaActualizacion
+     *
+     * @return TurnosSede
+     */
+    public function setFechaActualizacion($fechaActualizacion)
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
+
+        return $this;
+    }
+
+    /**
+     * Add turnoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
+     *
+     * @return TurnosSede
+     */
+    public function addTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
+    {
+        $this->turnoTramite[] = $turnoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Remove turnoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
+     */
+    public function removeTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
+    {
+        $this->turnoTramite->removeElement($turnoTramite);
+    }
+
+    /**
+     * Get turnoTramite
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTurnoTramite()
+    {
+        return $this->turnoTramite;
+    }
+
+    /**
+     * Set sede
+     *
+     * @param \AdminBundle\Entity\Sede $sede
+     *
+     * @return TurnosSede
+     */
+    public function setSede(\AdminBundle\Entity\Sede $sede = null)
+    {
+        $this->sede = $sede;
+
+        return $this;
+    }
+
+    /**
+     * Get sede
+     *
+     * @return \AdminBundle\Entity\Sede
+     */
+    public function getSede()
+    {
+        return $this->sede;
+    }
+
+    /**
+     * Set creadoPor
+     *
+     * @param \UserBundle\Entity\User $creadoPor
+     *
+     * @return TurnosSede
+     */
+    public function setCreadoPor(\UserBundle\Entity\User $creadoPor = null)
+    {
+        $this->creadoPor = $creadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Set actualizadoPor
+     *
+     * @param \UserBundle\Entity\User $actualizadoPor
+     *
+     * @return TurnosSede
+     */
+    public function setActualizadoPor(\UserBundle\Entity\User $actualizadoPor = null)
+    {
+        $this->actualizadoPor = $actualizadoPor;
+
+        return $this;
+    }
 }

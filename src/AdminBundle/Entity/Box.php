@@ -35,88 +35,21 @@ class Box extends BaseClass
      */
     private $sede;
 
+
+
+
     /**
-     * @return bool
+     * Constructor
      */
-    public function isActivo()
+    public function __construct()
     {
-        return $this->activo;
+        $this->colaTurno = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @param bool $activo
-     */
-    public function setActivo($activo)
-    {
-        $this->activo = $activo;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFechaCreacion()
-    {
-        return $this->fechaCreacion;
-    }
-
-    /**
-     * @param \DateTime $fechaCreacion
-     */
-    public function setFechaCreacion($fechaCreacion)
-    {
-        $this->fechaCreacion = $fechaCreacion;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFechaActualizacion()
-    {
-        return $this->fechaActualizacion;
-    }
-
-    /**
-     * @param \DateTime $fechaActualizacion
-     */
-    public function setFechaActualizacion($fechaActualizacion)
-    {
-        $this->fechaActualizacion = $fechaActualizacion;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreadoPor()
-    {
-        return $this->creadoPor;
-    }
-
-    /**
-     * @param string $creadoPor
-     */
-    public function setCreadoPor($creadoPor)
-    {
-        $this->creadoPor = $creadoPor;
-    }
-
-    /**
-     * @return string
-     */
-    public function getActualizadoPor()
-    {
-        return $this->actualizadoPor;
-    }
-
-    /**
-     * @param string $actualizadoPor
-     */
-    public function setActualizadoPor($actualizadoPor)
-    {
-        $this->actualizadoPor = $actualizadoPor;
-    }
-
-    /**
-     * @return mixed
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -124,15 +57,23 @@ class Box extends BaseClass
     }
 
     /**
-     * @param mixed $id
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return Box
      */
-    public function setId($id)
+    public function setDescripcion($descripcion)
     {
-        $this->id = $id;
+        $this->descripcion = $descripcion;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get descripcion
+     *
+     * @return string
      */
     public function getDescripcion()
     {
@@ -140,15 +81,61 @@ class Box extends BaseClass
     }
 
     /**
-     * @param mixed $descripcion
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return Box
      */
-    public function setDescripcion($descripcion)
+    public function setFechaCreacion($fechaCreacion)
     {
-        $this->descripcion = $descripcion;
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Set fechaActualizacion
+     *
+     * @param \DateTime $fechaActualizacion
+     *
+     * @return Box
+     */
+    public function setFechaActualizacion($fechaActualizacion)
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
+
+        return $this;
+    }
+
+    /**
+     * Add colaTurno
+     *
+     * @param \AdminBundle\Entity\ColaTurno $colaTurno
+     *
+     * @return Box
+     */
+    public function addColaTurno(\AdminBundle\Entity\ColaTurno $colaTurno)
+    {
+        $this->colaTurno[] = $colaTurno;
+
+        return $this;
+    }
+
+    /**
+     * Remove colaTurno
+     *
+     * @param \AdminBundle\Entity\ColaTurno $colaTurno
+     */
+    public function removeColaTurno(\AdminBundle\Entity\ColaTurno $colaTurno)
+    {
+        $this->colaTurno->removeElement($colaTurno);
+    }
+
+    /**
+     * Get colaTurno
+     *
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getColaTurno()
     {
@@ -156,15 +143,23 @@ class Box extends BaseClass
     }
 
     /**
-     * @param mixed $colaTurno
+     * Set sede
+     *
+     * @param \AdminBundle\Entity\Sede $sede
+     *
+     * @return Box
      */
-    public function setColaTurno($colaTurno)
+    public function setSede(\AdminBundle\Entity\Sede $sede = null)
     {
-        $this->colaTurno = $colaTurno;
+        $this->sede = $sede;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get sede
+     *
+     * @return \AdminBundle\Entity\Sede
      */
     public function getSede()
     {
@@ -172,12 +167,30 @@ class Box extends BaseClass
     }
 
     /**
-     * @param mixed $sede
+     * Set creadoPor
+     *
+     * @param \UserBundle\Entity\User $creadoPor
+     *
+     * @return Box
      */
-    public function setSede($sede)
+    public function setCreadoPor(\UserBundle\Entity\User $creadoPor = null)
     {
-        $this->sede = $sede;
+        $this->creadoPor = $creadoPor;
+
+        return $this;
     }
 
+    /**
+     * Set actualizadoPor
+     *
+     * @param \UserBundle\Entity\User $actualizadoPor
+     *
+     * @return Box
+     */
+    public function setActualizadoPor(\UserBundle\Entity\User $actualizadoPor = null)
+    {
+        $this->actualizadoPor = $actualizadoPor;
 
+        return $this;
+    }
 }
