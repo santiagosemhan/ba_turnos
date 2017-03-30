@@ -75,7 +75,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $slug;
 
     /**
-     * @ORM\OneToOne(targetEntity="SedeTipoTramite", mappedBy="tipoTramite")
+     * @ORM\OneToMany(targetEntity="SedeTipoTramite", mappedBy="tipoTramite")
      */
     private $sedeTipoTramite;
 

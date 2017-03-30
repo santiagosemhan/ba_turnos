@@ -39,7 +39,7 @@ class Sede extends BaseClass
     private $ultimoTurno;
 
     /**
-     * @ORM\OneToOne(targetEntity="SedeTipoTramite", mappedBy="sede")
+     * @ORM\OneToMany(targetEntity="SedeTipoTramite", mappedBy="sede")
      */
     private $sedeTipoTramite;
 
