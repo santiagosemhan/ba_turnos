@@ -6,22 +6,31 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="sede_tipo_tramite")
+ * @ORM\Table(
+ *     name="sede_tipo_tramite"
+ * )
  * @ORM\Entity(repositoryClass="AdminBundle\Repository\SedeTipoTramiteRepository")
+ *
  */
 class SedeTipoTramite extends BaseClass
 {
+
     /**
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Sede", inversedBy="sedeTipoTramite")
-     * @ORM\JoinColumn(name="sede_id", referencedColumnName="id", nullable=false, unique=true)
+     * @ORM\Column(name="id",type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Sede", inversedBy="sedeTipoTramite")
+     * @ORM\JoinColumn(name="sede_id", referencedColumnName="id",nullable=true)
      */
     private $sede;
 
     /**
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TipoTramite", inversedBy="sedeTipoTramite")
-     * @ORM\JoinColumn(name="tipo_tramite_id", referencedColumnName="id", unique=true)
+     * @ORM\ManyToOne(targetEntity="TipoTramite", inversedBy="sedeTipoTramite")
+     * @ORM\JoinColumn(name="tipo_tramite_id", referencedColumnName="id",nullable=true)
      */
     private $tipoTramite;
 
