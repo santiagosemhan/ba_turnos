@@ -35,7 +35,7 @@ class Login extends BaseClass
     private $nombrePc;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Sede", inversedBy="Login")
+     * @ORM\ManyToOne(targetEntity="Sede", inversedBy="login")
      * @ORM\JoinColumn(name="sede_id", referencedColumnName="id")
      */
     private $sede;
