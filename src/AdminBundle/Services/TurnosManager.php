@@ -11,10 +11,12 @@ class TurnosManager
 {
 
     private $em;
+    private $disponibilidad;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad)
     {
         $this->em = $em;
+        $this->disponibilidad = $disponibilidad;
     }
 
     /**
@@ -760,6 +762,44 @@ class TurnosManager
             }
         }
         return $letra;
+    }
+
+    public function guardarTurno($turno){
+        //Controlo Disponibilidad
+        if($this->checkDatos($turno)) {
+            if($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(),$turno->getHoraTurno(),$turno->getSede()->getId())){
+                $this->em->getConnection()->beginTransaction(); // suspend auto-commit
+                try {
+                    $turno->setViaMostrador(false);
+                    $turno->setNumero( $this->get('manager.turnos')->obtenerProximoTurnoSede($turno->getSede()->getId()) );
+                    $this->em = $this->getDoctrine()->getManager();
+                    $this->em->persist($turno);
+                    $this->em->flush();
+
+                    $this->em->getConnection()->commit();
+                } catch (Exception $e) {
+                    $this->em->getConnection()->rollBack();
+                    throw $e;
+                }
+            }
+        }else{
+            throw $this->createNotFoundException('No se encuentra con la disponiblidad');
+        }
+        //OK
+        return $turno;
+    }
+
+    private function checkDatos($turno){
+        //Controlo la sede
+        $sede = $this->em->getRepository('AdminBundle:Sede')->findBy('id',$turno->getSede()->getId());
+        if(is_null($sede)){
+            throw $this->createNotFoundException('No se encuentra la sede');
+        }
+        $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findBy('id',$turno->getTipoTramite()->getId());
+        if(is_null($tipoTramite)){
+            throw $this->createNotFoundException('No se encuentra el tipo de tramite');
+        }
+
     }
 
 }
