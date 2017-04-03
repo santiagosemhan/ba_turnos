@@ -76,8 +76,16 @@ class DisponibilidadManager
                 ->where('ts.sede = :sedeId')->setParameter('sedeId', $sedeId);
             $turnosSede = $repositoryTS->getQuery()->getResult();
             $turnosDelMes = array();
+            $existeTipoTramiteSede = false;
             foreach ($turnosSede as $turnoSede) {
                 $turnosDelMes = $this->getCantidadDiaTurno($tipoTurnoId,$turnoSede,$turnosDelMes,$diaRecorrido,$ultimoDiaMes,$mes,$anio);
+                if(count($turnoSede->getTurnoTramite())>0){
+                    foreach ($turnoSede->getTurnoTramite() as $tipoTramiteTurno){
+                        if($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId){
+                            $existeTipoTramiteSede = true;
+                        }
+                    }
+                }
             }
 
             //Busco y Resto por día los turnos  dados
@@ -85,15 +93,8 @@ class DisponibilidadManager
                 ->where('p.sede = :sedeId')->setParameter('sedeId', $sedeId)
                 ->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
                 ->setParameter('fecha_turno_desde', $primerDia)->setParameter('fecha_turno_hasta', $ultimoDia);
-            $existe = false;
-            if(count($turnoSede->getTurnoTramite())>0){
-                foreach ($turnoSede->getTurnoTramite() as $tipoTramiteTurno){
-                    if($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId){
-                        $existe = true;
-                    }
-                }
-            }
-            if($existe){
+
+            if($existeTipoTramiteSede){
                 $repositoryT->andWhere('p.tipoTramite = :tipo_tramite')->setParameter('tipo_tramite', $tipoTurnoId);
             }
             $turnos = $repositoryT->getQuery()->getResult();
