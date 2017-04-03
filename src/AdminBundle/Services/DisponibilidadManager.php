@@ -289,12 +289,21 @@ class DisponibilidadManager
             $turnosSede = $repositoryTS->getQuery()->getResult();
 
             $turnosDeldia = array();
+            $existe = false;
             foreach ($turnosSede as $turnoSede) {
                 $diaActual = false;
                 if (intval(date('d')) == $dia) {
                     $diaActual = true;
                 }
                 $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
+
+                if(count($turnoSede->getTurnoTramite())>0){
+                    foreach ($turnoSede->getTurnoTramite() as $tipoTramiteTurno){
+                        if($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId){
+                            $existe = true;
+                        }
+                    }
+                }
             }
 
             //Busca los turnos reservados
@@ -302,14 +311,8 @@ class DisponibilidadManager
                 ->where('p.sede = :sedeId')->setParameter('sedeId', $sedeId)
                 ->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
                 ->setParameter('fecha_turno_desde', $diaDesde)->setParameter('fecha_turno_hasta', $diaHasta);
-            $existe = false;
-            if(count($turnoSede->getTurnoTramite())>0){
-                foreach ($turnoSede->getTurnoTramite() as $tipoTramiteTurno){
-                    if($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId){
-                        $existe = true;
-                    }
-                }
-            }
+
+
             if($existe){
                 $repositoryT->andWhere('p.tipoTramite = :tipo_tramite')->setParameter('tipo_tramite', $tipoTurnoId);
             }
@@ -418,18 +421,13 @@ class DisponibilidadManager
                 }
             }
         }
+
         if(count($cantidadDiaTurno)>0) {
-            foreach ($cantidadDiaTurno as $clave => $valor) {
-                if(isset($cantidadDiaTurno[$clave])){
-                    if(isset($turnosHora[$clave])) {
-                        $cantidadDiaTurno[$clave] = $valor + $turnosHora[$clave];
-                    }else {
-                        $cantidadDiaTurno[$clave] = $valor;
-                    }
-                }else{
-                    if(isset($turnosHora[$clave])) {
-                        $cantidadDiaTurno[$clave] = $turnosHora[$clave];
-                    }
+            foreach ($turnosHora as $clave => $valor) {
+                if(isset($turnosHora[$clave])) {
+                    $cantidadDiaTurno[$clave] = $valor + $turnosHora[$clave];
+                }else {
+                    $cantidadDiaTurno[$clave] = $valor;
                 }
             }
         }else{
@@ -475,7 +473,8 @@ class DisponibilidadManager
 
     public function controlaDisponibilidad($fechaTurno,$horaTurno,$tipoTurnoId,$sedeId){
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId);
-        if(isset($array[$horaTurno->fomat('H:i')])){
+        $array = $array['horasHabiles'];
+        if(in_array ($horaTurno->fomat('H:i'),$array)){
             return true;
         }else{
             return false;
