@@ -38,7 +38,7 @@ class DisponibilidadManager
         $cont = 0;
         $array = array();
         while($cont < 7){
-            $array[$anio][$mes] = $this->getDiasDisponiblesMes($mes,$anio,$tipoTurnoId,$sedeId);
+            $array = $this->getDiasDisponiblesMes($mes,$anio,$tipoTurnoId,$sedeId,$array);
             if($mes<12){
                 $mes++;
             }else{
@@ -50,7 +50,7 @@ class DisponibilidadManager
         return $array;
     }
 
-    public function getDiasDisponiblesMes($mes,$anio,$tipoTurnoId,$sedeId){
+    public function getDiasDisponiblesMes($mes,$anio,$tipoTurnoId,$sedeId,$array){
         $diaRecorrido = 1;
         $diaHabil =array();
         $turnosDelMes = array();
@@ -110,10 +110,10 @@ class DisponibilidadManager
             while ($iterator <= $ultimoDiaMes) {
                 if (isset($turnosDelMes[$iterator])) {
                     if ($turnosDelMes[$iterator] == 0) {
-                        $diaHabil[] = $iterator;
+                        $array[] = array('anio' => $anio,'mes'=>$mes,'dia'=> $iterator);
                     }
                 }else{
-                    $diaHabil[] = $iterator;
+                    $array[] = array('anio' => $anio,'mes'=>$mes,'dia'=> $iterator);
                 }
                 $iterator++;
             }
@@ -126,19 +126,18 @@ class DisponibilidadManager
             foreach ($feriados as $feriado){
                 if(is_null($feriado->getSede())){
                     if(!in_array($feriado->getFecha()->format('d'), $diaHabil)){
-                        $diaHabil[] = intval($feriado->getFecha()->format('d'));
+                        $array[] = array('anio' => $anio,'mes'=>$mes,'dia'=> intval($feriado->getFecha()->format('d')));
                     }
                 }else{
                     if($feriado->getSede()->getId()== $sedeId){
                         if(!in_array($feriado->getFecha()->format('d'), $diaHabil)){
-                            $diaHabil[] = intval($feriado->getFecha()->format('d'));
+                            $array[] = array('anio' => $anio,'mes'=>$mes,'dia'=> intval($feriado->getFecha()->format('d')));
                         }
                     }
                 }
             }
         }
-        //$diaHabil = array( $mes => $diaHabil);
-        return $diaHabil;
+        return $array;
 
     }
 
