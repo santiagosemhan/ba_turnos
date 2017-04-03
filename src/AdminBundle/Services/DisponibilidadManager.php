@@ -28,7 +28,13 @@ class DisponibilidadManager
      *
      * @return array
      */
-    public function getDiasDisponibles($mes,$anio,$tipoTurnoId,$sedeId){
+    public function getDiasNoDisponibles($tipoTurnoId,$sedeId,$mes=null,$anio=null){
+        if(is_null($mes)){
+            $mes = intval(date('m'));
+        }
+        if(is_null($anio)){
+            $anio = intval(date('Y'));
+        }
         $cont = 0;
         $array = array();
         while($cont < 7){
