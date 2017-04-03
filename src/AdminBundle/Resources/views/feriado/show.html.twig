@@ -1,0 +1,49 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Feriado' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                    <td>{{ feriado.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha</th>
+                                    <td>{% if feriado.fecha %}{{ feriado.fecha|date('d-m-Y') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Repiteanio</th>
+                                    <td>{% if feriado.repiteAnio %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Activo</th>
+                                    <td>{% if feriado.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fechacreacion</th>
+                                    <td>{% if feriado.fechaCreacion %}{{ feriado.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fechaactualizacion</th>
+                                    <td>{% if feriado.fechaActualizacion %}{{ feriado.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="box-footer">
+                        <a class="btn btn-success" href="{{ path('feriado_edit', { 'id': feriado.id }) }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ path('feriado_index') }}"> Volver al Listado</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

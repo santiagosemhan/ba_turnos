@@ -1,0 +1,24 @@
+feriado_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:Feriado:index" }
+    methods:  GET
+
+feriado_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:Feriado:show" }
+    methods:  GET
+
+feriado_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:Feriado:new" }
+    methods:  [GET, POST]
+
+feriado_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:Feriado:edit" }
+    methods:  [GET, POST]
+
+feriado_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:Feriado:delete" }
+    methods:  DELETE

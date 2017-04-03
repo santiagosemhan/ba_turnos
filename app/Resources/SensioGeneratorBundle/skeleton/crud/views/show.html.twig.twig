@@ -1,0 +1,64 @@
+{% block extends %}
+    {{ "{% extends 'admin_base.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+    {{ "{% set __title = '" ~  entity   ~ "' %}" }}
+
+    {{ "{% block content %}" }}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table">
+                        <tbody>
+                        {%- for field, metadata in fields %}
+
+                            <tr>
+                                <th>{{ field|capitalize }}</th>
+
+                                {%- if metadata.type in ['datetime'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'d-m-Y H:i:s\') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['date'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'d-m-Y\') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['time'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['array'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['boolean'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}' }}</td>
+
+                                {%- else %}
+
+                                    <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+
+                                {%- endif %}
+
+                            </tr>
+
+                        {%- endfor %}
+
+                        </tbody>
+                    </table>
+
+                    <div class="box-footer">
+                        <a class="btn btn-success" href="{{ "{{ path('" ~ route_name_prefix ~ "_edit', { 'id': " ~ entity_singularized ~ ".id }) }}"  }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ "{{ path('" ~  route_name_prefix   ~ "_index') }}" }}"> Volver al Listado</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ "{% endblock %}" }}
+{% endblock body %}

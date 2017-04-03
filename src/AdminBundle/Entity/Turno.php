@@ -119,10 +119,10 @@ class Turno extends BaseClass
     private $cancelacionMasiva;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="turno")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="turnoConfirmacion")
      * @ORM\JoinColumn(name="usuario_confirmacion", referencedColumnName="id")
      */
-    private $userioConfirmacion;
+    private $usuarioConfirmacion;
     /**
      * Constructor
      */
@@ -599,27 +599,27 @@ class Turno extends BaseClass
     }
 
     /**
-     * Set userioConfirmacion
+     * Set usuarioConfirmacion
      *
      * @param \UserBundle\Entity\User $userioConfirmacion
      *
      * @return Turno
      */
-    public function setUserioConfirmacion(\UserBundle\Entity\User $userioConfirmacion = null)
+    public function setUsuarioConfirmacion(\UserBundle\Entity\User $usuarioConfirmacion = null)
     {
-        $this->userioConfirmacion = $userioConfirmacion;
+        $this->usuarioConfirmacion = $usuarioConfirmacion;
 
         return $this;
     }
 
     /**
-     * Get userioConfirmacion
+     * Get usuarioConfirmacion
      *
      * @return \UserBundle\Entity\User
      */
-    public function getUserioConfirmacion()
+    public function getUsuarioConfirmacion()
     {
-        return $this->userioConfirmacion;
+        return $this->usuarioConfirmacion;
     }
 
     /**
@@ -729,10 +729,19 @@ class Turno extends BaseClass
         }
 
         if(count($this->getColaTurno())>0){
-            if($this->viaMostrador) {
-                $estado = 'Atendidos Sin Turnos';
+            $cola=$this->getColaTurno();
+            if($cola[0]->getAtendido()) {
+                if ($this->viaMostrador) {
+                    $estado = 'Atendido Sin Turnos';
+                } else {
+                    $estado = 'Atendido Con Turnos';
+                }
             }else{
-                $estado = 'Atendidos Con Turnos';
+                if($this->viaMostrador) {
+                    $estado = 'Corfirmado Sin Turnos';
+                }else{
+                    $estado = 'Corfirmado Con Turnos';
+                }
             }
         }
 
@@ -760,5 +769,20 @@ class Turno extends BaseClass
      */
     public function getHoraTurnoString(){
         return $this->getHoraTurno()->format("H:i");
+    }
+
+    /**
+     * get Turno Box
+     *
+     * @return string
+     */
+    public function getTurnoBox()
+    {
+        $cola = $this->getColaTurno();
+        if (count($cola) > 0) {
+            return $cola[0]->getLetra().'-'.sprintf("%02d", $cola[0]->getNumero());
+        }else {
+            return "El turno no fue confirmado";
+        }
     }
 }

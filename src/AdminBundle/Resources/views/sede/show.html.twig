@@ -1,0 +1,57 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Sede' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                    <td>{{ sede.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Sede</th>
+                                    <td>{{ sede.sede }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dirección</th>
+                                    <td>{{ sede.direccion }}</td>
+                            </tr>
+                            <tr>
+                                <th>Letra</th>
+                                    <td>{{ sede.letra }}</td>
+                            </tr>
+                            <tr>
+                                <th>Ultimo Turno</th>
+                                    <td>{{ sede.ultimoTurno }}</td>
+                            </tr>
+                            <tr>
+                                <th>Activo</th>
+                                    <td>{% if sede.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha Creación</th>
+                                    <td>{% if sede.fechaCreacion %}{{ sede.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha actualización</th>
+                                    <td>{% if sede.fechaActualizacion %}{{ sede.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="box-footer">
+                        <a class="btn btn-success" href="{{ path('sede_edit', { 'id': sede.id }) }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ path('sede_index') }}"> Volver al Listado</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

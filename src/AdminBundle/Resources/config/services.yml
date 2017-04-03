@@ -10,3 +10,7 @@ services:
     manager.usuario:
         class:        AdminBundle\Services\UsuarioManager
         autowire: true
+
+    manager.util:
+        class:        AdminBundle\Services\UtilManager
+        autowire: true

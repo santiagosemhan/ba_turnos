@@ -1,0 +1,24 @@
+sede_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:Sede:index" }
+    methods:  GET
+
+sede_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:Sede:show" }
+    methods:  GET
+
+sede_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:Sede:new" }
+    methods:  [GET, POST]
+
+sede_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:Sede:edit" }
+    methods:  [GET, POST]
+
+sede_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:Sede:delete" }
+    methods:  DELETE

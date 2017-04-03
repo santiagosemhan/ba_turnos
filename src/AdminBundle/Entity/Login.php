@@ -41,10 +41,10 @@ class Login extends BaseClass
     private $sede;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="Login")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="login")
      * @ORM\JoinColumn(name="usuario", referencedColumnName="id")
      */
-    private $userio;
+    private $usuario;
 
     /**
      * Get id
@@ -187,9 +187,9 @@ class Login extends BaseClass
      *
      * @return Login
      */
-    public function setUserio(\UserBundle\Entity\User $userio = null)
+    public function setUsuario(\UserBundle\Entity\User $usuario= null)
     {
-        $this->userio = $userio;
+        $this->usuario = $usuario;
 
         return $this;
     }
@@ -199,9 +199,9 @@ class Login extends BaseClass
      *
      * @return \UserBundle\Entity\User
      */
-    public function getUserio()
+    public function getUsuario()
     {
-        return $this->userio;
+        return $this->usuario;
     }
 
     /**

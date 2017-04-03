@@ -13,15 +13,21 @@ class UsuarioSede extends BaseClass
 {
     /**
      * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Sede", inversedBy="usuarioSede")
      * @ORM\JoinColumn(name="sede_id", referencedColumnName="id")
      */
     private $sede;
 
     /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="usuarioSede")
-     * @ORM\JoinColumn(name="usuario", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="UserBundle\Entity\User", inversedBy="usuarioSede",cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     *
      */
     private $usuario;
 
@@ -156,5 +162,15 @@ class UsuarioSede extends BaseClass
     public function getUsuario()
     {
         return $this->usuario;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

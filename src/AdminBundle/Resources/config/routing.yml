@@ -1,3 +1,32 @@
 admin_homepage:
     path:     /
     defaults: { _controller: AdminBundle:Default:index }
+    methods: [GET,POST]
+
+app_sede:
+        resource: "@AdminBundle/Resources/config/routing/sede.yml"
+        prefix:   /sede
+
+app_box:
+        resource: "@AdminBundle/Resources/config/routing/box.yml"
+        prefix:   /box
+
+app_tipo_tramite:
+        resource: "@AdminBundle/Resources/config/routing/tipotramite.yml"
+        prefix:   /tipo-tramite
+
+app_turno:
+        resource: "@AdminBundle/Resources/config/routing/turno.yml"
+        prefix:   /turno
+
+app_sede_usuario:
+        resource: "@AdminBundle/Resources/config/routing/usuariosede.yml"
+        prefix:   /sede-usuario
+
+app_sede_feriado:
+        resource: "@AdminBundle/Resources/config/routing/feriado.yml"
+        prefix:   /feriado
+
+app_sede_turnos_sede:
+        resource: "@AdminBundle/Resources/config/routing/turnossede.yml"
+        prefix:   /turnos-sede

@@ -135,11 +135,16 @@ class TurnosManager
      * @return integer
      */
     public function getCantidad($sedeId,$fecha){
-        $repository = $this->em->getRepository('AdminBundle:Turno','p')->createQueryBuilder('p');
-        $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
-        $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
-        $repository->orderBy('p.horaTurno', 'ASC');
-        return  count($repository->getQuery()->getResult());
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+        $query =  $this->em->createQuery(
+            'SELECT count(t.id) cant
+                FROM AdminBundle:Turno t
+                WHERE t.sede = :sedeId AND (t.fechaTurno BETWEEN :desde AND :hasta)'
+        )->setParameter('desde',$fecha.' 00:00:00')
+            ->setParameter('hasta',$fecha.' 23:59:59')
+            ->setParameter('sedeId', $sedeId);
+        $cantidad = $query->getResult();
+        return  $cantidad[0]['cant'];
     }
 
     /**
@@ -151,12 +156,16 @@ class TurnosManager
      * @return integer
      */
     public function getCantidadConfirmados($sedeId,$fecha){
-        $repository = $this->em->getRepository('AdminBundle:Turno','p')->createQueryBuilder('p');
-        $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
-        $repository->andWhere('p.fechaConfirmacion IS NOT NULL');
-        $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
-        $repository->orderBy('p.horaTurno', 'ASC');
-        return  count($repository->getQuery()->getResult());
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+        $query =  $this->em->createQuery(
+                'SELECT count(t.id) cant
+                FROM AdminBundle:Turno t
+                WHERE t.sede = :sedeId AND t.fechaConfirmacion IS NOT NULL AND (t.fechaTurno BETWEEN :desde AND :hasta)'
+        )->setParameter('desde',$fecha.' 00:00:00')
+        ->setParameter('hasta',$fecha.' 23:59:59')
+        ->setParameter('sedeId', $sedeId);
+        $cantidad = $query->getResult();
+        return  $cantidad[0]['cant'];
     }
 
 
@@ -169,12 +178,16 @@ class TurnosManager
      * @return integer
      */
     public function getCantidadSinTurnos($sedeId,$fecha){
-        $repository = $this->em->getRepository('AdminBundle:Turno','p')->createQueryBuilder('p');
-        $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
-        $repository->andWhere('p.viaMostrador = true');
-        $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
-        $repository->orderBy('p.horaTurno', 'ASC');
-        return  count($repository->getQuery()->getResult());
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+        $query =  $this->em->createQuery(
+            'SELECT count(t.id) cant
+                FROM AdminBundle:Turno t
+                WHERE t.sede = :sedeId AND t.viaMostrador = true AND (t.fechaTurno BETWEEN :desde AND :hasta)'
+        )->setParameter('desde',$fecha.' 00:00:00')
+            ->setParameter('hasta',$fecha.' 23:59:59')
+            ->setParameter('sedeId', $sedeId);
+        $cantidad = $query->getResult();
+        return  $cantidad[0]['cant'];
     }
 
     /**
@@ -202,11 +215,15 @@ class TurnosManager
      *
      * @return integer
      */
-    public function obtenerNumeroTurnoSede($sedeId,$numeroTurno)
+    public function obtenerProximoTurnoSede($sedeId)
     {
         $repository = $this->em->getRepository('AdminBundle:Sede');
         $sede = $repository->findOneById($sedeId);
-        return $sede->getUltimoTurno();
+        $proximoNumero = $sede->getUltimoTurno()+1;
+        $sede->setUltimoTurno($proximoNumero);
+        $this->em->persist($sede);
+        $this->em->flush();
+        return $proximoNumero;
     }
 
     /**
@@ -219,15 +236,17 @@ class TurnosManager
      */
     public function confirmarTurno($turno,$user,$prioritario)
     {
-        $turno->getUserioConfirmacion($user);
+        $turno->setUsuarioConfirmacion($user);
         $turno->setFechaConfirmacion(new \DateTime("now"));
         $this->em->persist($turno);
         $this->em->flush();
 
         $cola = new ColaTurno();
-        $cola->setSede($this->get('manager.usuario')->getSede($user->getId()));
+        $cola->setSede($turno->getSede());
         $cola->setTurno($turno);
         $cola->setPrioritario($prioritario);
+        $cola->setAtendido(false);
+        $cola->setActivo(true);
         $cola->setFechaTurno(new \DateTime("now"));
 
         $fecha = date("Y/m/d");
@@ -240,13 +259,18 @@ class TurnosManager
             $repository->andWhere('p.prioritario = false');
         }
         $cantidad = count($repository->getQuery()->getResult());
-        $numero = $cantidad%100;
-        $cantidad = intdiv($cantidad,100);
-        if($resto = 99) {
-            $cantidad = $cantidad+1;
-            $numero = 1;
+        if($cantidad > 0) {
+            $numero = $cantidad % 100;
+            $cantidad = intdiv($cantidad, 100);
+            if ($resto = 99) {
+                $cantidad = $cantidad + 1;
+                $numero = 1;
+            } else {
+                $numero = $numero + 1;
+            }
         }else{
-            $numero = $numero+1;
+            $cantidad = 0;
+            $numero= 1;
         }
         $cola->setLetra($this->obtenerLetra($cantidad,$prioritario));
         $cola->setNumero($numero);

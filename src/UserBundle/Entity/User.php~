@@ -1,0 +1,82 @@
+<?php
+// src/AppBundle/Entity/User.php
+
+namespace UserBundle\Entity;
+
+use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity(repositoryClass="UserBundle\Repository\UserRepository")
+ * @UniqueEntity("email",errorPath="email",groups={"Registracion"})
+ * @UniqueEntity("username",errorPath="username",groups={"Registracion"})
+ * @ORM\Table(name="user")
+ */
+class User extends BaseUser
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var $usuarioSede
+     *
+     * @ORM\OneToOne(targetEntity="AdminBundle\Entity\UsuarioSede", mappedBy="usuario")
+     */
+    private $usuarioSede;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AdminBundle\Entity\Login", mappedBy="usuario")
+     */
+    private $login;
+
+    /**
+     * @ORM\OneToMany(targetEntity="UserBundle\Entity\User", mappedBy="usuarioConfirmacion")
+     */
+    private $turnoConfirmacion;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="AdminBundle\Entity\ColaTurno", mappedBy="usuarioAtendido")
+     */
+    private $colaTurnoAtendio;
+
+
+
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
+
+
+    /**
+     * Set usuarioSede
+     *
+     * @param \AdminBundle\Entity\UsuarioSede $usuarioSede
+     *
+     * @return User
+     */
+    public function setUsuarioSede(\AdminBundle\Entity\UsuarioSede $usuarioSede = null)
+    {
+        $this->usuarioSede = $usuarioSede;
+
+        return $this;
+    }
+
+    /**
+     * Get usuarioSede
+     *
+     * @return \AdminBundle\Entity\UsuarioSede
+     */
+    public function getUsuarioSede()
+    {
+        return $this->usuarioSede;
+    }
+}

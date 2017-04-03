@@ -1,0 +1,89 @@
+{% block extends %}
+    {{ "{% extends 'admin_base.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+    {{  "{% set __title = 'Listado de "~ entity_pluralized ~ "' %}" }}
+
+    {{ "{% block content %}" }}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            {%- for field, metadata in fields %}
+
+                                <th>{{ field|capitalize }}</th>
+
+                            {%- endfor %}
+
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
+                        <tr>
+
+                            {%- for field, metadata in fields %}
+                                {%- if loop.first and ('show' in actions) %}
+
+                                    <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
+
+                                {%- elseif metadata.type in ['datetime'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'d/m/Y H:i:s\') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['date'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'d/m/Y\') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['time'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['array'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
+
+                                {%- elseif metadata.type in ['boolean'] %}
+
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}' }}</td>
+
+                                {%- else %}
+
+                                    <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+
+                                {%- endif %}
+
+                                {%- if loop.last %}
+                                    <td>
+                                        <a title="Editar"   class="btn btn-default btn-sm" href="{{ "{{ path('" ~ route_name_prefix ~ "_edit', { 'id': " ~ entity_singularized ~ ".id }) }}"  }}"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a title="Eliminar" class="btn btn-danger  btn-sm delete-obj" data-id="{{ "{{ " ~ entity_singularized ~ ".id }}"}}" data-href="{{ "{{ path('" ~ route_name_prefix ~ "_delete', { 'id': " ~ entity_singularized ~ ".id }) }}"}}"> <i class="glyphicon glyphicon-remove-circle"></i></a>
+                                    </td>
+                                {%- endif %}
+                            {%- endfor %}
+
+                        </tr>
+                        {{ '{% endfor %}' }}
+                        </tbody>
+                    </table>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+            {{  "{{ knp_pagination_render("~entity_pluralized~") }}" }}
+
+        </div>
+    </div>
+
+    <div class="delete-obj-form hidden">
+        {{ "{{ form_start(delete_form) }}" }}
+        <input type="submit" value="Delete">
+        {{ "{{ form_end(delete_form) }}" }}
+    </div>
+
+    <a class="btn btn-success" href="{{ "{{ path('" ~  route_name_prefix  ~ "_new') }}" }}">Nuevo {{ entity_singularized }}</a>
+
+    {{ "{% endblock %}" }}
+{% endblock body %}
+

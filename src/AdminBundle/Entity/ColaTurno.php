@@ -81,10 +81,10 @@ class ColaTurno extends BaseClass
     private $sede;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="colaTurno")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="colaTurnoAtendio")
      * @ORM\JoinColumn(name="usuario_atendido", referencedColumnName="id")
      */
-    private $userioAtendido;
+    private $usuarioAtendido;
 
     /**
      * Get id
@@ -389,27 +389,27 @@ class ColaTurno extends BaseClass
     }
 
     /**
-     * Set userioAtendido
+     * Set usuarioAtendido
      *
      * @param \UserBundle\Entity\User $userioAtendido
      *
      * @return ColaTurno
      */
-    public function setUserioAtendido(\UserBundle\Entity\User $userioAtendido = null)
+    public function setUsuarioAtendido(\UserBundle\Entity\User $usuarioAtendido = null)
     {
-        $this->userioAtendido = $userioAtendido;
+        $this->usuarioAtendido = $usuarioAtendido;
 
         return $this;
     }
 
     /**
-     * Get userioAtendido
+     * Get usuarioAtendido
      *
      * @return \UserBundle\Entity\User
      */
-    public function getUserioAtendido()
+    public function getUsuarioAtendido()
     {
-        return $this->userioAtendido;
+        return $this->usuarioAtendido;
     }
 
     /**

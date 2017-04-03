@@ -1,0 +1,24 @@
+usuariosede_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:UsuarioSede:index" }
+    methods:  GET
+
+usuariosede_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:UsuarioSede:show" }
+    methods:  GET
+
+usuariosede_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:UsuarioSede:new" }
+    methods:  [GET, POST]
+
+usuariosede_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:UsuarioSede:edit" }
+    methods:  [GET, POST]
+
+usuariosede_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:UsuarioSede:delete" }
+    methods:  DELETE

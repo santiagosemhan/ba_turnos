@@ -1,0 +1,24 @@
+tipotramite_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:TipoTramite:index" }
+    methods:  GET
+
+tipotramite_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:TipoTramite:show" }
+    methods:  GET
+
+tipotramite_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:TipoTramite:new" }
+    methods:  [GET, POST]
+
+tipotramite_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:TipoTramite:edit" }
+    methods:  [GET, POST]
+
+tipotramite_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:TipoTramite:delete" }
+    methods:  DELETE

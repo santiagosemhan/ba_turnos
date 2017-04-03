@@ -1,0 +1,45 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Box' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                    <td>{{ box.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Descripción</th>
+                                    <td>{{ box.descripcion }}</td>
+                            </tr>
+                            <tr>
+                                <th>Activo</th>
+                                    <td>{% if box.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha Creación</th>
+                                    <td>{% if box.fechaCreacion %}{{ box.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha Actualización</th>
+                                    <td>{% if box.fechaActualizacion %}{{ box.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="box-footer">
+                        <a class="btn btn-success" href="{{ path('box_edit', { 'id': box.id }) }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ path('box_index') }}"> Volver al Listado</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

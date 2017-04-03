@@ -1,3 +1,8 @@
 user_homepage:
     path:     /
     defaults: { _controller: UserBundle:Default:index }
+
+
+cambiar-password:
+    path:     /cambiar-password
+    defaults: { _controller: UserBundle:CambiarPassword:cambiarPassword }

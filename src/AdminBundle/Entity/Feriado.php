@@ -19,7 +19,7 @@ class Feriado extends BaseClass
     private $id;
 
     /**
-     * @ORM\Column(name="fecha",type="date", nullable=true)
+     * @ORM\Column(name="fecha",type="datetime", nullable=true)
      */
     private $fecha;
 

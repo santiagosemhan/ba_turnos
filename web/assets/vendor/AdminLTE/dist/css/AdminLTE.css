@@ -1,3 +1,4 @@
+
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
 /*!
  *   AdminLTE v2.3.8
@@ -95,7 +96,7 @@ body {
 .content-wrapper,
 .right-side {
   min-height: 100%;
-  background-color: #ecf0f5;
+  background-color: #e8e8e8;
   z-index: 800;
 }
 .main-footer {
@@ -1095,7 +1096,7 @@ a:focus {
   border-bottom-left-radius: 4px;
 }
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
-  height: 175px;
+  height: 70px;
   padding: 10px;
   text-align: center;
 }

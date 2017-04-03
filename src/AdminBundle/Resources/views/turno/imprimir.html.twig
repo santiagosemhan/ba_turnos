@@ -1,0 +1,27 @@
+{% extends 'print_base_html.twig' %}
+
+{% set __title = 'Ministerio de Educación' %}
+{% set __descripcion_opcional = sede  %}
+{% set __impresion = fechaImpresion  %}
+
+{% block content %}
+
+<div class="col-xs-12">
+    <div class="row">
+        <p class="lead text-center">Usted será atendido con el número</p>
+    </div>
+    <div class="row">
+        <p class="text-center" style="font-size: 80px;">{{ turno.turnoBox }}</p>
+    </div>
+    <div class="row">
+        <p class="text-center" style="font-size: 20px;">{{ turno.tipoTramite }}</p>
+    </div>
+    <br>
+    <div class="row">
+        <p class="lead text-center">Por favor, conserve su ticket</p>
+    </div>
+</div>
+
+
+{% endblock %}
+

@@ -1,0 +1,30 @@
+turno_administrar:
+    path:     /
+    defaults: { _controller: "AdminBundle:Turno:administrar" }
+    methods:  [GET, POST]
+
+turno_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:Turno:show" }
+    methods:  GET
+
+turno_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:Turno:new" }
+    methods:  [GET, POST]
+
+turno_new_prioritario:
+    path:     /new-prioritario
+    defaults: { _controller: "AdminBundle:Turno:newPrioritario" }
+    methods:  [GET, POST]
+
+turno_confirmar:
+    path:     /{id}/confirmar
+    defaults: { _controller: "AdminBundle:Turno:confirmarTurno" }
+    methods:  [GET, POST]
+
+turno_imprimir:
+    path:     /{id}/imprimir
+    defaults: { _controller: "AdminBundle:Turno:imprimir" }
+    methods:  GET
+

@@ -49,12 +49,12 @@ class TurnosSede extends BaseClass
     private $sabado;
 
     /**
-     * @ORM\Column(name="hora_turnos_desde",type="string", nullable=true)
+     * @ORM\Column(name="hora_turnos_desde",type="time", nullable=true)
      */
     private $horaTurnosDesde;
 
     /**
-     * @ORM\Column(name="hora_turnos_hasta",type="string", nullable=true)
+     * @ORM\Column(name="hora_turnos_hasta",type="time", nullable=true)
      */
     private $horaTurnosHasta;
 
@@ -69,17 +69,18 @@ class TurnosSede extends BaseClass
     private $cantidadFrecuencia;
 
     /**
-     * @ORM\Column(name="frecuncia_turno_control",type="integer", nullable=true)
+     * @ORM\Column(name="frecuncia_turno_control",type="string", nullable=true)
      */
     private $frecunciaTurnoControl;
 
+
     /**
-     * @ORM\Column(name="vigencia_desde",type="date", nullable=true)
+     * @ORM\Column(name="vigencia_desde",type="datetime", nullable=true)
      */
     private $vigenciaDesde;
 
     /**
-     * @ORM\Column(name="vigencia_hasta",type="date", nullable=true)
+     * @ORM\Column(name="vigencia_hasta",type="datetime", nullable=true)
      */
     private $vigenciaHasta;
 
@@ -276,7 +277,25 @@ class TurnosSede extends BaseClass
      */
     public function getHoraTurnosDesde()
     {
-        return $this->horaTurnosDesde;
+        if ($this->horaTurnosDesde) {
+            if(is_string ($this->horaTurnosDesde)){
+                return $this->horaTurnosDesde;
+            }else {
+                return $this->horaTurnosDesde->format('H:i A');
+            }
+        }else{
+            return $this->horaTurnosDesde;
+        }
+    }
+
+    /**
+     * Get HoraTurnosDesde Sin Formato
+     *
+     * @return \DateTime
+     */
+    public function getHoraTurnosDesdeSinFormato()
+    {
+       return $this->horaTurnosDesde;
     }
 
     /**
@@ -299,6 +318,24 @@ class TurnosSede extends BaseClass
      * @return string
      */
     public function getHoraTurnosHasta()
+    {
+        if ($this->horaTurnosHasta) {
+            if(is_string ($this->horaTurnosHasta)){
+                return $this->horaTurnosHasta;
+            }else {
+                return $this->horaTurnosHasta->format('H:i A');
+            }
+        }else{
+            return $this->horaTurnosHasta;
+        }
+    }
+
+    /**
+     * Get HoraTurnosHasta Sin Formato
+     *
+     * @return \DateTime
+     */
+    public function getHoraTurnosHastaSinFormato()
     {
         return $this->horaTurnosHasta;
     }
@@ -396,7 +433,26 @@ class TurnosSede extends BaseClass
      */
     public function getVigenciaDesde()
     {
+        if ($this->vigenciaDesde) {
+            if(is_string ($this->vigenciaDesde)){
+                return $this->vigenciaDesde;
+            }else {
+                return $this->vigenciaDesde->format('d/m/Y');
+            }
+        }else{
+            return $this->vigenciaDesde;
+        }
+    }
+
+    /**
+     * Get vigenciaDesde
+     *
+     * @return \DateTime
+     */
+    public function getVigenciaDesdeDateTime()
+    {
         return $this->vigenciaDesde;
+
     }
 
     /**
@@ -420,7 +476,26 @@ class TurnosSede extends BaseClass
      */
     public function getVigenciaHasta()
     {
+        if ($this->vigenciaHasta) {
+            if(is_string ($this->vigenciaHasta)){
+                return $this->vigenciaHasta;
+            }else {
+                return $this->vigenciaHasta->format('d/m/Y');
+            }
+        }else{
+            return $this->vigenciaHasta;
+        }
+    }
+
+    /**
+     * Get vigenciaDesde
+     *
+     * @return \DateTime
+     */
+    public function getVigenciaHastaDateTime()
+    {
         return $this->vigenciaHasta;
+
     }
 
     /**
@@ -535,5 +610,28 @@ class TurnosSede extends BaseClass
         $this->actualizadoPor = $actualizadoPor;
 
         return $this;
+    }
+
+    public function getDiasAtiende(){
+        $string = '';
+        if($this->getLunes()){
+            $string = 'Lu ';
+        }
+        if($this->getMartes()){
+            $string = $string.'Ma ';
+        }
+        if($this->getMiercoles()){
+            $string = $string.'Mi ';
+        }
+        if($this->getJueves()){
+            $string = $string.'Ju ';
+        }
+        if($this->getViernes()){
+            $string = $string.'Vi ';
+        }
+        if($this->getSabado()){
+            $string = $string.'Sa ';
+        }
+        return $string;
     }
 }

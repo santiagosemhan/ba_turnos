@@ -1,0 +1,50 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Listado de Usuarios por Sedes' %}
+
+    {% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                                <th>Id</th>
+                                <th>Activo</th>
+                                <th>Sede</th>
+                                <th>Usuario</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for usuarioSede in usuarioSedes %}
+                        <tr>
+                                    <td><a href="{{ path('usuariosede_show', { 'id': usuarioSede.id }) }}">{{ usuarioSede.id }}</a></td>
+                                    <td>{% if usuarioSede.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                                    <td>{% if usuarioSede.sede %}{{ usuarioSede.sede}}{% endif %}</td>
+                                    <td>{% if usuarioSede.usuario %}{{ usuarioSede.usuario}}{% endif %}</td>                                    <td>
+                                        <a title="Editar"   class="btn btn-default btn-sm" href="{{ path('usuariosede_edit', { 'id': usuarioSede.id }) }}"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a title="Eliminar" class="btn btn-danger  btn-sm delete-obj" data-id="{{ usuarioSede.id }}" data-href="{{ path('usuariosede_delete', { 'id': usuarioSede.id }) }}"> <i class="glyphicon glyphicon-remove-circle"></i></a>
+                                    </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+            {{ knp_pagination_render(usuarioSedes) }}
+
+        </div>
+    </div>
+
+    <div class="delete-obj-form hidden">
+        {{ form_start(delete_form) }}
+        <input type="submit" value="Delete">
+        {{ form_end(delete_form) }}
+    </div>
+
+    <a class="btn btn-success" href="{{ path('usuariosede_new') }}">Nuevo Usuario Sede</a>
+
+    {% endblock %}
+

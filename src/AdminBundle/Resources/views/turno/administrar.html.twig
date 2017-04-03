@@ -1,0 +1,395 @@
+{% extends 'admin_base.html.twig' %}
+
+{% set __title = 'Administración de Turnos' %}
+
+{% set __descripcion_opcional = sede %}
+
+{% block content %}
+
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <!-- small box -->
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="glyphicon glyphicon-file"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Turnos del día</span>
+                    <span class="info-box-number">{{ turnosDia }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <!-- small box -->
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Turnos Confirmados</span>
+                    <span class="info-box-number">{{ turnosConfirmados }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+        </div>
+        <!-- ./col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-light-blue "><i class="glyphicon glyphicon-info-sign"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Parametria:</span>
+                    <p class="info-box-text">{{ parametriaTurnos }}</p>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <!-- small box -->
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="glyphicon glyphicon-user"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Sin Turno</span>
+                    <span class="info-box-number">{{ sinTurno }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+
+    <!-- Filters-->
+    <div class="box box-success">
+
+        <div class="box-header with-border">
+            <h3 class="box-title">Filtros</h3>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                <div class = "col-md-12">
+                    {{ form_start(form, {'attr': {'class': 'form-admin'} }) }}
+
+                    <div class="col-lg-5">
+
+                        <div class="col-lg-6">
+
+
+                            <div class="bootstrap-timepicker">
+                                <div class="form-group">
+                                    <label>Hora Desde:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        {{ form_widget(form.horaDesde) }}
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <!-- /.form group -->
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="bootstrap-timepicker">
+                                <div class="form-group">
+                                    <label>Hora Hasta:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        {{ form_widget(form.horaHasta) }}
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <!-- /.form group -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Estados Turnos</label>
+                            {{ form_widget(form.estados) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tipo de Tramite</label>
+                            {{ form_widget(form.tipoTramite) }}
+                        </div>
+
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-1"></div>
+                    <div class="col-lg-5">
+
+                        <div class="form-group">
+                            <label>Date:</label>
+
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                {{ form_widget(form.fecha) }}
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+
+                        <div class="form-group">
+                            <label>CUIT</label>
+                            {{ form_widget(form.cuit) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nro. Turno</label>
+                            {{ form_widget(form.nroTurno) }}
+                        </div>
+
+                    </div>
+                        <!-- /.col -->
+                    <!-- /.col -->
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success pull-right">Filtrar</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.box-body -->
+
+    </div>
+    <!-- /.box -->
+
+
+    <!-- Data -->
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-header">
+                    <h3 class="box-title">Listado de Turnos</h3>
+                    <div class="box-tools pull-right">
+                        <a class="btn btn-warning" href="{{ path('turno_new') }}"> Agregar Turno</a>
+                        <a class="btn btn-warning" href="{{ path('turno_new_prioritario') }}"> Turno Prioritario <i class="fa fa-fw fa-star"></i></a>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Numero Turno</th>
+                            <th>Persona</th>
+                            <th>Hora de Turno</th>
+                            <th>Estado</th>
+                            <th>Tramite</th>
+                            <th>Acción</th>
+                        </tr>
+                        {% if paginationTurnos|length < 1 %}
+                        <tr>
+                            <td colspan="6"><p class="text-center"> Sin Datos.</p></td>
+                        </tr>
+                        {% endif %}
+                        {% for turno in paginationTurnos %}
+                        <tr>
+                            <td>{{ turno.numero }}</td>
+                            <td>{{ turno.nombreApellido }}</td>
+                            <td>{{ turno.HoraTurnoString }}</td>
+                            <td>
+                                {% if turno.estadoInformativo == 'Sin Corfirmar' %}
+                                    <span class="label label-primary">{{ turno.estadoInformativo }}</span>
+                                {% elseif turno.estadoInformativo == 'Corfirmado Sin Turnos' %}
+                                    <span class="label label-warning">{{ turno.estadoInformativo }}</span>
+                                {% elseif turno.estadoInformativo == 'Corfirmado Con Turnos' %}
+                                    <span class="label label-success">{{ turno.estadoInformativo }}</span>
+                                {% elseif turno.estadoInformativo == 'Atendidos Sin Turnos' %}
+                                    <span class="label label-warning">{{ turno.estadoInformativo }}</span>
+                                {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
+                                    <span class="label label-success">{{ turno.estadoInformativo }}</span>
+                                {% else %}
+                                    <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ turno.tipoTramite }}</td>
+                            <td> {% if turno.estadoInformativo == 'Sin Corfirmar' %}
+                                    <a class="btn btn-primary pull-left" href="{{ path('turno_show', { 'id': turno.id }) }}"> Confirmar</a>
+                                    <button type="submit" class="btn btn-danger pull-right">Cancelar</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+                {{ knp_pagination_render(paginationTurnos) }}
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+    <!-- List row -->
+    <div class="row">
+        <!-- Left col -->
+        <section class="col-lg-7 connectedSortable">
+            <!-- Confirm -->
+            <div class="box box-success">
+                <div class="box-header">
+                    <i class="ion ion-clipboard"></i>
+
+                    <h3 class="box-title">Turnos Confirmados no atendidos</h3>
+
+                    <div class="box-tools pull-right">
+                        {{ knp_pagination_render(turnosConfirmadosList) }}
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Numero Turno</th>
+                                <th>Persona</th>
+                                <th>Hora de Turno</th>
+                                <th>Estado</th>
+                                <th>Tramite</th>
+                            </tr>
+                            {% if turnosConfirmadosList|length < 1 %}
+                                <tr>
+                                    <td colspan="5"><p class="text-center"> Sin Datos.</p></td>
+                                </tr>
+                            {% endif %}
+                            {% for turno in turnosConfirmadosList %}
+                                <tr>
+                                    <td>{{ turno.numero }}</td>
+                                    <td>{{ turno.nombreApellido }}</td>
+                                    <td>{{ turno.HoraTurnoString }}</td>
+                                    <td>
+                                        {% if turno.estadoInformativo == 'Sin Corfirmar' %}
+                                            <span class="label label-primary">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Corfirmado Sin Turnos' %}
+                                            <span class="label label-warning">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Corfirmado Con Turnos' %}
+                                            <span class="label label-success">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Atendidos Sin Turnos' %}
+                                            <span class="label label-warning">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
+                                            <span class="label label-success">{{ turno.estadoInformativo }}</span>
+                                        {% else %}
+                                            <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ turno.tipoTramite }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!-- /.box -->
+        </section>
+        <!-- /.Left col -->
+
+        <!-- Right col-->
+        <section class="col-lg-5 connectedSortable">
+            <!-- Attend -->
+            <div class="box box-success">
+                <div class="box-header">
+                    <i class="ion ion-clipboard"></i>
+
+                    <h3 class="box-title">Turnos Atendidos</h3>
+
+
+                    <div class="box-tools pull-right">
+                        {{ knp_pagination_render(turnosAtendidosList) }}
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Numero Turno</th>
+                                <th>Persona</th>
+                                <th>Hora de Turno</th>
+                                <th>Estado</th>
+                                <th>Tramite</th>
+                            </tr>
+                            {% if turnosAtendidosList|length < 1 %}
+                                <tr>
+                                    <td colspan="5"><p class="text-center"> Sin Datos.</p></td>
+                                </tr>
+                            {% endif %}
+                            {% for turno in turnosAtendidosList %}
+                                <tr>
+                                    <td>{{ turno.numero }}</td>
+                                    <td>{{ turno.nombreApellido }}</td>
+                                    <td>{{ turno.HoraTurnoString }}</td>
+                                    <td>
+                                        {% if turno.estadoInformativo == 'Sin Corfirmar' %}
+                                            <span class="label label-primary">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Corfirmado Sin Turnos' %}
+                                            <span class="label label-warning">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Corfirmado Con Turnos' %}
+                                            <span class="label label-success">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Atendidos Sin Turnos' %}
+                                            <span class="label label-warning">{{ turno.estadoInformativo }}</span>
+                                        {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
+                                            <span class="label label-success">{{ turno.estadoInformativo }}</span>
+                                        {% else %}
+                                            <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ turno.tipoTramite }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                </div>
+                <!-- /.box-header -->
+            </div>
+            <!-- /.box -->
+        </section>
+        <!-- Right col -->
+    </div>
+    <!-- /.row (main row) -->
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/timepicker/bootstrap-timepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/datepicker3.css') }}">
+{% endblock %}
+
+{% block footer_javascript %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('assets/vendor/AdminLTE/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/locales/bootstrap-datepicker.es.js') }}"></script>
+    <script>
+        $(function () {
+            //Date picker
+            $('.datepicker').datepicker({
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                startDate: 'd',
+                startView: '0 days'
+            });
+
+            //Timepicker
+            $(".timepicker").timepicker({
+                showInputs: false
+            });
+        });
+    </script>
+{% endblock  %}
