@@ -474,7 +474,7 @@ class DisponibilidadManager
     public function controlaDisponibilidad($fechaTurno,$horaTurno,$tipoTurnoId,$sedeId){
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId);
         $array = $array['horasHabiles'];
-        if(in_array ($horaTurno->fomat('H:i'),$array)){
+        if(in_array ($horaTurno->format('H:i'),$array)){
             return true;
         }else{
             return false;

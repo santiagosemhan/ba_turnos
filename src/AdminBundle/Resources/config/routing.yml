@@ -30,3 +30,7 @@ app_sede_feriado:
 app_sede_turnos_sede:
         resource: "@AdminBundle/Resources/config/routing/turnossede.yml"
         prefix:   /turnos-sede
+
+app_sede_texto_mail:
+        resource: "@AdminBundle/Resources/config/routing/textomail.yml"
+        prefix:   /texto-mail

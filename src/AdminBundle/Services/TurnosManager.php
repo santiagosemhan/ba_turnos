@@ -6,17 +6,22 @@ namespace AdminBundle\Services;
 use AdminBundle\Entity\ColaTurno;
 use AdminBundle\Entity\Turnos;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class TurnosManager
 {
 
     private $em;
     private $disponibilidad;
+    private $mailer;
 
-    public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad)
+    private $emailFrom = 'info@milentar.com';
+
+    public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad,\Swift_Mailer  $mailer)
     {
         $this->em = $em;
         $this->disponibilidad = $disponibilidad;
+        $this->mailer= $mailer;
     }
 
     /**
@@ -28,6 +33,7 @@ class TurnosManager
      * @return \Doctrine\Common\Collections\Collection
      */
     public function obtenerTodosSinConfimar($sedeId,$fecha){
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
         $repository = $this->em->getRepository('AdminBundle:Turno','p')->createQueryBuilder('p');
         $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
         $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
@@ -767,12 +773,11 @@ class TurnosManager
     public function guardarTurno($turno){
         //Controlo Disponibilidad
         if($this->checkDatos($turno)) {
-            if($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(),$turno->getHoraTurno(),$turno->getSede()->getId())){
+            if($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(),$turno->getHoraTurno(),$turno->getTipoTramite()->getId(),$turno->getSede()->getId())){
                 $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
                     $turno->setViaMostrador(false);
-                    $turno->setNumero( $this->get('manager.turnos')->obtenerProximoTurnoSede($turno->getSede()->getId()) );
-                    $this->em = $this->getDoctrine()->getManager();
+                    $turno->setNumero( $this->obtenerProximoTurnoSede($turno->getSede()->getId()) );
                     $this->em->persist($turno);
                     $this->em->flush();
 
@@ -781,9 +786,13 @@ class TurnosManager
                     $this->em->getConnection()->rollBack();
                     throw $e;
                 }
+            }else{
+                $exp = new Exception('No se encuentra la disponiblidad para la fecha: '.$turno->getFechaTurno()->format('d/m/Y').' hora Turno: '.$turno->getHoraTurno()->format('H:i'));
+                throw $exp;
             }
         }else{
-            throw $this->createNotFoundException('No se encuentra con la disponiblidad');
+            $exp = new Exception('Los datos enviados no concuerdan');
+            throw $exp;
         }
         //OK
         return $turno;
@@ -791,15 +800,51 @@ class TurnosManager
 
     private function checkDatos($turno){
         //Controlo la sede
-        $sede = $this->em->getRepository('AdminBundle:Sede')->findBy('id',$turno->getSede()->getId());
+        $sede = $this->em->getRepository('AdminBundle:Sede')->findById($turno->getSede()->getId());
         if(is_null($sede)){
-            throw $this->createNotFoundException('No se encuentra la sede');
+            $exp = new Exception('No se encuentra la sede');
+            throw $exp;
         }
-        $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findBy('id',$turno->getTipoTramite()->getId());
+        $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findById($turno->getTipoTramite()->getId());
         if(is_null($tipoTramite)){
-            throw $this->createNotFoundException('No se encuentra el tipo de tramite');
+            $exp = new Exception('No se encuentra el tipo de tramite');
+            throw $exp;
         }
+        return true;
 
+    }
+
+    public function sendEmail($turno,$nuevoTurno)
+    {
+        $textoMail = null;
+        if ($nuevoTurno) {
+            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneBy('accion', 'nuevo');
+        } else {
+            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneBy('accion', 'cancelacion');
+        }
+        $message = \Swift_Message::newInstance();
+        foreach ($textoMail as $texto) {
+            $message
+                ->setSubject($this->formateTexto($turno,$texto->getAsunto()))
+                ->setFrom($this->emailFrom)
+                ->setTo($turno->getMail1())
+                ->setBody($this->formateTexto($turno,$texto->getTexto()));
+        }
+        return $this->mailer->send($message);
+    }
+
+    private function formateTexto($turno,$texto){
+        return str_replace('%SEDE%', $turno->getSede()->getSede(),
+                        str_replace('%CUIT%', $turno->getCuit(),
+                            str_replace('%HORA_TURNO%', $turno->getHoraTurno()->format('H:i'),
+                                str_replace('%FECHA_TURNO%', $turno->getFechaTurno()->format('d/m/Y'),
+                                    str_replace('%NUMERO_TURNO%', $turno->getSede()->getLetra() . '-' . $turno->getNumero(),
+                                        str_replace('%NOMBRE_PERSONA%', $turno->getNombreApellido(), $texto)
+                                    )
+                                )
+                            )
+                        )
+                );
     }
 
 }

@@ -1,0 +1,35 @@
+    {% extends 'admin_base.html.twig' %}
+
+
+    {% set __title = 'Nuevo Texto Mail' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <!-- form start -->
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <div class="box-footer">
+                        <input class="btn btn-success" type="submit" value="Crear"/>
+                        <a class="btn btn-default" href="{{ path('texto_mail_index') }}"> Volver al Listado</a>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+{% block footer_javascript %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/ckeditor/ckeditor.js') }}"></script>
+    <script>
+        $(function () {
+            CKEDITOR.replace( 'adminbundle_textomail_texto' );
+        });
+    </script>
+{% endblock  %}

@@ -1,0 +1,24 @@
+texto_mail_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:TextoMail:index" }
+    methods:  GET
+
+texto_mail_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:TextoMail:show" }
+    methods:  GET
+
+texto_mail_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:TextoMail:new" }
+    methods:  [GET, POST]
+
+texto_mail_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:TextoMail:edit" }
+    methods:  [GET, POST]
+
+texto_mail_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:TextoMail:delete" }
+    methods:  DELETE

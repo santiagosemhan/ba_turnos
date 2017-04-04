@@ -1,0 +1,51 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Listado de Textos Mails' %}
+
+    {% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                                <th>Id</th>
+                                <th>Accion</th>
+                                <th>Asunto</th>
+                                <th>Activo</th>
+                                <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for textoMail in textoMails %}
+                        <tr>
+                                    <td><a href="{{ path('texto_mail_show', { 'id': textoMail.id }) }}">{{ textoMail.id }}</a></td>
+                                    <td>{{ textoMail.accion }}</td>
+                                    <td>{{ textoMail.asunto }}</td>
+                                    <td>{% if textoMail.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                                    <td>
+                                        <a title="Editar"   class="btn btn-default btn-sm" href="{{ path('texto_mail_edit', { 'id': textoMail.id }) }}"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a title="Eliminar" class="btn btn-danger  btn-sm delete-obj" data-id="{{ textoMail.id }}" data-href="{{ path('texto_mail_delete', { 'id': textoMail.id }) }}"> <i class="glyphicon glyphicon-remove-circle"></i></a>
+                                    </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+            {{ knp_pagination_render(textoMails) }}
+
+        </div>
+    </div>
+
+    <div class="delete-obj-form hidden">
+        {{ form_start(delete_form) }}
+        <input type="submit" value="Delete">
+        {{ form_end(delete_form) }}
+    </div>
+
+    <a class="btn btn-success" href="{{ path('texto_mail_new') }}">Nuevo Texto Mail</a>
+
+    {% endblock %}
+
