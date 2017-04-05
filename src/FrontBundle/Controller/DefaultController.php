@@ -129,6 +129,10 @@ class DefaultController extends Controller
 
     public function generarComprobanteAction(Request $request, Turno $turno)
     {
+        $session = $request->getSession();
+
+        $session->invalidate();
+
         return $this->render('FrontBundle:Default:generar_comprobante.html.twig', [
           'sede' => $turno->getSede(),
           'turno' => $turno,
