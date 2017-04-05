@@ -474,6 +474,12 @@ class DisponibilidadManager
     }
 
     public function controlaDisponibilidad($fechaTurno,$horaTurno,$tipoTurnoId,$sedeId){
+        if(is_string($fechaTurno)){
+            $fechaTurno = new \DateTime($fechaTurno);
+        }
+        if(is_string($horaTurno)){
+            $horaTurno = new \DateTime($horaTurno);
+        }
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId);
         $array = $array['horasHabiles'];
         if(in_array ($horaTurno->format('H:i'),$array)){
