@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use AdminBundle\Entity\Turno;
+use FrontBundle\Form\TurnoType;
 
 class DefaultController extends Controller
 {
@@ -72,51 +73,66 @@ class DefaultController extends Controller
 
     public function ingresoDatosAction(Request $request)
     {
-        $session = $request->getSession();
-
-        $tipoTramiteId = $session->get('tipoTramite');
-        $sedeId        = $session->get('sede');
-        $dia           = $session->get('dia');
-        $mes           = $session->get('mes');
-        $anio          = $session->get('anio');
-        $horario       = $session->get('horario');
-
-        $sede = $this->getDoctrine()->getRepository('AdminBundle:Sede')->find($sedeId);
-
-        $tipoTramite = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite')->find($tipoTramiteId);
-
         $turno = new Turno();
 
-        $turno->setSede($sede);
+        $form = $this->createForm(TurnoType::class, $turno);
 
-        $turno->setTipoTramite($tipoTramite);
+        $form->handleRequest($request);
 
-        $turno->setHoraTurno($horario);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
 
-        $fechaString = "$anio-$mes-$dia";
+                $session = $request->getSession();
 
-        $fechaTurno = new \DateTime($fechaString);
+                $tipoTramiteId = $session->get('tipoTramite');
+                $sedeId        = $session->get('sede');
+                $dia           = $session->get('dia');
+                $mes           = $session->get('mes');
+                $anio          = $session->get('anio');
+                $horario       = $session->get('horario');
 
-        $turno->setFechaTurno($fechaTurno);
+                $sede = $this->getDoctrine()->getRepository('AdminBundle:Sede')->find($sedeId);
 
-        var_dump($turno);
+                $tipoTramite = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite')->find($tipoTramiteId);
 
-        exit;
-    }
+                $turno->setSede($sede);
 
-    public function guardarTurno(Request $request)
-    {
-        $turnosManager = $this->get('manager.turnos');
+                $turno->setTipoTramite($tipoTramite);
 
-        if ($form->isValid()) {
-            $turno = $form->getData();
+                $turno->setHoraTurno($horario);
 
-            $turno = $turnosManager->guardarTurno($turno);
+                $fechaString = "$anio-$mes-$dia";
 
-            if ($turno) {
-            } else {
-                //muestro mendsaje de error
+                $fechaTurno = new \DateTime($fechaString);
+
+                $turno->setFechaTurno($fechaTurno);
+
+                // var_dump($turno);
+                //
+                // exit;
+                $turnoManager = $this->get('manager.turnos');
+
+                $turnoManager->guardarTurno($turno);
+
+                // set flash messages
+                $this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');
+
+                return $this->redirectToRoute('generar_comprobante', array('turno' => $turno));
+            } catch (\Exception $ex) {
+                $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
             }
         }
+
+        return $this->render('FrontBundle:default:ingreso_datos.html.twig', [
+          'turno' => $turno,
+          'form' => $form->createView(),
+        ]);
+    }
+
+    public function generarComprobanteAction(Request $request, Turno $turno)
+    {
+        var_dump($turno);
+        exit;
     }
 }

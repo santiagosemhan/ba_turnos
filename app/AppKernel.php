@@ -24,6 +24,8 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
 
+            new Beelab\Recaptcha2Bundle\BeelabRecaptcha2Bundle()
+
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
