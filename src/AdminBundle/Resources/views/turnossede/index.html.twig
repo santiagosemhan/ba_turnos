@@ -28,8 +28,8 @@
                         <tr>
                                     <td><a href="{{ path('turnossede_show', { 'id': turnosSede.id }) }}">{{ turnosSede.id }}</a></td>
                                     <td>{{ turnosSede.diasAtiende }}</td>
-                                    <td>{% if turnosSede.horaTurnosDesde %}{{ turnosSede.horaTurnosDesde|date('H:i:s') }}{% endif %}</td>
-                                    <td>{% if turnosSede.horaTurnosHasta %}{{ turnosSede.horaTurnosHasta|date('H:i:s') }}{% endif %}</td>
+                                    <td>{% if turnosSede.horaTurnosDesde %}{{ turnosSede.horaTurnosDesde }}{% endif %}</td>
+                                    <td>{% if turnosSede.horaTurnosHasta %}{{ turnosSede.horaTurnosHasta }}{% endif %}</td>
                                     <td>{{ turnosSede.cantidadTurnos }}</td>
                                     <td>{{ turnosSede.cantidadFrecuencia }}</td>
                                     <td>{{ turnosSede.frecunciaTurnoControl }}</td>

@@ -92,6 +92,7 @@ class DisponibilidadManager
             $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
                 ->where('p.sede = :sedeId')->setParameter('sedeId', $sedeId)
                 ->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
+                ->andWhere('p.fechaCancelado IS NULL')
                 ->setParameter('fecha_turno_desde', $primerDia)->setParameter('fecha_turno_hasta', $ultimoDia);
 
             if($existeTipoTramiteSede){
@@ -310,6 +311,7 @@ class DisponibilidadManager
             $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
                 ->where('p.sede = :sedeId')->setParameter('sedeId', $sedeId)
                 ->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
+                ->andWhere('p.fechaCancelado IS NULL')
                 ->setParameter('fecha_turno_desde', $diaDesde)->setParameter('fecha_turno_hasta', $diaHasta);
 
 
@@ -472,12 +474,30 @@ class DisponibilidadManager
     }
 
     public function controlaDisponibilidad($fechaTurno,$horaTurno,$tipoTurnoId,$sedeId){
+        if(is_string($fechaTurno)){
+            $fechaTurno = new \DateTime($fechaTurno);
+        }
+        if(is_string($horaTurno)){
+            $horaTurno = new \DateTime($horaTurno);
+        }
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId);
         $array = $array['horasHabiles'];
         if(in_array ($horaTurno->format('H:i'),$array)){
             return true;
         }else{
             return false;
+        }
+    }
+
+    public function verificaTurnoSinConfirmar($cuit){
+        $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
+            ->where('p.cuit = :cuit')->setParameter('cuit', $cuit)
+            ->andWhere('p.fechaCancelado IS NULL AND p.fechaConfirmacion IS NULL');
+        $turnos = $repositoryT->getQuery()->getResult();
+        if(count($turnos)>0){
+            return false;
+        }else{
+            return true;
         }
     }
 }
