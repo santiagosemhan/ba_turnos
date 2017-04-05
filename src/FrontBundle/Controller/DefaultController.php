@@ -129,7 +129,7 @@ class DefaultController extends Controller
 
     public function generarComprobanteAction(Request $request, Turno $turno)
     {
-        return $this->render('FrontBundle:default:generar_comprobante.html.twig', [
+        return $this->render('FrontBundle:Default:generar_comprobante.html.twig', [
           'sede' => $turno->getSede(),
           'turno' => $turno,
           'fechaImpresion' => (new \DateTime("now"))->format('d-m-Y h:i:s')
