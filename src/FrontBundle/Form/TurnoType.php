@@ -26,8 +26,9 @@ class TurnoType extends AbstractType
             ->add('mail1', EmailType::class, array('required'=>true))
             ->add('mail2', EmailType::class, array('required'=>false))
             ->add('captcha', RecaptchaType::class, [
-                'mapped' => false,
-                'constraints' => new Recaptcha2(['groups' => ['create']]),  // "groups" option is not mandatory
+                'mapped'   => false,
+                //'required' => true,
+                'constraints' => new Recaptcha2(),
             ]);
             // ->add('horaTurno', TextType::class, array('required'=>true))
             // ->add('tipoTramite', EntityType::class);
