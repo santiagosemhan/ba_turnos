@@ -785,4 +785,13 @@ class Turno extends BaseClass
             return "El turno no fue confirmado";
         }
     }
+
+    /**
+     * get Turno Sede
+     *
+     * @return string
+     */
+    public function getTurnoSede(){
+        return $this->getSede()->getLetra().$this->getNumero();
+    }
 }
