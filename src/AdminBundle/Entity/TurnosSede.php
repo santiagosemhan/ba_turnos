@@ -286,6 +286,8 @@ class TurnosSede extends BaseClass
         }else{
             return $this->horaTurnosDesde;
         }
+        //return $this->horaTurnosDesde;
+
     }
 
     /**

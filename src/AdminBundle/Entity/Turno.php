@@ -123,6 +123,13 @@ class Turno extends BaseClass
      * @ORM\JoinColumn(name="usuario_confirmacion", referencedColumnName="id")
      */
     private $usuarioConfirmacion;
+
+    /**
+     * @var $usuarioSede
+     *
+     * @ORM\OneToOne(targetEntity="AdminBundle\Entity\Comprobante", mappedBy="turnoId")
+     */
+    private $comprobante;
     /**
      * Constructor
      */

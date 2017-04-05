@@ -24,6 +24,11 @@ class TurnoTramite extends BaseClass
     private $cantidadTurno;
 
     /**
+     * @ORM\Column(name="cantidadSlot",type="integer", nullable=true)
+     */
+    private $cantidadSlot;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TipoTramite", inversedBy="turnoTramite")
      * @ORM\JoinColumn(name="tipo_tramite_id", referencedColumnName="id")
      */

@@ -2,6 +2,9 @@ services:
     manager.turnos:
         class:        AdminBundle\Services\TurnosManager
         autowire: true
+        calls:
+          - [ setSecret, [%secret%]]
+          - [ setMailer, ['@mailer']]
 
     manager.disponibilidad:
         class:        AdminBundle\Services\DisponibilidadManager

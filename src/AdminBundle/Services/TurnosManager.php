@@ -4,6 +4,7 @@
 namespace AdminBundle\Services;
 
 use AdminBundle\Entity\ColaTurno;
+use AdminBundle\Entity\Comprobante;
 use AdminBundle\Entity\Turnos;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -14,13 +15,21 @@ class TurnosManager
     private $em;
     private $disponibilidad;
     private $mailer;
+    private $secret;
 
     private $emailFrom = 'mail@milentar.com';
 
-    public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad,\Swift_Mailer  $mailer)
+    public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad)
     {
         $this->em = $em;
         $this->disponibilidad = $disponibilidad;
+    }
+
+    public function setSecret($secret){
+        $this->secret = $secret;
+    }
+
+    public function setMailer(\Swift_Mailer  $mailer){
         $this->mailer= $mailer;
     }
 
@@ -780,10 +789,21 @@ class TurnosManager
                         $turno->setViaMostrador(false);
                         $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
                         $this->em->persist($turno);
+
+                        $comprobante = new Comprobante();
+                        $comprobante->setTurnoId($turno);
+                        $comprobante->setSede($turno->getSede()->getSede());
+                        $comprobante->setLetra($turno->getSede()->getLetra());
+                        $comprobante->setNumero($turno->getNumero());
+                        $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                        $this->em->persist($comprobante);
+
                         $this->em->flush();
-                        $this->em->getConnection()->commit();
 
                         $this->sendEmail($turno, 1/*Nuevo Turno*/);
+
+                        $this->em->getConnection()->commit();
+
                     } catch (Exception $e) {
                         $this->em->getConnection()->rollBack();
                         throw $e;
@@ -854,6 +874,10 @@ class TurnosManager
                             )
                         )
                 );
+    }
+
+    public function getComprobanteByHash($hash){
+        $string = $hash;
     }
 
 }

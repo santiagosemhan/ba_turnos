@@ -156,6 +156,15 @@ class TurnoController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($turno);
+
+            $comprobante = new Comprobante();
+            $comprobante->setTurnoId($turno);
+            $comprobante->setSede($turno->getSede()->getSede());
+            $comprobante->setLetra($turno->getSede()->getLetra());
+            $comprobante->setNumero($turno->getNumero());
+            $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+            $em->persist($comprobante);
+
             $em->flush();
 
             $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
@@ -188,17 +197,34 @@ class TurnoController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $turno->setSede($sede);
-            $turno->setFechaTurno(new \DateTime("now"));
-            $turno->setViaMostrador(true);
-            $turno->setNumero( $this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()) );
-            $turno->setHoraTurno($this->get('manager.util')->getHoraDateTime($turno->getHoraTurno()));
-
             $em = $this->getDoctrine()->getManager();
-            $em->persist($turno);
-            $em->flush();
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+                $turno->setSede($sede);
+                $turno->setFechaTurno(new \DateTime("now"));
+                $turno->setViaMostrador(true);
+                $turno->setNumero( $this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()) );
+                $turno->setHoraTurno($this->get('manager.util')->getHoraDateTime($turno->getHoraTurno()));
+                $em->persist($turno);
 
-            $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+                $comprobante = new Comprobante();
+                $comprobante->setTurnoId($turno);
+                $comprobante->setSede($turno->getSede()->getSede());
+                $comprobante->setLetra($turno->getSede()->getLetra());
+                $comprobante->setNumero($turno->getNumero());
+                $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                $em->persist($comprobante);
+
+                $em->flush();
+
+                $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollBack();
+                throw $e;
+            }
+
 
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         }
@@ -222,7 +248,7 @@ class TurnoController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
             return $this->redirectToRoute('admin_homepage');
         }
-        $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+        $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
         return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
 
     }
