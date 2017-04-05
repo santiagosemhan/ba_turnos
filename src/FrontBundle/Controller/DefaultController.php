@@ -93,7 +93,13 @@ class DefaultController extends Controller
 
         $turno->setHoraTurno($horario);
 
+        $fechaString = "$anio-$mes-$dia";
+
+        $fechaTurno = new \DateTime($fechaString);
+
         $turno->setFechaTurno($fechaTurno);
+
+        var_dump($turno);
 
         exit;
     }
