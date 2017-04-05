@@ -15,7 +15,7 @@ class TurnosManager
     private $disponibilidad;
     private $mailer;
 
-    private $emailFrom = 'info@milentar.com';
+    private $emailFrom = 'mail@milentar.com';
 
     public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad,\Swift_Mailer  $mailer)
     {
@@ -773,21 +773,27 @@ class TurnosManager
     public function guardarTurno($turno){
         //Controlo Disponibilidad
         if($this->checkDatos($turno)) {
-            if($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(),$turno->getHoraTurno(),$turno->getTipoTramite()->getId(),$turno->getSede()->getId())){
-                $this->em->getConnection()->beginTransaction(); // suspend auto-commit
-                try {
-                    $turno->setViaMostrador(false);
-                    $turno->setNumero( $this->obtenerProximoTurnoSede($turno->getSede()->getId()) );
-                    $this->em->persist($turno);
-                    $this->em->flush();
+            if($this->disponibilidad->verificaTurnoSinConfirmar($turno->getCuit())) {
+                if ($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId())) {
+                    $this->em->getConnection()->beginTransaction(); // suspend auto-commit
+                    try {
+                        $turno->setViaMostrador(false);
+                        $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
+                        $this->em->persist($turno);
+                        $this->em->flush();
+                        $this->em->getConnection()->commit();
 
-                    $this->em->getConnection()->commit();
-                } catch (Exception $e) {
-                    $this->em->getConnection()->rollBack();
-                    throw $e;
+                        $this->sendEmail($turno, 1/*Nuevo Turno*/);
+                    } catch (Exception $e) {
+                        $this->em->getConnection()->rollBack();
+                        throw $e;
+                    }
+                } else {
+                    $exp = new Exception('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
+                    throw $exp;
                 }
             }else{
-                $exp = new Exception('No se encuentra la disponiblidad para la fecha: '.$turno->getFechaTurno()->format('d/m/Y').' hora Turno: '.$turno->getHoraTurno()->format('H:i'));
+                $exp = new Exception('La persona tiene un turno sin confirmar o no cancelado');
                 throw $exp;
             }
         }else{
@@ -814,21 +820,24 @@ class TurnosManager
 
     }
 
-    public function sendEmail($turno,$nuevoTurno)
+    public function sendEmail($turno,$tipoEnvio)
     {
         $textoMail = null;
-        if ($nuevoTurno) {
-            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneBy('accion', 'nuevo');
-        } else {
-            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneBy('accion', 'cancelacion');
+        if ($tipoEnvio == 1) {
+            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('nuevo');
+        } else if($tipoEnvio == 2) {
+            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado');
+        }else{
+            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado_masivo');
         }
-        $message = \Swift_Message::newInstance();
-        foreach ($textoMail as $texto) {
+
+       $message = \Swift_Message::newInstance();
+       if($textoMail) {
             $message
-                ->setSubject($this->formateTexto($turno,$texto->getAsunto()))
+                ->setSubject($this->formateTexto($turno,$textoMail->getAsunto()))
                 ->setFrom($this->emailFrom)
                 ->setTo($turno->getMail1())
-                ->setBody($this->formateTexto($turno,$texto->getTexto()));
+                ->setBody($this->formateTexto($turno,$textoMail->getTexto(),'text/html'));
         }
         return $this->mailer->send($message);
     }
