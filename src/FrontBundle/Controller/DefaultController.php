@@ -121,7 +121,7 @@ class DefaultController extends Controller
             }
         }
 
-        return $this->render('FrontBundle:default:ingreso_datos.html.twig', [
+        return $this->render('FrontBundle:Default:ingreso_datos.html.twig', [
           'turno' => $turno,
           'form' => $form->createView(),
         ]);
