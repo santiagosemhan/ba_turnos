@@ -108,17 +108,14 @@ class DefaultController extends Controller
 
                 $turno->setFechaTurno($fechaTurno);
 
-                // var_dump($turno);
-                //
-                // exit;
                 $turnoManager = $this->get('manager.turnos');
 
-                $turnoManager->guardarTurno($turno);
+                $turno = $turnoManager->guardarTurno($turno);
 
                 // set flash messages
                 $this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');
 
-                return $this->redirectToRoute('generar_comprobante', array('turno' => $turno));
+                return $this->redirectToRoute('generar_comprobante', array('turno' => $turno->getId()));
             } catch (\Exception $ex) {
                 $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
             }
@@ -132,7 +129,10 @@ class DefaultController extends Controller
 
     public function generarComprobanteAction(Request $request, Turno $turno)
     {
-        var_dump($turno);
-        exit;
+        return $this->render('FrontBundle:default:generar_comprobante.html.twig', [
+          'sede' => $turno->getSede(),
+          'turno' => $turno,
+          'fechaImpresion' => (new \DateTime("now"))->format('d-m-Y h:i:s')
+      ]);
     }
 }

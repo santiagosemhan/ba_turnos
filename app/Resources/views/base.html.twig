@@ -49,7 +49,10 @@
 
             <div class="row">
                 <section>
-                  <div id="ap2p">
+                  <div class="container-fluid">
+                  {%  include 'flash_messages.html.twig' %}
+                  </div>
+                  <div id="app">
                     {% block body %}{% endblock %}
                   </div>
                 </section>
