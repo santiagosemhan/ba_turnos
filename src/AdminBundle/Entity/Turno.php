@@ -295,7 +295,11 @@ class Turno extends BaseClass
      */
     public function setHoraTurno($horaTurno)
     {
-        $this->horaTurno = $horaTurno;
+        if(is_string($horaTurno)) {
+            $this->horaTurno = new \DateTime($horaTurno);
+        }else{
+            $this->horaTurno = $horaTurno;
+        }
 
         return $this;
     }
@@ -303,7 +307,7 @@ class Turno extends BaseClass
     /**
      * Get horaTurno
      *
-     * @return string
+     * @return DateTime
      */
     public function getHoraTurno()
     {
