@@ -1,1 +1,80 @@
-Hello World!
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}
+  {{ parent() }}
+
+  <style type="text/css">
+
+  .dropdown .btn-text {
+    width: 234px !important;
+    margin-bottom: 5px;
+  }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+      var Dropdown = window.components.getComponent('Dropdown');
+
+      var sacarTurnoUrlConTurno = "{{ path('seleccionar_tramite', {'sinTurno': tramites_con_turno })}}";
+
+      var sacarTurnoUrlSinTurno = "{{ path('seleccionar_tramite', {'sinTurno': tramites_sin_turno })}}";
+
+
+      var opciones = [
+        { id:1, url: sacarTurnoUrlConTurno, nombre: "Sacar Turno" },
+        { id:2, nombre: "Cancelar Turno" }
+      ];
+
+      var opcionesTematicasSinTurno = [
+        { id:1, url: sacarTurnoUrlSinTurno, nombre: "Consultar" }
+      ];
+
+      var opcionesGenerales = [
+        { id:1, text:"INGRESO DE TRÁMITE",html_id:"ingreso-tramite"},
+        { id:2, text:"INFORME/ASESORAMIENTO",html_id:"informe"},
+        { id:3, text:"RECLAMO/RECTIFICATORIA",html_id:"reclamo"},
+        { id:4, text:"TEMATICAS SIN TURNO",html_id:"tematica-sin-turno"},
+      ];
+
+
+      for (let opcion of opcionesGenerales) {
+
+        ReactDOM.render(
+          React.createElement(Dropdown, {
+             text: opcion.text,
+             opciones: opcion.id != 4 ? opciones : opcionesTematicasSinTurno
+          }),
+          document.getElementById(opcion.html_id)
+        );
+
+      }
+
+
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <label for="tipo-de-tramite">Solicitud de Turno</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="container">
+            <div class="col-sm-12 text-center">
+              <div id="ingreso-tramite"></div>
+              <div id="informe"></div>
+              <div id="reclamo"></div>
+              <div id="tematica-sin-turno"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "::base.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+      var Sede = window.components.getComponent('Sede');
+
+      var sedesData = {{ sedes | raw}};
+
+      ReactDOM.render(
+        React.createElement(Sede, {
+          placeholder : "Seleccione una sede",
+          sedes : sedesData,
+          submitUrl: "{{ path('elegir_turno') }}?tipoTramite={{ tipoTramite }}"
+        }),
+        document.getElementById('sede')
+      );
+
+    </script>
+
+{% endblock %}
+
+{% block body %}
+    <div id="sede"></div>
+{% endblock %}

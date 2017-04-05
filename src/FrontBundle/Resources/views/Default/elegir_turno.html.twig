@@ -1,0 +1,45 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/front/css/react-infinite-calendar.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        var Turno = window.components.getComponent('Turno');
+
+        var tipoTramite = {{ tipoTramite }};
+
+        var sede = {{ sede }};
+
+        var diasNoDisponibles = [];
+
+        {% for fecha in diasNoDisponibles %}
+        diasNoDisponibles.push(new Date( {{fecha.anio}},{{fecha.mes}} -1,{{fecha.dia}} ));
+        {% endfor %}
+
+        ReactDOM.render(
+          React.createElement(
+            Turno,
+            {
+              tipoTramite: tipoTramite,
+              sede: sede,
+              diasNoDisponibles: diasNoDisponibles,
+              getHorariosUrl : "{{ path('get_horarios')}}",
+              preReservaUrl : "{{path('pre-reserva')}}",
+              ingresoDatosUrl: "{{path('ingreso-datos')}}" 
+            }
+          ),
+          document.getElementById('turno')
+        );
+
+    </script>
+
+{% endblock %}
+
+{% block body %}
+    <div id="turno"></div>
+{% endblock %}

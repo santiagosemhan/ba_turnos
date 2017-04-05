@@ -1,3 +1,36 @@
 front_homepage:
     path:     /
     defaults: { _controller: FrontBundle:Default:index }
+
+seleccionar_tramite:
+    path:     /seleccionar-tipo-tramite/{sinTurno}
+    defaults: { _controller: FrontBundle:Default:seleccionarTipoTramite }
+    requirements:
+      sinTurno: \d+
+
+seleccionar_sede:
+    path:     /seleccionar-sede
+    defaults: { _controller: FrontBundle:Default:seleccionarSede }
+
+elegir_turno:
+    path:     /elegir-turno
+    defaults: { _controller: FrontBundle:Default:elegirTurno }
+
+ingreso-datos:
+    path:     /ingreso-datos
+    defaults: { _controller: FrontBundle:Default:ingresoDatos }
+
+## AJAX ACTIONS ##
+get_tipo_tramite:
+    path:     get-tipo-tramite
+    defaults: { _controller: FrontBundle:Ajax:getTipoTramite }
+
+
+get_horarios:
+    path:     get-horarios
+    defaults: { _controller: FrontBundle:Ajax:getHorarios }
+
+pre-reserva:
+    path:     pre-reserva
+    defaults: { _controller: FrontBundle:Ajax:postPreReserva }
+    methods: ['POST']

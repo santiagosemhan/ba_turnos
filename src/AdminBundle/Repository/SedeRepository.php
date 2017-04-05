@@ -16,5 +16,14 @@ namespace AdminBundle\Repository;
  */
 class SedeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getSedesByTipoTramite($tipoTramite, $hidrate_array = false)
+    {
+        $qb = $this->createQueryBuilder('s')
+          ->innerJoin('s.sedeTipoTramite', 'tt')
+          ->where('tt.tipoTramite =:tipo_tramite')
+          ->setParameter('tipo_tramite', $tipoTramite)
+          ->getQuery();
 
+        return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
+    }
 }
