@@ -24,6 +24,10 @@ generar_comprobante:
     path:     /generar-comprobante/{turno}
     defaults: { _controller: FrontBundle:Default:generarComprobante }
 
+cancelar_turno:
+    path:     /cancelar_turno/{turno}
+    defaults: { _controller: FrontBundle:Default:cancelarTurno }
+
 ## AJAX ACTIONS ##
 get_tipo_tramite:
     path:     get-tipo-tramite

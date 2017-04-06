@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Beelab\Recaptcha2Bundle\Form\Type\RecaptchaType;
@@ -20,9 +21,9 @@ class TurnoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('cuit', NumberType::class, array('required'=>true))
             ->add('nombreApellido', TextType::class, array('required'=>true,'label'=>'Nombre Apellido'))
-            ->add('telefono', TextType::class, array('required'=>true))
-            ->add('cuit', TextType::class, array('required'=>true))
+            ->add('telefono', NumberType::class, array('required'=>true))
             ->add('mail1', EmailType::class, array('required'=>true))
             ->add('mail2', EmailType::class, array('required'=>false))
             ->add('captcha', RecaptchaType::class, [

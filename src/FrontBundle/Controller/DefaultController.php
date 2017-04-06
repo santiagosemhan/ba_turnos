@@ -73,6 +73,12 @@ class DefaultController extends Controller
 
     public function ingresoDatosAction(Request $request)
     {
+        $session = $request->getSession();
+
+        if (!($session->has('sede') && $session->has('tipoTramite'))) {
+            return $this->redirectToRoute('front_homepage');
+        }
+
         $turno = new Turno();
 
         $form = $this->createForm(TurnoType::class, $turno);
@@ -112,6 +118,8 @@ class DefaultController extends Controller
 
                 $turno = $turnoManager->guardarTurno($turno);
 
+                $session->invalidate();
+
                 // set flash messages
                 $this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');
 
@@ -129,14 +137,18 @@ class DefaultController extends Controller
 
     public function generarComprobanteAction(Request $request, Turno $turno)
     {
-        $session = $request->getSession();
-
-        $session->invalidate();
-
         return $this->render('FrontBundle:Default:generar_comprobante.html.twig', [
           'sede' => $turno->getSede(),
           'turno' => $turno,
           'fechaImpresion' => (new \DateTime("now"))->format('d-m-Y h:i:s')
-      ]);
+        ]);
+    }
+
+
+    public function cancelarTurnoAction(Request $request, Turno $turno)
+    {
+        return $this->render('FrontBundle:Default:cancelar_turno.html.twig', [
+          'turno' => $turno
+        ]);
     }
 }
