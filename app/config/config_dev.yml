@@ -30,8 +30,9 @@ monolog:
         #    type:   chromephp
         #    level:  info
 
-#swiftmailer:
-#    delivery_addresses: ['me@example.com']
+swiftmailer:
+   transport: "mail"
+   delivery_addresses: ['yo@local.com']
 
 beelab_recaptcha2:
     enabled: false
