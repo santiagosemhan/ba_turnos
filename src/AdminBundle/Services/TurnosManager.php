@@ -5,6 +5,7 @@ namespace AdminBundle\Services;
 
 use AdminBundle\Entity\ColaTurno;
 use AdminBundle\Entity\Comprobante;
+use AdminBundle\Entity\Mail;
 use AdminBundle\Entity\Turnos;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -798,10 +799,20 @@ class TurnosManager
                         $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
                         $this->em->persist($comprobante);
 
+                        $mail = new Mail();
+                        $mail->setTextoMail( $this->getCuerpoMail(1 /*Nuevo Turno*/));
+                        $mail->setAsunto($this->formateTexto($turno,$mail->getTextoMail()->getAsunto()));
+                        $mail->setTurno($turno);
+                        $mail->setEmail($turno->getMail1());
+                        $mail->setNombre($turno->getNombreApellido());
+                        $mail->setTexto($this->formateTexto($mail->getTurno(),$mail->getTextoMail()->getTexto()));
+                        $mail->setEnviado($this->sendEmail($mail));
+                        if($mail->getEnviado() ){
+                            $mail->setFechaEnviado(new \DateTime("now") );
+                        }
+                        $this->em->persist($mail);
+
                         $this->em->flush();
-
-                        $this->sendEmail($turno, 1/*Nuevo Turno*/);
-
                         $this->em->getConnection()->commit();
 
                     } catch (Exception $e) {
@@ -840,8 +851,7 @@ class TurnosManager
 
     }
 
-    public function sendEmail($turno,$tipoEnvio)
-    {
+    public function getCuerpoMail($tipoEnvio){
         $textoMail = null;
         if ($tipoEnvio == 1) {
             $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('nuevo');
@@ -850,16 +860,22 @@ class TurnosManager
         }else{
             $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado_masivo');
         }
+        return $textoMail;
+    }
 
-       $message = \Swift_Message::newInstance();
-       if($textoMail) {
-            $message
-                ->setSubject($this->formateTexto($turno,$textoMail->getAsunto()))
+    public function sendEmail($mail)
+    {
+       $message = \Swift_Message::newInstance()
+                ->setSubject($mail->getAsunto())
                 ->setFrom($this->emailFrom)
-                ->setTo($turno->getMail1())
-                ->setBody($this->formateTexto($turno,$textoMail->getTexto(),'text/html'));
+                ->setTo($mail->getEmail())
+                ->setBody(html_entity_decode($mail->getTexto()),'text/html');
+
+        if($this->mailer->send($message) == 1){
+            return true;
+        }else{
+            return false;
         }
-        return $this->mailer->send($message);
     }
 
     private function formateTexto($turno,$texto){
@@ -877,7 +893,12 @@ class TurnosManager
     }
 
     public function getComprobanteByHash($hash){
-        $string = $hash;
+        $comprobante = null;
+        $texto = explode("$", \SaferCrypto::decrypt($hash,$this->secret));
+        if(isset($texto[0])){
+            $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findById($texto[0]);
+        }
+        return $comprobante;
     }
 
 }

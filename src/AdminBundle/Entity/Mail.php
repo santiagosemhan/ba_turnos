@@ -35,7 +35,7 @@ class Mail extends BaseClass
     private $asunto;
 
     /**
-     * @ORM\Column(name="texto",type="string", nullable=true)
+     * @ORM\Column(name="texto",type="string",length=100000, nullable=true)
      */
     private $texto;
 

@@ -29,7 +29,7 @@ class TextoMail extends BaseClass
     private $asunto;
 
     /**
-     * @ORM\Column(name="texto",type="string", length=10000, nullable=true)
+     * @ORM\Column(name="texto",type="string", length=100000, nullable=true)
      */
     private $texto;
 

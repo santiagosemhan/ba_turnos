@@ -78,6 +78,11 @@ swiftmailer:
     encryption: tls
     username:  "%mailer_user%"
     password:  "%mailer_password%"
+    stream_options:
+      ssl:
+        verify_peer: false
+        verify_peer_name: false
+        allow_self_signed: true
     spool:     { type: memory }
 
 

@@ -275,11 +275,12 @@ class Comprobante extends BaseClass
     }
 
     public function getHash(){
-        return hash('sha256', $this->getId().
-                             $this->getTurnoId()->getId().
-                             $this->getLetra().
-                             $this->getNumero().
-                             $this->getTipoTramite(),
-                    $this->getSecretKey());
+        $texto =  $this->getId().'$'.
+            $this->getTurnoId()->getId().'%'.
+            $this->getLetra().'#'.
+            $this->getNumero().'&'.
+            $this->getTipoTramite();
+        dump(explode("$", $texto));
+        return \SaferCrypto::encrypt($texto,$this->getSecretKey());
     }
 }
