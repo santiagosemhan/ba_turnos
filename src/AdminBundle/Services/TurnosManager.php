@@ -8,6 +8,7 @@ use AdminBundle\Entity\Comprobante;
 use AdminBundle\Entity\Mail;
 use AdminBundle\Entity\Turnos;
 use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -916,11 +917,15 @@ class TurnosManager
 
     public function getComprobanteByHash($hash)
     {
-        $comprobante = null;
-        $texto = explode("$", Crypto::decrypt($hash, $this->secret));
-        if (isset($texto[0])) {
-            $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findById($texto[0]);
+        try {
+            $comprobante = null;
+            $texto = explode("$", Crypto::decrypt($hash, Key::loadFromAsciiSafeString($this->secret)));
+            if (isset($texto[0])) {
+                $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findOneBy(array('id' => $texto[0]));
+            }
+            return $comprobante;
+        }catch (\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $ex){
+            return null;
         }
-        return $comprobante;
     }
 }

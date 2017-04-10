@@ -3,6 +3,7 @@ namespace AdminBundle\Entity;
 
 use AdminBundle\Entity\Base\BaseClass;
 use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -28,7 +29,7 @@ class Comprobante extends BaseClass
      * @ORM\JoinColumn(name="turno_id", referencedColumnName="id")
      *
      */
-    private $turnoId;
+    private $turno;
 
     /**
      * @ORM\Column(name="letra",type="string", nullable=true)
@@ -216,27 +217,27 @@ class Comprobante extends BaseClass
     }
 
     /**
-     * Set turnoId
+     * Set turno
      *
-     * @param \AdminBundle\Entity\Turno $turnoId
+     * @param \AdminBundle\Entity\Turno $turno
      *
      * @return Comprobante
      */
-    public function setTurnoId(\AdminBundle\Entity\Turno $turnoId = null)
+    public function setTurno(\AdminBundle\Entity\Turno $turno = null)
     {
-        $this->turnoId = $turnoId;
+        $this->turno = $turno;
 
         return $this;
     }
 
     /**
-     * Get turnoId
+     * Get turno
      *
      * @return \AdminBundle\Entity\Turno
      */
-    public function getTurnoId()
+    public function getTurno()
     {
-        return $this->turnoId;
+        return $this->turno;
     }
 
     /**
@@ -284,6 +285,8 @@ class Comprobante extends BaseClass
             $this->getLetra().'#'.
             $this->getNumero().'&'.
             $this->getTipoTramite();
-        return Crypto::encrypt($texto,$this->getSecretKey());
+            //$key = Key::createNewRandomKey();
+            //var_dump($key->saveToAsciiSafeString());exit;
+        return Crypto::encrypt($texto,Key::loadFromAsciiSafeString($this->getSecretKey()));
     }
 }

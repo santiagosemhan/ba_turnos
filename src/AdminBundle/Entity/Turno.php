@@ -127,7 +127,7 @@ class Turno extends BaseClass
     /**
      * @var $usuarioSede
      *
-     * @ORM\OneToOne(targetEntity="AdminBundle\Entity\Comprobante", mappedBy="turnoId")
+     * @ORM\OneToOne(targetEntity="AdminBundle\Entity\Comprobante", mappedBy="turno")
      */
     private $comprobante;
 
