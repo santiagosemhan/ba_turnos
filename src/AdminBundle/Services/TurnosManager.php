@@ -805,7 +805,7 @@ class TurnosManager
                         $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 
                         $comprobante = new Comprobante();
-                        $comprobante->setTurnoId($turno);
+                        $comprobante->setTurno($turno);
                         $comprobante->setSede($turno->getSede()->getSede());
                         $comprobante->setLetra($turno->getSede()->getLetra());
                         $comprobante->setNumero($turno->getNumero());
