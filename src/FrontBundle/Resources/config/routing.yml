@@ -21,7 +21,7 @@ ingreso_datos:
     defaults: { _controller: FrontBundle:Default:ingresoDatos }
 
 generar_comprobante:
-    path:     /generar-comprobante/{turno}
+    path:     /generar-comprobante/{hash}
     defaults: { _controller: FrontBundle:Default:generarComprobante }
 
 cancelar_turno:

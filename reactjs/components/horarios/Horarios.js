@@ -20,7 +20,7 @@ class Horarios extends Component {
 
       let horarioSeleccionado = this.props.horarioSeleccionado;
 
-      let listHorarios = <li><p>Seleccione una fecha, para obtener el listado de horarios...</p></li>;
+      let listHorarios = <li><p>{this.props.sinHorarioMsg}</p></li>;
 
       if(horarios.length != 0){
 

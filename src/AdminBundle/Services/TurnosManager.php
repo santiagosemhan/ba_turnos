@@ -13,7 +13,6 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class TurnosManager
 {
-
     private $em;
     private $disponibilidad;
     private $mailer;
@@ -27,11 +26,13 @@ class TurnosManager
         $this->disponibilidad = $disponibilidad;
     }
 
-    public function setSecret($secret){
+    public function setSecret($secret)
+    {
         $this->secret = $secret;
     }
 
-    public function setMailer(\Swift_Mailer  $mailer){
+    public function setMailer(\Swift_Mailer  $mailer)
+    {
         $this->mailer= $mailer;
     }
 
@@ -43,9 +44,10 @@ class TurnosManager
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function obtenerTodosSinConfimar($sedeId,$fecha){
-        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
-        $repository = $this->em->getRepository('AdminBundle:Turno','p')->createQueryBuilder('p');
+    public function obtenerTodosSinConfimar($sedeId, $fecha)
+    {
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
+        $repository = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p');
         $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
         $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
         $repository->orderBy('p.horaTurno', 'ASC');
@@ -66,17 +68,23 @@ class TurnosManager
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function obtenerPorFiltro($sedeId,$horaDesde,$horaHasta,$estado,$tipoTramite,$fecha,$cuit=null,$nroTurno=null)
+    public function obtenerPorFiltro($sedeId, $horaDesde, $horaHasta, $estado, $tipoTramite, $fecha, $cuit=null, $nroTurno=null)
     {
-        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
 
-        $repository = $this->em->getRepository('AdminBundle:Turno','p');
+        $repository = $this->em->getRepository('AdminBundle:Turno', 'p');
         $repository = $repository->createQueryBuilder('p');
 
-        $hora = (substr($horaDesde,0,2)); $min = (substr($horaDesde,3,2));
-        if(substr($horaDesde,6,2) == 'PM'){ $hora = $hora +12; }
-        $hora2 = (substr($horaHasta,0,2)); $min2 = (substr($horaHasta,3,2));
-        if(substr($horaHasta,6,2) == 'PM'){ $hora2 = $hora2 +12; }
+        $hora = (substr($horaDesde, 0, 2));
+        $min = (substr($horaDesde, 3, 2));
+        if (substr($horaDesde, 6, 2) == 'PM') {
+            $hora = $hora +12;
+        }
+        $hora2 = (substr($horaHasta, 0, 2));
+        $min2 = (substr($horaHasta, 3, 2));
+        if (substr($horaHasta, 6, 2) == 'PM') {
+            $hora2 = $hora2 +12;
+        }
 
         $repository->where('p.horaTurno >= :horaDesde AND p.horaTurno  <=  :horaHasta')
             ->setParameter('horaDesde', ($hora.':'.$min.':00'))
@@ -86,21 +94,21 @@ class TurnosManager
 
         $repository->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
 
-        if($tipoTramite != 0){
+        if ($tipoTramite != 0) {
             $repository->andWhere('p.tipoTramite = :tipoTramite')->setParameter('tipoTramite', $tipoTramite);
         }
 
-        if($cuit) {
+        if ($cuit) {
             $repository->andWhere('p.cuit > :cuit')->setParameter('cuit', $cuit);
         }
 
-        if($nroTurno) {
+        if ($nroTurno) {
             $repository->andWhere('p.numero > :numero')->setParameter('numero', $nroTurno);
         }
 
         $sub =  $this->em->createQueryBuilder();
         $sub->select("t");
-        $sub->from("AdminBundle:ColaTurno","t");
+        $sub->from("AdminBundle:ColaTurno", "t");
         $sub->andWhere('t.turno = p.id AND t.atendido = true');
 
         switch ($estado) {
@@ -131,7 +139,7 @@ class TurnosManager
 
                 $sub =  $this->em->createQueryBuilder();
                 $sub->select("t");
-                $sub->from("AdminBundle:ColaTurno","t");
+                $sub->from("AdminBundle:ColaTurno", "t");
                 $sub->andWhere('t.turno = p.id AND t.atendido = false');
 
                 $repository->andWhere('p.fechaConfirmacion IS NOT NULL');
@@ -142,7 +150,6 @@ class TurnosManager
         $repository->orderBy('p.horaTurno', 'ASC');
 
         return  $repository->getQuery()->getResult();
-
     }
 
     /**
@@ -153,14 +160,15 @@ class TurnosManager
      *
      * @return integer
      */
-    public function getCantidad($sedeId,$fecha){
-        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+    public function getCantidad($sedeId, $fecha)
+    {
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
         $query =  $this->em->createQuery(
             'SELECT count(t.id) cant
                 FROM AdminBundle:Turno t
                 WHERE t.sede = :sedeId AND (t.fechaTurno BETWEEN :desde AND :hasta)'
-        )->setParameter('desde',$fecha.' 00:00:00')
-            ->setParameter('hasta',$fecha.' 23:59:59')
+        )->setParameter('desde', $fecha.' 00:00:00')
+            ->setParameter('hasta', $fecha.' 23:59:59')
             ->setParameter('sedeId', $sedeId);
         $cantidad = $query->getResult();
         return  $cantidad[0]['cant'];
@@ -174,14 +182,15 @@ class TurnosManager
      *
      * @return integer
      */
-    public function getCantidadConfirmados($sedeId,$fecha){
-        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+    public function getCantidadConfirmados($sedeId, $fecha)
+    {
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
         $query =  $this->em->createQuery(
                 'SELECT count(t.id) cant
                 FROM AdminBundle:Turno t
                 WHERE t.sede = :sedeId AND t.fechaConfirmacion IS NOT NULL AND (t.fechaTurno BETWEEN :desde AND :hasta)'
-        )->setParameter('desde',$fecha.' 00:00:00')
-        ->setParameter('hasta',$fecha.' 23:59:59')
+        )->setParameter('desde', $fecha.' 00:00:00')
+        ->setParameter('hasta', $fecha.' 23:59:59')
         ->setParameter('sedeId', $sedeId);
         $cantidad = $query->getResult();
         return  $cantidad[0]['cant'];
@@ -196,14 +205,15 @@ class TurnosManager
      *
      * @return integer
      */
-    public function getCantidadSinTurnos($sedeId,$fecha){
-        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha,3,2), substr($fecha,0,2), substr($fecha,6,4)));
+    public function getCantidadSinTurnos($sedeId, $fecha)
+    {
+        $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
         $query =  $this->em->createQuery(
             'SELECT count(t.id) cant
                 FROM AdminBundle:Turno t
                 WHERE t.sede = :sedeId AND t.viaMostrador = true AND (t.fechaTurno BETWEEN :desde AND :hasta)'
-        )->setParameter('desde',$fecha.' 00:00:00')
-            ->setParameter('hasta',$fecha.' 23:59:59')
+        )->setParameter('desde', $fecha.' 00:00:00')
+            ->setParameter('hasta', $fecha.' 23:59:59')
             ->setParameter('sedeId', $sedeId);
         $cantidad = $query->getResult();
         return  $cantidad[0]['cant'];
@@ -217,7 +227,7 @@ class TurnosManager
      *
      * @return boolean
      */
-    public function actualizaNumeroTurnoSede($sedeId,$numeroTurno)
+    public function actualizaNumeroTurnoSede($sedeId, $numeroTurno)
     {
         $repository = $this->em->getRepository('AdminBundle:Sede');
         $sede = $repository->findOneById($sedeId);
@@ -253,7 +263,7 @@ class TurnosManager
      *
      * @return boolean
      */
-    public function confirmarTurno($turno,$user,$prioritario)
+    public function confirmarTurno($turno, $user, $prioritario)
     {
         $turno->setUsuarioConfirmacion($user);
         $turno->setFechaConfirmacion(new \DateTime("now"));
@@ -269,16 +279,16 @@ class TurnosManager
         $cola->setFechaTurno(new \DateTime("now"));
 
         $fecha = date("Y/m/d");
-        $repository = $this->em->getRepository('AdminBundle:ColaTurno','p')->createQueryBuilder('p');
+        $repository = $this->em->getRepository('AdminBundle:ColaTurno', 'p')->createQueryBuilder('p');
         $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
         $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $cola->getSede()->getId());
-        if($prioritario){
+        if ($prioritario) {
             $repository->andWhere('p.prioritario = false');
-        }else{
+        } else {
             $repository->andWhere('p.prioritario = false');
         }
         $cantidad = count($repository->getQuery()->getResult());
-        if($cantidad > 0) {
+        if ($cantidad > 0) {
             $numero = $cantidad % 100;
             $cantidad = intdiv($cantidad, 100);
             if ($resto = 99) {
@@ -287,11 +297,11 @@ class TurnosManager
             } else {
                 $numero = $numero + 1;
             }
-        }else{
+        } else {
             $cantidad = 0;
             $numero= 1;
         }
-        $cola->setLetra($this->obtenerLetra($cantidad,$prioritario));
+        $cola->setLetra($this->obtenerLetra($cantidad, $prioritario));
         $cola->setNumero($numero);
 
         $this->em->persist($cola);
@@ -300,9 +310,10 @@ class TurnosManager
         return true;
     }
 
-    private function obtenerLetra($cantidad,$reservado){
+    private function obtenerLetra($cantidad, $reservado)
+    {
         $letra = '';
-        if($reservado){
+        if ($reservado) {
             switch ($cantidad) {
                 /*
                  * Letra M
@@ -413,7 +424,7 @@ class TurnosManager
                     $letra = "OK";
                     break;
             }
-        }else{
+        } else {
             switch ($cantidad) {
                 /*
                  * Letra A
@@ -781,10 +792,11 @@ class TurnosManager
         return $letra;
     }
 
-    public function guardarTurno($turno){
+    public function guardarTurno($turno)
+    {
         //Controlo Disponibilidad
-        if($this->checkDatos($turno)) {
-            if($this->disponibilidad->verificaTurnoSinConfirmar($turno->getCuit())) {
+        if ($this->checkDatos($turno)) {
+            if ($this->disponibilidad->verificaTurnoSinConfirmar($turno->getCuit())) {
                 if ($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId())) {
                     $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                     try {
@@ -798,24 +810,25 @@ class TurnosManager
                         $comprobante->setLetra($turno->getSede()->getLetra());
                         $comprobante->setNumero($turno->getNumero());
                         $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+
+                        $turno->setComprobante($comprobante);
                         $this->em->persist($comprobante);
 
                         $mail = new Mail();
-                        $mail->setTextoMail( $this->getCuerpoMail(1 /*Nuevo Turno*/));
-                        $mail->setAsunto($this->formateTexto($turno,$mail->getTextoMail()->getAsunto()));
+                        $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
+                        $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
                         $mail->setTurno($turno);
                         $mail->setEmail($turno->getMail1());
                         $mail->setNombre($turno->getNombreApellido());
-                        $mail->setTexto($this->formateTexto($mail->getTurno(),$mail->getTextoMail()->getTexto()));
+                        $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
                         $mail->setEnviado($this->sendEmail($mail));
-                        if($mail->getEnviado() ){
-                            $mail->setFechaEnviado(new \DateTime("now") );
+                        if ($mail->getEnviado()) {
+                            $mail->setFechaEnviado(new \DateTime("now"));
                         }
                         $this->em->persist($mail);
 
                         $this->em->flush();
                         $this->em->getConnection()->commit();
-
                     } catch (Exception $e) {
                         $this->em->getConnection()->rollBack();
                         throw $e;
@@ -824,11 +837,11 @@ class TurnosManager
                     $exp = new Exception('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
                     throw $exp;
                 }
-            }else{
+            } else {
                 $exp = new Exception('La persona tiene un turno sin confirmar o no cancelado');
                 throw $exp;
             }
-        }else{
+        } else {
             $exp = new Exception('Los datos enviados no concuerdan');
             throw $exp;
         }
@@ -836,29 +849,30 @@ class TurnosManager
         return $turno;
     }
 
-    private function checkDatos($turno){
+    private function checkDatos($turno)
+    {
         //Controlo la sede
         $sede = $this->em->getRepository('AdminBundle:Sede')->findById($turno->getSede()->getId());
-        if(is_null($sede)){
+        if (is_null($sede)) {
             $exp = new Exception('No se encuentra la sede');
             throw $exp;
         }
         $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findById($turno->getTipoTramite()->getId());
-        if(is_null($tipoTramite)){
+        if (is_null($tipoTramite)) {
             $exp = new Exception('No se encuentra el tipo de tramite');
             throw $exp;
         }
         return true;
-
     }
 
-    public function getCuerpoMail($tipoEnvio){
+    public function getCuerpoMail($tipoEnvio)
+    {
         $textoMail = null;
         if ($tipoEnvio == 1) {
             $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('nuevo');
-        } else if($tipoEnvio == 2) {
+        } elseif ($tipoEnvio == 2) {
             $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado');
-        }else{
+        } else {
             $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado_masivo');
         }
         return $textoMail;
@@ -866,20 +880,21 @@ class TurnosManager
 
     public function sendEmail($mail)
     {
-       $message = \Swift_Message::newInstance()
+        $message = \Swift_Message::newInstance()
                 ->setSubject($mail->getAsunto())
                 ->setFrom($this->emailFrom)
                 ->setTo($mail->getEmail())
-                ->setBody(html_entity_decode($mail->getTexto()),'text/html');
+                ->setBody(html_entity_decode($mail->getTexto()), 'text/html');
 
-        if($this->mailer->send($message) == 1){
+        if ($this->mailer->send($message) == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    private function formateTexto($turno,$texto){
+    private function formateTexto($turno, $texto)
+    {
         return str_replace('%LINK_COMPRBANTE%', '#',
                     str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
                         str_replace('%SEDE%', $turno->getSede()->getSede(),
@@ -897,13 +912,13 @@ class TurnosManager
                 );
     }
 
-    public function getComprobanteByHash($hash){
+    public function getComprobanteByHash($hash)
+    {
         $comprobante = null;
-        $texto = explode("$", Crypto::decrypt($hash,$this->secret));
-        if(isset($texto[0])){
+        $texto = explode("$", Crypto::decrypt($hash, $this->secret));
+        if (isset($texto[0])) {
             $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findById($texto[0]);
         }
         return $comprobante;
     }
-
 }
