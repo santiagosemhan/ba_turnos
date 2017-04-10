@@ -1,9 +1,13 @@
+const path = require('path');
+
+var distPath = path.resolve(__dirname.replace('reactjs', 'web'), 'dist');
+
 module.exports = {
     entry: [
         './components.js'
     ],
     output: {
-        path: '../web/dist/',
+        path: distPath,
         publicPath: '/',
         filename: 'components.js'
     },

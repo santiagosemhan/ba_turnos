@@ -8,7 +8,11 @@ class Turno extends Component {
     constructor(props) {
       super(props);
 
-      this.state = { horarios: [], horario: '', submitEnabled: false };
+      this.state = {
+        horarios: [],
+        horario: '',
+        sinHorarioMsg: 'Seleccione una fecha para obtener el listado de horarios...',
+        submitEnabled: false };
 
       this.handleSubmit = this.handleSubmit.bind(this);
 
@@ -70,7 +74,9 @@ class Turno extends Component {
         }
       })
       .then(({ data }) => {
-
+        if(data.horasHabiles.length == 0) {
+          this.setState({sinHorarioMsg: 'No se disponen de turnos disponibles para la fecha seleccionada...'});
+        }
         this.setState({ horarios: data.horasHabiles });
          //
         //  this.setState({submitEnabled:true});
@@ -93,7 +99,11 @@ class Turno extends Component {
                         </div>
                         <div className="col-md-6">
                             <h4>Horarios</h4>
-                            <Horarios horarios={this.state.horarios} handleClick={this.handleClick.bind(this)} horarioSeleccionado={this.state.horario}/>
+                            <Horarios
+                              horarios={this.state.horarios}
+                              sinHorarioMsg={ this.state.sinHorarioMsg }
+                              handleClick={this.handleClick.bind(this)}
+                              horarioSeleccionado={this.state.horario}/>
                         </div>
                     </div>
                 </div>
