@@ -267,15 +267,18 @@ class Comprobante extends BaseClass
         return $this;
     }
 
-    public function getSecretKey(){
+    public function getSecretKey()
+    {
         return $this->secretKey;
     }
 
-    public function setSecretKey($secretKey){
+    public function setSecretKey($secretKey)
+    {
         return $this->secretKey = $secretKey;
     }
 
-    public function getHash(){
+    public function getHash()
+    {
         $texto =  $this->getId().'$'.
             $this->getTurnoId()->getId().'%'.
             $this->getLetra().'#'.

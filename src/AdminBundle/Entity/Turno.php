@@ -130,6 +130,7 @@ class Turno extends BaseClass
      * @ORM\OneToOne(targetEntity="AdminBundle\Entity\Comprobante", mappedBy="turnoId")
      */
     private $comprobante;
+
     /**
      * Constructor
      */
@@ -302,9 +303,9 @@ class Turno extends BaseClass
      */
     public function setHoraTurno($horaTurno)
     {
-        if(is_string($horaTurno)) {
+        if (is_string($horaTurno)) {
             $this->horaTurno = new \DateTime($horaTurno);
-        }else{
+        } else {
             $this->horaTurno = $horaTurno;
         }
 
@@ -694,31 +695,30 @@ class Turno extends BaseClass
     public function getEstado()
     {
         $estado = '';
-        if(is_null($this->fechaConfirmacion)){
+        if (is_null($this->fechaConfirmacion)) {
             $estado = 'Sin Corfirmar';
-        }else{
+        } else {
             $estado = 'Corfirmado';
         }
 
-        if(count($this->getColaTurno())>0){
+        if (count($this->getColaTurno())>0) {
             $estado = 'Atendidos';
         }
 
-        if($this->canceladoWeb){
+        if ($this->canceladoWeb) {
             $estado = 'Cencelado Web';
         }
 
-        if($this->cancelacionMasiva){
+        if ($this->cancelacionMasiva) {
             $estado = 'Cencelado Mostrador';
         }
 
-        if($this->cancelacionMasiva){
+        if ($this->cancelacionMasiva) {
             $estado = 'Cencelado Masivo';
         }
 
 
         return $estado;
-
     }
 
     /**
@@ -729,48 +729,47 @@ class Turno extends BaseClass
     public function getEstadoInformativo()
     {
         $estado = '';
-        if(is_null($this->fechaConfirmacion)){
+        if (is_null($this->fechaConfirmacion)) {
             $estado = 'Sin Corfirmar';
-        }else{
-            if($this->viaMostrador) {
+        } else {
+            if ($this->viaMostrador) {
                 $estado = 'Corfirmado Sin Turnos';
-            }else{
+            } else {
                 $estado = 'Corfirmado Con Turnos';
             }
         }
 
-        if(count($this->getColaTurno())>0){
+        if (count($this->getColaTurno())>0) {
             $cola=$this->getColaTurno();
-            if($cola[0]->getAtendido()) {
+            if ($cola[0]->getAtendido()) {
                 if ($this->viaMostrador) {
                     $estado = 'Atendido Sin Turnos';
                 } else {
                     $estado = 'Atendido Con Turnos';
                 }
-            }else{
-                if($this->viaMostrador) {
+            } else {
+                if ($this->viaMostrador) {
                     $estado = 'Corfirmado Sin Turnos';
-                }else{
+                } else {
                     $estado = 'Corfirmado Con Turnos';
                 }
             }
         }
 
-        if($this->canceladoWeb){
+        if ($this->canceladoWeb) {
             $estado = 'Cencelado Web';
         }
 
-        if($this->cancelacionMasiva){
+        if ($this->cancelacionMasiva) {
             $estado = 'Cencelado Mostrador';
         }
 
-        if($this->cancelacionMasiva){
+        if ($this->cancelacionMasiva) {
             $estado = 'Cencelado Masivo';
         }
 
 
         return $estado;
-
     }
 
     /**
@@ -778,7 +777,8 @@ class Turno extends BaseClass
      *
      * @return string
      */
-    public function getHoraTurnoString(){
+    public function getHoraTurnoString()
+    {
         return $this->getHoraTurno()->format("H:i");
     }
 
@@ -792,7 +792,7 @@ class Turno extends BaseClass
         $cola = $this->getColaTurno();
         if (count($cola) > 0) {
             return $cola[0]->getLetra().'-'.sprintf("%02d", $cola[0]->getNumero());
-        }else {
+        } else {
             return "El turno no fue confirmado";
         }
     }
@@ -802,7 +802,32 @@ class Turno extends BaseClass
      *
      * @return string
      */
-    public function getTurnoSede(){
+    public function getTurnoSede()
+    {
         return $this->getSede()->getLetra().$this->getNumero();
+    }
+
+    /**
+     * Set comprobante
+     *
+     * @param \AdminBundle\Entity\Comprobante $comprobante
+     *
+     * @return Turno
+     */
+    public function setComprobante(\AdminBundle\Entity\Comprobante $comprobante = null)
+    {
+        $this->comprobante = $comprobante;
+
+        return $this;
+    }
+
+    /**
+     * Get comprobante
+     *
+     * @return \AdminBundle\Entity\Comprobante
+     */
+    public function getComprobante()
+    {
+        return $this->comprobante;
     }
 }

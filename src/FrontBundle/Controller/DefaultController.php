@@ -118,12 +118,16 @@ class DefaultController extends Controller
 
                 $turno = $turnoManager->guardarTurno($turno);
 
+                $hash = $turno->getComprobante()->getHash();
+
                 $session->invalidate();
 
                 // set flash messages
                 $this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');
 
-                return $this->redirectToRoute('generar_comprobante', array('turno' => $turno->getId()));
+                dump($hash);
+
+                return $this->redirectToRoute('generar_comprobante', array('hash' => $hash));
             } catch (\Exception $ex) {
                 $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
             }
@@ -135,8 +139,19 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function generarComprobanteAction(Request $request, Turno $turno)
+    public function generarComprobanteAction(Request $request, $hash)
     {
+        $turnoManager = $this->get('manager.turnos');
+
+        $comprobante = $turnoManager->getComprobanteByHash($hash);
+
+
+        if (!$comprobante) {
+            throw new HttpException(404, "No se ha podido determinar el comprobante requerido.");
+        }
+
+        $turno = $comprobante->getTurno();
+
         return $this->render('FrontBundle:Default:generar_comprobante.html.twig', [
           'sede' => $turno->getSede(),
           'turno' => $turno,
