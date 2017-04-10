@@ -105,6 +105,18 @@ class TurnosSedeController extends Controller
     public function editAction(Request $request, TurnosSede $turnosSede)
 {
     $deleteForm = $this->createDeleteForm($turnosSede);
+    if($turnosSede->getHoraTurnosDesde()) {
+        $turnosSede->setHoraTurnosDesde($turnosSede->getHoraTurnosDesde()->format('h:i A'));
+    }
+    if($turnosSede->getHoraTurnosHasta()) {
+        $turnosSede->setHoraTurnosHasta($turnosSede->getHoraTurnosHasta()->format('h:i A'));
+    }
+    if($turnosSede->getVigenciaDesde()){
+        $turnosSede->setVigenciaDesde($turnosSede->getVigenciaDesde()->format('d/m/Y'));
+    }
+    if($turnosSede->getVigenciaHasta()){
+        $turnosSede->setVigenciaHasta($turnosSede->getVigenciaHasta()->format('d/m/Y'));
+    }
     $editForm = $this->createForm(TurnosSedeType::class, $turnosSede);
     $editForm->handleRequest($request);
 

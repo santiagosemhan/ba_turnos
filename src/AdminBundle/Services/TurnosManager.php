@@ -7,6 +7,7 @@ use AdminBundle\Entity\ColaTurno;
 use AdminBundle\Entity\Comprobante;
 use AdminBundle\Entity\Mail;
 use AdminBundle\Entity\Turnos;
+use Defuse\Crypto\Crypto;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -879,22 +880,26 @@ class TurnosManager
     }
 
     private function formateTexto($turno,$texto){
-        return str_replace('%SEDE%', $turno->getSede()->getSede(),
-                        str_replace('%CUIT%', $turno->getCuit(),
-                            str_replace('%HORA_TURNO%', $turno->getHoraTurno()->format('H:i'),
-                                str_replace('%FECHA_TURNO%', $turno->getFechaTurno()->format('d/m/Y'),
-                                    str_replace('%NUMERO_TURNO%', $turno->getSede()->getLetra() . '-' . $turno->getNumero(),
-                                        str_replace('%NOMBRE_PERSONA%', $turno->getNombreApellido(), $texto)
+        return str_replace('%LINK_COMPRBANTE%', '#',
+                    str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
+                        str_replace('%SEDE%', $turno->getSede()->getSede(),
+                            str_replace('%CUIT%', $turno->getCuit(),
+                                str_replace('%HORA_TURNO%', $turno->getHoraTurno()->format('H:i'),
+                                    str_replace('%FECHA_TURNO%', $turno->getFechaTurno()->format('d/m/Y'),
+                                        str_replace('%NUMERO_TURNO%', $turno->getSede()->getLetra() . '-' . $turno->getNumero(),
+                                            str_replace('%NOMBRE_PERSONA%', $turno->getNombreApellido(), $texto)
+                                        )
                                     )
                                 )
                             )
                         )
+                    )
                 );
     }
 
     public function getComprobanteByHash($hash){
         $comprobante = null;
-        $texto = explode("$", \SaferCrypto::decrypt($hash,$this->secret));
+        $texto = explode("$", Crypto::decrypt($hash,$this->secret));
         if(isset($texto[0])){
             $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findById($texto[0]);
         }

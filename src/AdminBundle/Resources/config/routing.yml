@@ -31,6 +31,10 @@ app_sede_turnos_sede:
         resource: "@AdminBundle/Resources/config/routing/turnossede.yml"
         prefix:   /turnos-sede
 
+app_sede_turnos_tramite:
+        resource: "@AdminBundle/Resources/config/routing/turnotramite.yml"
+        prefix:   /turnos-tramite
+
 app_sede_texto_mail:
         resource: "@AdminBundle/Resources/config/routing/textomail.yml"
         prefix:   /texto-mail

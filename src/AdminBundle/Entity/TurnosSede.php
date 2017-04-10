@@ -259,7 +259,7 @@ class TurnosSede extends BaseClass
     /**
      * Set horaTurnosDesde
      *
-     * @param string $horaTurnosDesde
+     * @param \DateTime $horaTurnosDesde
      *
      * @return TurnosSede
      */
@@ -273,37 +273,19 @@ class TurnosSede extends BaseClass
     /**
      * Get horaTurnosDesde
      *
-     * @return string
+     * @return \Time
      */
     public function getHoraTurnosDesde()
     {
-        if ($this->horaTurnosDesde) {
-            if(is_string ($this->horaTurnosDesde)){
-                return $this->horaTurnosDesde;
-            }else {
-                return $this->horaTurnosDesde->format('H:i A');
-            }
-        }else{
-            return $this->horaTurnosDesde;
-        }
-        //return $this->horaTurnosDesde;
+        return $this->horaTurnosDesde;
 
     }
 
-    /**
-     * Get HoraTurnosDesde Sin Formato
-     *
-     * @return \DateTime
-     */
-    public function getHoraTurnosDesdeSinFormato()
-    {
-       return $this->horaTurnosDesde;
-    }
 
     /**
      * Set horaTurnosHasta
      *
-     * @param string $horaTurnosHasta
+     * @param \DateTime $horaTurnosHasta
      *
      * @return TurnosSede
      */
@@ -317,27 +299,9 @@ class TurnosSede extends BaseClass
     /**
      * Get horaTurnosHasta
      *
-     * @return string
+     * @return \Time
      */
     public function getHoraTurnosHasta()
-    {
-        if ($this->horaTurnosHasta) {
-            if(is_string ($this->horaTurnosHasta)){
-                return $this->horaTurnosHasta;
-            }else {
-                return $this->horaTurnosHasta->format('H:i A');
-            }
-        }else{
-            return $this->horaTurnosHasta;
-        }
-    }
-
-    /**
-     * Get HoraTurnosHasta Sin Formato
-     *
-     * @return \DateTime
-     */
-    public function getHoraTurnosHastaSinFormato()
     {
         return $this->horaTurnosHasta;
     }
@@ -435,15 +399,8 @@ class TurnosSede extends BaseClass
      */
     public function getVigenciaDesde()
     {
-        if ($this->vigenciaDesde) {
-            if(is_string ($this->vigenciaDesde)){
-                return $this->vigenciaDesde;
-            }else {
-                return $this->vigenciaDesde->format('d/m/Y');
-            }
-        }else{
-            return $this->vigenciaDesde;
-        }
+        return $this->vigenciaDesde;
+
     }
 
     /**
@@ -478,15 +435,8 @@ class TurnosSede extends BaseClass
      */
     public function getVigenciaHasta()
     {
-        if ($this->vigenciaHasta) {
-            if(is_string ($this->vigenciaHasta)){
-                return $this->vigenciaHasta;
-            }else {
-                return $this->vigenciaHasta->format('d/m/Y');
-            }
-        }else{
-            return $this->vigenciaHasta;
-        }
+        return $this->vigenciaHasta;
+
     }
 
     /**
@@ -636,4 +586,30 @@ class TurnosSede extends BaseClass
         }
         return $string;
     }
+
+    public function getHorasAtiende(){
+       return 'Hora.Desde:'.$this->horaTurnosDesde->format('H:i A').' Hora.Hasta:'.$this->horaTurnosHasta->format('H:i A');
+    }
+
+    public function getVigenciasTurno(){
+        $string = "";
+        if($this->vigenciaDesde){
+            $string = $string.' Vig.Desde:'.$this->vigenciaDesde->format('d/m/Y');
+        }else{
+            $string = $string.' Vig.Desde:-';
+        }
+        if($this->vigenciaHasta){
+            $string = $string.' Vig.Hasta:'.$this->vigenciaHasta->format('d/m/Y');
+        }else{
+            $string = $string.' Vig.Hasta:-';
+        }
+
+        return $string;
+    }
+
+    public function __toString()
+    {
+        return $this->sede->getSede().' | Dias:'.$this->getDiasAtiende().' | '.$this->getHorasAtiende().' | '.$this->getVigenciasTurno();
+    }
+
 }

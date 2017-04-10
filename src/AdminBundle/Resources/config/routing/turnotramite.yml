@@ -1,0 +1,24 @@
+turnotramite_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:TurnoTramite:index" }
+    methods:  GET
+
+turnotramite_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:TurnoTramite:show" }
+    methods:  GET
+
+turnotramite_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:TurnoTramite:new" }
+    methods:  [GET, POST]
+
+turnotramite_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:TurnoTramite:edit" }
+    methods:  [GET, POST]
+
+turnotramite_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:TurnoTramite:delete" }
+    methods:  DELETE

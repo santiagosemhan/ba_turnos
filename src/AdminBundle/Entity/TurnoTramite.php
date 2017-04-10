@@ -177,4 +177,28 @@ class TurnoTramite extends BaseClass
 
         return $this;
     }
+
+    /**
+     * Set cantidadSlot
+     *
+     * @param integer $cantidadSlot
+     *
+     * @return TurnoTramite
+     */
+    public function setCantidadSlot($cantidadSlot)
+    {
+        $this->cantidadSlot = $cantidadSlot;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadSlot
+     *
+     * @return integer
+     */
+    public function getCantidadSlot()
+    {
+        return $this->cantidadSlot;
+    }
 }

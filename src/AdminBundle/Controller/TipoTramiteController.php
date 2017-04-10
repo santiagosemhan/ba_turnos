@@ -51,14 +51,14 @@ class TipoTramiteController extends Controller
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-    $em = $this->getDoctrine()->getManager();
-    $em->persist($tipoTramite);
-    $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($tipoTramite);
+        $em->flush();
 
-    // set flash messages
-    $this->get('session')->getFlashBag()->add('success', 'El registro se ha guardado satisfactoriamente.');
+        // set flash messages
+        $this->get('session')->getFlashBag()->add('success', 'El registro se ha guardado satisfactoriamente.');
 
-    return $this->redirectToRoute('tipotramite_index');
+        return $this->redirectToRoute('tipotramite_index');
 
     }
 
@@ -92,15 +92,19 @@ class TipoTramiteController extends Controller
     $editForm = $this->createForm(TipoTramiteType::class, $tipoTramite);
     $editForm->handleRequest($request);
 
+    dump($tipoTramite->getPathFiles());
+
     if ($editForm->isSubmitted() && $editForm->isValid()) {
-    $em = $this->getDoctrine()->getManager();
-    $em->persist($tipoTramite);
-    $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($tipoTramite);
+        $em->flush();
 
-    // set flash messages
-    $this->get('session')->getFlashBag()->add('success', 'El registro se ha actualizado satisfactoriamente.');
 
-    return $this->redirectToRoute('tipotramite_edit', array('id' => $tipoTramite->getId()));
+
+        // set flash messages
+        $this->get('session')->getFlashBag()->add('success', 'El registro se ha actualizado satisfactoriamente.');
+
+        return $this->redirectToRoute('tipotramite_edit', array('id' => $tipoTramite->getId()));
     }
 
     return $this->render('AdminBundle:tipotramite:edit.html.twig', array(
@@ -121,11 +125,11 @@ class TipoTramiteController extends Controller
 
     if ($form->isSubmitted() && $form->isValid()) {
     try{
-    $em = $this->getDoctrine()->getManager();
-    $em->remove($tipoTramite);
-    $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($tipoTramite);
+        $em->flush();
 
-    $this->get('session')->getFlashBag()->add('success', 'El registro se ha dado de baja satisfactoriamente.');
+        $this->get('session')->getFlashBag()->add('success', 'El registro se ha dado de baja satisfactoriamente.');
     }catch(\Exception $e){
     $this->get('session')->getFlashBag()->add('error', 'Hubo un error al intentar eliminar el registro.');
     }

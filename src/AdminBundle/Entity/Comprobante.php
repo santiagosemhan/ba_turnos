@@ -2,6 +2,7 @@
 namespace AdminBundle\Entity;
 
 use AdminBundle\Entity\Base\BaseClass;
+use Defuse\Crypto\Crypto;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -280,7 +281,7 @@ class Comprobante extends BaseClass
             $this->getLetra().'#'.
             $this->getNumero().'&'.
             $this->getTipoTramite();
-        dump(explode("$", $texto));
-        return \SaferCrypto::encrypt($texto,$this->getSecretKey());
+        return Crypto::encrypt($texto,$this->getSecretKey());
+        //return \SaferCrypto::encrypt($texto,$this->getSecretKey());
     }
 }

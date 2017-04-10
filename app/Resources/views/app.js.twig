@@ -1,0 +1,72 @@
+/**
+ * Created by santiago on 25/5/16.
+ */
+
+//Codigo ejecutado al Inicio, común a todas las ventanas.
+$(document).ready(function () {
+
+    {#var websocket_connection = server.getWsNotifications();#}
+
+    {#var not = io(websocket_connection);#}
+
+    {#not.on('sistema',function(data){#}
+        {#console.log('sistema');#}
+        {#console.log(data);#}
+    {#});#}
+
+    {#not.on('grupal_{{ equipo.id }}',function(data){#}
+        {#console.log('equipo');#}
+        {#console.log(data);#}
+    {#});#}
+
+    {#not.on('personal_{{ app.user.persona.id }}',function(data){#}
+        {#console.log('personal');#}
+        {#console.log(data);#}
+    {#});#}
+
+
+    /**
+     * Funciones relacionadas con los modales
+     *
+     */
+    $('.delete-obj').click(function(){
+        $('#modal-delete-obj').modal('show',this);
+        return false;
+    });
+
+    $('#modal-delete-obj').on('show.bs.modal', function(e) {
+
+        $(this).find('.btn-confirm').click(function(){
+
+            var objId = $(e.relatedTarget).data('id');
+
+            var actionString = $('.delete-obj-form form').attr('action');
+
+            var actionString = actionString.replace(/__obj_id__/g, objId);
+
+            $('.delete-obj-form form').attr('action',actionString);
+
+            $('.delete-obj-form form').submit();
+        });
+
+    });
+
+
+
+
+    $(document).ajaxStart(function() { Pace.restart(); });
+
+
+});
+
+/**
+ * Funcion que deja en estado cargando el box especificado.
+ * @param boxId
+ */
+function overlayBox(boxId){
+   $(boxId).append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
+}
+
+function removeOverlayBox(boxId){
+    $(boxId).find('.overlay').remove();
+}

@@ -128,6 +128,11 @@ vich_uploader:
             delete_on_update:   true
             delete_on_remove:   true
 
+            namer:  vich_uploader.namer_origname
+            directory_namer:
+                service: vich_uploader.directory_namer_subdir
+                options: {chars_per_dir: 4}
+
 beelab_recaptcha2:
     # request_method: curl_post
     site_key: "%recaptcha_site_key%"

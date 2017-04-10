@@ -1,7 +1,7 @@
     {% extends 'admin_base.html.twig' %}
 
 
-    {% set __title = 'Nuevo Texto Mail' %}
+    {% set __title = 'Nuevo Turno Tramite' %}
 
     {% block content %}
     <div class="box box-success">
@@ -13,7 +13,7 @@
                     {{ form_widget(form) }}
                     <div class="box-footer">
                         <input class="btn btn-success" type="submit" value="Crear"/>
-                        <a class="btn btn-default" href="{{ path('texto_mail_index') }}"> Volver al Listado</a>
+                        <a class="btn btn-default" href="{{ path('turnotramite_index') }}"> Volver al Listado</a>
                     </div>
 
                     {{ form_end(form) }}
@@ -23,15 +23,3 @@
     </div>
 
     {% endblock %}
-
-{% block footer_javascript %}
-    {{ parent() }}
-    <script src="{{ asset('assets/vendor/ckeditor/ckeditor.js') }}"></script>
-    <script>
-        $(function () {
-            $(function () {
-                CKEDITOR.replace( 'adminbundle_textomail_texto',{ extraAllowedContent : '*{*}'} );
-            });
-        });
-    </script>
-{% endblock  %}

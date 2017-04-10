@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
@@ -91,6 +93,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
+     * @Assert\File(
+     *     maxSize="10M"
+     * )
+     *
      * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento1")
      *
      * @var File
@@ -98,6 +104,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $documento1File;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Assert\File(
+     *     maxSize="10M"
+     * )
      *
      * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento2")
      *
@@ -107,6 +117,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
+     * @Assert\File(
+     *     maxSize="10M"
+     * )
+     *
      * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento3")
      *
      * @var File
@@ -114,6 +128,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $documento3File;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Assert\File(
+     *     maxSize="10M"
+     * )
      *
      * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento4")
      *
@@ -123,6 +141,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
+     * @Assert\File(
+     *     maxSize="10M"
+     * )
+     *
      * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento5")
      *
      * @var File
@@ -130,6 +152,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $documento5File;
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Assert\File(
+     *     maxSize="10M"
+     * )
      *
      * @Vich\UploadableField(mapping="tramites_file", fileNameProperty="documento6")
      *
@@ -551,15 +577,15 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param UploadedFile  $file
      *
-     * @return TipoTramite
+     * @return UploadedFile
      */
     public function setDocumento1File(File $file = null)
     {
         $this->documento1File = $file;
 
-        if ($file) {
+        if ($file instanceof UploadedFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -569,7 +595,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @return File|null
+     * @return UploadedFile
      */
     public function getDocumento1File()
     {
@@ -577,15 +603,15 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param UploadedFile $file
      *
-     * @return TipoTramite
+     * @return UploadedFile
      */
     public function setDocumento2File(File $file = null)
     {
         $this->documento2File = $file;
 
-        if ($file) {
+        if ($file instanceof UploadedFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -595,7 +621,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @return File|null
+     * @return UploadedFile
      */
     public function getDocumento2File()
     {
@@ -603,15 +629,15 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param UploadedFile $file
      *
-     * @return TipoTramite
+     * @return UploadedFile
      */
     public function setDocumento3File(File $file = null)
     {
         $this->documento3File = $file;
 
-        if ($file) {
+        if ($file instanceof UploadedFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -621,7 +647,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @return File|null
+     * @return UploadedFile
      */
     public function getDocumento3File()
     {
@@ -629,15 +655,15 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param UploadedFile $file
      *
-     * @return TipoTramite
+     * @return UploadedFile
      */
     public function setDocumento4File(File $file = null)
     {
         $this->documento4File = $file;
 
-        if ($file) {
+        if ($file instanceof UploadedFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -647,7 +673,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @return File|null
+     * @return UploadedFile
      */
     public function getDocumento4File()
     {
@@ -655,15 +681,15 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param UploadedFile $file
      *
-     * @return TipoTramite
+     * @return UploadedFile
      */
     public function setDocumento5File(File $file = null)
     {
         $this->documento5File = $file;
 
-        if ($file) {
+        if ($file instanceof UploadedFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -673,7 +699,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @return File|null
+     * @return UploadedFile
      */
     public function getDocumento5File()
     {
@@ -681,15 +707,15 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param UploadedFile $file
      *
-     * @return TipoTramite
+     * @return UploadedFile
      */
     public function setDocumento6File(File $file = null)
     {
         $this->documento6File = $file;
 
-        if ($file) {
+        if ($file instanceof UploadedFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
@@ -699,7 +725,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * @return File|null
+     * @return UploadedFile
      */
     public function getDocumento6File()
     {
@@ -719,9 +745,36 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-          'id' => $this->getId(),
-          'descripcion'=>$this->getDescripcion(),
-          'texto'=> $this->getTexto()
+            'id' => $this->getId(),
+            'descripcion'=>$this->getDescripcion(),
+            'texto'=> $this->getTexto(),
+            'file' => $this->getPathFiles(),
         ];
+    }
+
+    public function getPathFiles(){
+        $array = array();
+        if($this->documento1){
+            $array[] = 'documento1';
+        }
+        if($this->documento2){
+            $array[] = 'documento2';
+        }
+        if($this->documento3){
+            $array[] = 'documento3';
+        }
+        if($this->documento4){
+            $array[] = 'documento4';
+        }
+        if($this->documento5){
+            $array[] = 'documento5';
+        }
+        if($this->documento6){
+            $array[] = 'documento6';
+        }
+        //how to use:
+        //$helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+        //$path = $helper->asset(Tipo Tramite $entity, $array[$index]);
+        return $array;
     }
 }

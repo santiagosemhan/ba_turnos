@@ -10,12 +10,149 @@
                 <div class="col-md-9">
                     <!-- form start -->
                     {{ form_start(edit_form) }}
-                    {{ form_widget(edit_form) }}
+                    <div id="adminbundle_turnosede">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_lunes">{{ form_label(edit_form.lunes) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.lunes) }}
+                                {{ form_errors(edit_form.lunes) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_martes">{{ form_label(edit_form.martes) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.martes) }}
+                                {{ form_errors(edit_form.martes) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_miercoles">{{ form_label(edit_form.miercoles) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.miercoles) }}
+                                {{ form_errors(edit_form.miercoles) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_jueves">{{ form_label(edit_form.jueves) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.jueves) }}
+                                {{ form_errors(edit_form.jueves) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_viernes">{{ form_label(edit_form.viernes) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.viernes) }}
+                                {{ form_errors(edit_form.viernes) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_sabado">{{ form_label(edit_form.sabado) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.sabado) }}
+                                {{ form_errors(edit_form.sabado) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosede_horaTurnoDesde">
+                                {{ form_label(edit_form.horaTurnosDesde) }}
+                            </label>
+                            <div class="col-sm-8 ">
+                                <div class="bootstrap-timepicker">
+                                    <div class="input-group">
+                                        {{ form_widget(edit_form.horaTurnosDesde) }}
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        {{ form_errors(edit_form.horaTurnosDesde) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosede_horaTurnoHasta">
+                                {{ form_label(edit_form.horaTurnosHasta) }}
+                            </label>
+                            <div class="col-sm-8 ">
+                                <div class="bootstrap-timepicker">
+                                    <div class="input-group">
+                                        {{ form_widget(edit_form.horaTurnosHasta) }}
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        {{ form_errors(edit_form.horaTurnosHasta) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosede_cantidadTurnos">{{ form_label(edit_form.cantidadTurnos) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.cantidadTurnos) }}
+                                {{ form_errors(edit_form.cantidadTurnos) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosede_cantidadFrecuencia">{{ form_label(edit_form.cantidadFrecuencia) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.cantidadFrecuencia) }}
+                                {{ form_errors(edit_form.cantidadFrecuencia) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosede_frecunciaTurnoControl">{{ form_label(edit_form.frecunciaTurnoControl) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.frecunciaTurnoControl) }}
+                                {{ form_errors(edit_form.frecunciaTurnoControl) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_vigenciaDesde">
+                                {{ form_label(edit_form.vigenciaDesde) }}
+                            </label>
+                            <div class="col-sm-8 ">
+                                <div class="input-group date">
+                                    {{ form_widget(edit_form.vigenciaDesde) }}
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    {{ form_errors(edit_form.vigenciaDesde) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="adminbundle_turnosede_vigenciaHasta">
+                                {{ form_label(edit_form.vigenciaHasta) }}
+                            </label>
+                            <div class="col-sm-8 ">
+                                <div class="input-group date">
+                                    {{ form_widget(edit_form.vigenciaHasta) }}
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    {{ form_errors(edit_form.vigenciaHasta) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosedeo_activo">{{ form_label(edit_form.activo) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.activo) }}
+                                {{ form_errors(edit_form.activo) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turnosede_sede">{{ form_label(edit_form.sede) }}</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(edit_form.sede) }}
+                                {{ form_errors(edit_form.sede) }}
+                            </div>
+                        </div>
+                    </div>
                     <div class="box-footer">
                         <input class="btn btn-success" type="submit" value="Editar"/>
                         <a class="btn btn-default" href="{{ path('turnossede_index') }}"> Volver al Listado</a>
                     </div>
-
                     {{ form_end(edit_form) }}
                 </div>
             </div>
@@ -24,3 +161,33 @@
 
     {% endblock %}
 
+
+    {% block stylesheets %}
+        {{ parent() }}
+        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/timepicker/bootstrap-timepicker.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/datepicker3.css') }}">
+    {% endblock %}
+
+    {% block footer_javascript %}
+        {{ parent() }}
+        <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+        <script src="{{ asset('assets/vendor/AdminLTE/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/locales/bootstrap-datepicker.es.js') }}"></script>
+        <script>
+            $(function () {
+                //Date picker
+                $('.datepicker').datepicker({
+                    autoclose: true,
+                    format: 'dd/mm/yyyy',
+                    language: 'es',
+                    startDate: 'd',
+                    startView: '0 days'
+                });
+
+                //Timepicker
+                $(".timepicker").timepicker({
+                    showInputs: false
+                });
+            });
+        </script>
+    {% endblock  %}

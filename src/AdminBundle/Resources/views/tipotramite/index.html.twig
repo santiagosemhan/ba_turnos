@@ -12,8 +12,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Descripcion</th>
-                            <th>Texto</th>
-                            <th>Sinturno</th>
+                            <th>Sin Turno</th>
                             <th>Activo</th>
                             <th>Acciones</th>
                         </tr>
@@ -23,7 +22,6 @@
                         <tr>
                             <td><a href="{{ path('tipotramite_show', { 'id': tipoTramite.id }) }}">{{ tipoTramite.id }}</a></td>
                             <td>{{ tipoTramite.descripcion }}</td>
-                            <td>{{ tipoTramite.texto }}</td>
                             <td>{% if tipoTramite.sinTurno %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
                             <td>{% if tipoTramite.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
                             <td>

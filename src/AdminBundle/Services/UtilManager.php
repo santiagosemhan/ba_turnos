@@ -30,16 +30,48 @@ class UtilManager
      *
      * @return DateTime (Formato H:i:s)
      */
-    public function getHoraDateTime($horaString){
-        var_dump($horaString);
-        $hora = (substr($horaString,0,2));
-        $min = (substr($horaString,3,2));
-        if(substr($horaString,6,2) == 'PM'){
+    public function getHoraDateTime($horaString)
+    {
+        $hora = 0;$min=0;
+        if (strlen($horaString) == 7) {
+            $hora = (substr($horaString, 0, 1));
+            $min = (substr($horaString, 2, 2));
+            if (substr($horaString, 5, 2) == 'PM') {
+                if ($hora != 12) {
+                    $hora = $hora + 12;
+                }
+            }
+        } else {
+            $hora = (substr($horaString, 0, 2));
+            $min = (substr($horaString, 3, 2));
+            if (substr($horaString, 6, 2) == 'PM') {
+                if ($hora != 12) {
+                    $hora = $hora + 12;
+                }
+            }
+        }
+
+
+        return( new \DateTime($hora.':'.$min.':00'));
+    }
+
+    /*
+     * get Hora
+     *
+     * @param DateTime $hora
+     *
+     * @return String
+     */
+    public function getHoraString($horaDateTime){
+        $string = $horaDateTime->format('h:i A');
+        $hora = (substr($string,0,2));
+        $min = (substr($string,3,2));
+        if(substr($string,6,2) == 'PM'){
             if($hora!=12){
                 $hora = $hora +12;
             }
         }
-        return( new \DateTime($hora.':'.$min.':00'));
+        return( $hora.':'.$min.':00');
     }
 
     /*

@@ -120,6 +120,7 @@
                         <li><a href="{{ path('tipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Tipo Tramite</a></li>
                         <li><a href="{{ path('feriado_index') }}"><i class="fa fa-sign-out"></i> Feriado</a></li>
                         <li><a href="{{ path('turnossede_index') }}"><i class="fa fa-calendar-check-o"></i> Turnos por Sede</a></li>
+                        <li><a href="{{ path('turnotramite_index') }}"><i class="fa fa-calendar-check-o"></i> Turnos por Tramite por Sede </a></li>
                         <li><a href="{{ path('texto_mail_index') }}"><i class="fa fa-envelope-o"></i> Parametrización Mail</a></li>
 
                     </ul>
@@ -220,6 +221,8 @@
     <script src="{{ asset('assets/vendor/AdminLTE/plugins/fastclick/fastclick.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/vendor/AdminLTE/dist/js/app.min.js') }}"></script>
+
+    <script type="text/javascript">{% include 'app.js.twig' %} </script>
 
 {% endblock %}
 

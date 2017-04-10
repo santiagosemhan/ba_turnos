@@ -35,7 +35,8 @@
         "knplabs/knp-paginator-bundle": "^2.5",
         "vich/uploader-bundle": "^1.5",
         "ocramius/proxy-manager": "2.0.4",
-        "beelab/recaptcha2-bundle": "^1.3"
+        "beelab/recaptcha2-bundle": "^1.3",
+        "defuse/php-encryption": "^2.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.0"

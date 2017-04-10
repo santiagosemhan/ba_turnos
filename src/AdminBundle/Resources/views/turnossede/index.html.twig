@@ -11,6 +11,7 @@
                         <thead>
                         <tr>
                                 <th>Id</th>
+                                <th>Sede</th>
                                 <th>Días</th>
                                 <th>Hora desde</th>
                                 <th>Hora hasta</th>
@@ -27,9 +28,10 @@
                         {% for turnosSede in turnosSedes %}
                         <tr>
                                     <td><a href="{{ path('turnossede_show', { 'id': turnosSede.id }) }}">{{ turnosSede.id }}</a></td>
+                                    <td>{{ turnosSede.sede }}</td>
                                     <td>{{ turnosSede.diasAtiende }}</td>
-                                    <td>{% if turnosSede.horaTurnosDesde %}{{ turnosSede.horaTurnosDesde }}{% endif %}</td>
-                                    <td>{% if turnosSede.horaTurnosHasta %}{{ turnosSede.horaTurnosHasta }}{% endif %}</td>
+                                    <td>{% if turnosSede.horaTurnosDesde %}{{ turnosSede.horaTurnosDesde|date('H:i A')  }}{% endif %}</td>
+                                    <td>{% if turnosSede.horaTurnosHasta %}{{ turnosSede.horaTurnosHasta|date('H:i A')  }}{% endif %}</td>
                                     <td>{{ turnosSede.cantidadTurnos }}</td>
                                     <td>{{ turnosSede.cantidadFrecuencia }}</td>
                                     <td>{{ turnosSede.frecunciaTurnoControl }}</td>
