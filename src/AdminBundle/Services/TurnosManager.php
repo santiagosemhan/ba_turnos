@@ -798,6 +798,7 @@ class TurnosManager
                         $comprobante->setLetra($turno->getSede()->getLetra());
                         $comprobante->setNumero($turno->getNumero());
                         $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                        $comprobante->setSecretKey($this->secret);
                         $this->em->persist($comprobante);
 
                         $mail = new Mail();

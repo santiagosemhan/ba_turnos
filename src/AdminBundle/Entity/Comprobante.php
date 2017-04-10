@@ -282,6 +282,5 @@ class Comprobante extends BaseClass
             $this->getNumero().'&'.
             $this->getTipoTramite();
         return Crypto::encrypt($texto,$this->getSecretKey());
-        //return \SaferCrypto::encrypt($texto,$this->getSecretKey());
     }
 }
