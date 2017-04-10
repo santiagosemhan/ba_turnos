@@ -281,7 +281,7 @@ class Comprobante extends BaseClass
     public function getHash()
     {
         $texto =  $this->getId().'$'.
-            $this->getTurnoId()->getId().'%'.
+            $this->getTurno()->getId().'%'.
             $this->getLetra().'#'.
             $this->getNumero().'&'.
             $this->getTipoTramite();
