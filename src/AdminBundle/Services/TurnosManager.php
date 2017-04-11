@@ -810,6 +810,8 @@ class TurnosManager
                         $comprobante->setLetra($turno->getSede()->getLetra());
                         $comprobante->setNumero($turno->getNumero());
                         $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                        $comprobante->setFecha($turno->getFechaTurno()->format('d/m/Y'));
+                        $comprobante->setHora($turno->getHoraTurno()->format('h:i'));
                         $comprobante->setSecretKey($this->secret);
                         $this->em->persist($comprobante);
 

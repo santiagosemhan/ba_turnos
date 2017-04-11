@@ -42,6 +42,16 @@ class Comprobante extends BaseClass
     private $numero;
 
     /**
+     * @ORM\Column(name="hora",type="string", nullable=true)
+     */
+    private $hora;
+
+    /**
+     * @ORM\Column(name="fecha",type="string", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="tipo_tramite",type="string", nullable=true)
      */
     private $tipoTramite;
@@ -288,5 +298,53 @@ class Comprobante extends BaseClass
             //$key = Key::createNewRandomKey();
             //var_dump($key->saveToAsciiSafeString());exit;
         return Crypto::encrypt($texto,Key::loadFromAsciiSafeString($this->getSecretKey()));
+    }
+
+    /**
+     * Set hora
+     *
+     * @param string $hora
+     *
+     * @return Comprobante
+     */
+    public function setHora($hora)
+    {
+        $this->hora = $hora;
+
+        return $this;
+    }
+
+    /**
+     * Get hora
+     *
+     * @return string
+     */
+    public function getHora()
+    {
+        return $this->hora;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param string $fecha
+     *
+     * @return Comprobante
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return string
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
     }
 }
