@@ -67,6 +67,7 @@ class DisponibilidadManager
             $busca =false;
         }
         if($busca){
+
             $primerDia = $this->util->getFechaDateTime(sprintf("%02d",$diaRecorrido) . '/' . sprintf("%02d",$mes) . '/' . $anio, '00:00:00');
             $ultimoDia = $this->util->getUltimaFechaMesDateTime($mes, $anio, '23:59:59');
             $ultimoDiaMes = intval($ultimoDia->format('d'));
@@ -189,6 +190,8 @@ class DisponibilidadManager
                 foreach ($turnoSede->getTurnoTramite() as $tipoTramiteTurno){
                     if($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId){
                         $cantidad = $tipoTramiteTurno->getCantidadTurno();
+                    }else{
+                        $cantidad = $turnoSede->getCantidadTurnos();
                     }
                 }
             }else{
@@ -203,6 +206,8 @@ class DisponibilidadManager
                 foreach ($turnoSede->getTurnoTramite() as $tipoTramiteTurno){
                     if($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId){
                         $cantidad = $tipoTramiteTurno->getCantidadTurno();
+                    }else{
+                        $cantidad = $turnoSede->getCantidadTurnos();
                     }
                 }
             }else{
