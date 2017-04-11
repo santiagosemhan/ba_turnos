@@ -123,9 +123,9 @@ class DefaultController extends Controller
                 $session->invalidate();
 
                 // set flash messages
-                $this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');
+                //$this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');
 
-                dump($hash);
+                //dump($hash);
 
                 return $this->redirectToRoute('generar_comprobante', array('hash' => $hash));
             } catch (\Exception $ex) {
