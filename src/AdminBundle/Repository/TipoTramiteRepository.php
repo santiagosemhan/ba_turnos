@@ -27,4 +27,12 @@ class TipoTramiteRepository extends EntityRepository
 
         return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
     }
+
+    public function getTipoTramiteByOpcionesGenerales($id,$hidrate_array = false){
+        $qb = $this->createQueryBuilder('tt')
+            ->where('tt.opcionesGenerales = :opcionesGenerales')
+            ->setParameter("opcionesGenerales", $id)
+            ->getQuery();
+        return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
+    }
 }

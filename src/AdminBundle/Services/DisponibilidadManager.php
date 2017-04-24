@@ -27,17 +27,17 @@ class DisponibilidadManager
         return $this->mesAtincipacionTurnos;
     }
 
-    public function getOpcionesGenerales($hidrate_array = false){
+    public function getOpcionesGenerales($hydrate_array = false){
         $opcionesGenerales= $this->getDoctrine()->getRepository('AdminBundle:OpcionesGenerales');
-        return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hidrate_array);
+        return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hydrate_array);
     }
 
-    public function obtenerTipoTramite($opcionGeneralId){
-        $opcionClase = $this->em->getRepository('AdminBundle:OpcionesGenerales')->findOneById($opcionGeneralId);
-        return  $opcionClase->getTipoTramite();
+    public function obtenerTipoTramite($opcionGeneralId,$hydrate_array=false){
+        $tiposTramites= $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
+        return $opcionGeneral = $tiposTramites->getTipoTramiteByOpcionesGenerales($opcionGeneralId,$hydrate_array);
     }
 
-    public function obtenerSedePorTipoTramte($tipoTramiteId){
+    public function obtenerSedePorTipoTramte($tipoTramiteId,$hydrate_array = false){
         $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findOneById($tipoTramiteId);
         $array = array();
         foreach ($tipoTramite->getTurnoTipoTramite() as $turnoTipoTramte){
@@ -46,7 +46,17 @@ class DisponibilidadManager
                 if($turnoSede){
                     $sede = $turnoSede->getSede();
                     if($sede){
-                        $array[$sede->getId()] = $sede;
+                        if($hydrate_array){
+                            $array[$sede->getId()] = array(
+                                                                'id'=>$sede->getId(),
+                                                                'sede'=>$sede->getSede(),
+                                                                'direccion'=>$sede->getDireccion(),
+                                                                'letra'=>$sede->getLetra(),
+                                                            );
+                        }else{
+                            $array[$sede->getId()] = $sede;
+                        }
+
                     }
                 }
             }
