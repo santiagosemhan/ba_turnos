@@ -76,10 +76,6 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      */
     private $slug;
 
-    /**
-     * @ORM\OneToMany(targetEntity="SedeTipoTramite", mappedBy="tipoTramite")
-     */
-    private $sedeTipoTramite;
 
     /**
      * @ORM\OneToMany(targetEntity="Turno", mappedBy="tipoTramite")
@@ -87,9 +83,17 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $turno;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurnoTramite", mappedBy="tipoTramite")
+     * @ORM\OneToMany(targetEntity="TurnoTipoTramite", mappedBy="tipoTramite")
      */
-    private $turnoTramite;
+    private $turnoTipoTramite;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="OpcionesGenerales", inversedBy="tipoTramite")
+     * @ORM\JoinColumn(name="opciones_generales_id", referencedColumnName="id")
+     */
+    private $opcionesGenerales;
+
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
@@ -449,29 +453,6 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * Set sedeTipoTramite
-     *
-     * @param \AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite
-     *
-     * @return TipoTramite
-     */
-    public function setSedeTipoTramite(\AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite = null)
-    {
-        $this->sedeTipoTramite = $sedeTipoTramite;
-
-        return $this;
-    }
-
-    /**
-     * Get sedeTipoTramite
-     *
-     * @return \AdminBundle\Entity\SedeTipoTramite
-     */
-    public function getSedeTipoTramite()
-    {
-        return $this->sedeTipoTramite;
-    }
 
     /**
      * Add turno
@@ -507,39 +488,6 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this->turno;
     }
 
-    /**
-     * Add turnoTramite
-     *
-     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
-     *
-     * @return TipoTramite
-     */
-    public function addTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
-    {
-        $this->turnoTramite[] = $turnoTramite;
-
-        return $this;
-    }
-
-    /**
-     * Remove turnoTramite
-     *
-     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
-     */
-    public function removeTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
-    {
-        $this->turnoTramite->removeElement($turnoTramite);
-    }
-
-    /**
-     * Get turnoTramite
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTurnoTramite()
-    {
-        return $this->turnoTramite;
-    }
 
     /**
      * Set creadoPor
@@ -739,7 +687,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      */
     public function __toString()
     {
-        return $this->getDescripcion();
+        return $this->opcionesGenerales->getDescripcion().' - '.$this->getDescripcion();
     }
 
     public function jsonSerialize()
@@ -776,5 +724,63 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         //$helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
         //$path = $helper->asset(Tipo Tramite $entity, $array[$index]);
         return $array;
+    }
+
+    /**
+     * Add turnoTipoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite
+     *
+     * @return TipoTramite
+     */
+    public function addTurnoTipoTramite(\AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite)
+    {
+        $this->turnoTipoTramite[] = $turnoTipoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Remove turnoTipoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite
+     */
+    public function removeTurnoTipoTramite(\AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite)
+    {
+        $this->turnoTipoTramite->removeElement($turnoTipoTramite);
+    }
+
+    /**
+     * Get turnoTipoTramite
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTurnoTipoTramite()
+    {
+        return $this->turnoTipoTramite;
+    }
+
+    /**
+     * Set opcionesGenerales
+     *
+     * @param \AdminBundle\Entity\OpcionesGenerales $opcionesGenerales
+     *
+     * @return TipoTramite
+     */
+    public function setOpcionesGenerales(\AdminBundle\Entity\OpcionesGenerales $opcionesGenerales = null)
+    {
+        $this->opcionesGenerales = $opcionesGenerales;
+
+        return $this;
+    }
+
+    /**
+     * Get opcionesGenerales
+     *
+     * @return \AdminBundle\Entity\OpcionesGenerales
+     */
+    public function getOpcionesGenerales()
+    {
+        return $this->opcionesGenerales;
     }
 }

@@ -11,6 +11,8 @@ use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TurnosManager
 {
@@ -18,6 +20,7 @@ class TurnosManager
     private $disponibilidad;
     private $mailer;
     private $secret;
+    private $router;
 
     private $emailFrom = 'mail@milentar.com';
 
@@ -37,6 +40,9 @@ class TurnosManager
         $this->mailer= $mailer;
     }
 
+    public function setRouter(Router $router){
+        $this->router = $router;
+    }
     /**
      * Obtener turnos sin confirmador
      *
@@ -49,7 +55,7 @@ class TurnosManager
     {
         $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
         $repository = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p');
-        $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
+        $repository->where('(p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta) AND p.fechaCancelado IS NULL ')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
         $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
         $repository->orderBy('p.horaTurno', 'ASC');
         return  $repository->getQuery()->getResult();
@@ -114,26 +120,27 @@ class TurnosManager
 
         switch ($estado) {
             case 0: //Sin Corfirmar
-                $repository->andWhere('p.fechaConfirmacion IS NULL');
+                $repository->andWhere('p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL');
                 break;
             case 1: //Confirmados
-                $repository->andWhere('p.fechaConfirmacion IS NOT NULL');
+                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL');
                 break;
             case 2: //Confirmados Sin Turnos
-                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true');
+                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL');
                 break;
             case 3: //Confirmados Con Turnos
-                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false');
+                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL');
                 break;
             case 4: //Atendidos
+                $repository->andWhere('p.fechaCancelado IS NULL');
                 $repository->andWhere($repository->expr()->exists($sub->getDQL()));
                 break;
             case 5: //Atendidos Sin Turnos
-                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true');
+                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL');
                 $repository->andWhere($repository->expr()->exists($sub->getDQL()));
                 break;
             case 6: //Atendidos Con Turnos
-                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false');
+                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL');
                 $repository->andWhere($repository->expr()->exists($sub->getDQL()));
                 break;
             case 7: //Confirmados y no Atendido
@@ -143,8 +150,11 @@ class TurnosManager
                 $sub->from("AdminBundle:ColaTurno", "t");
                 $sub->andWhere('t.turno = p.id AND t.atendido = false');
 
-                $repository->andWhere('p.fechaConfirmacion IS NOT NULL');
+                $repository->andWhere('p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL');
                 $repository->andWhere($repository->expr()->exists($sub->getDQL()));
+                break;
+            case 8: //Cancelados
+                $repository->andWhere('p.fechaCancelado IS NOT NULL');
                 break;
         }
 
@@ -870,6 +880,80 @@ class TurnosManager
         return true;
     }
 
+    public function getComprobanteByHash($hash)
+    {
+        try {
+            $comprobante = null;
+            $texto = explode("$", Crypto::decrypt($hash, Key::loadFromAsciiSafeString($this->secret)));
+            if (isset($texto[0])) {
+                $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findOneBy(array('id' => $texto[0]));
+            }
+            return $comprobante;
+        }catch (\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $ex){
+            return null;
+        }
+    }
+
+    public function cancelarTurno($cuit,$numeroTurno,$mostrador=false,$cancelacionMasiva=false,$turno=false){
+        $turnos = array();
+        if($turno==false) {
+            $letra = (substr($numeroTurno, 0, 2));
+            $numero = (substr($numeroTurno, 2, strlen($numeroTurno)));
+            $repository = $this->em->getRepository('AdminBundle:Turno', 't')
+                ->createQueryBuilder('t')
+                ->innerJoin('AdminBundle:Sede', 's', 'WITH', 't.sede= s.id')
+                ->where('(t.numero = :numero) AND t.fechaCancelado iS NULL')->setParameter('numero', $numero)
+                ->andWhere('t.cuit = :cuit')->setParameter('cuit', $cuit)
+                ->andWhere('s.letra = :letra')->setParameter('letra', $letra);
+            $turnos = $repository->getQuery()->getResult();
+        }else{
+            $turnos[] = $turno;
+        }
+        foreach ($turnos as $turno){
+
+            $turno->setFechaCancelado(new \DateTime("now"));
+
+            $motivoCancelacion = '';
+
+            if($cancelacionMasiva == false){
+                if($mostrador == false ){
+                    $turno->setCanceladoWeb(true);
+                    $turno->setCanceladoMostrador(false);
+                }else{
+                    $turno->setCanceladoWeb(false);
+                    $turno->setCanceladoMostrador(true);
+                }
+            }else{
+                $motivoCancelacion = $cancelacionMasiva->getMotivo();
+                $turno->setCanceladoWeb(false);
+                $turno->setCanceladoMostrador(false);
+            }
+
+            $turno->setCanceladoMostrador($mostrador);
+
+            $tipoMail = 2;
+            if($cancelacionMasiva != null){
+                $turno->setCancelacionMasiva($cancelacionMasiva);
+                $tipoMail = 3;
+            }
+            $this->em->persist($turno);
+
+            $mail = new Mail();
+            $mail->setTextoMail($this->getCuerpoMail($tipoMail));
+            $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
+            $mail->setTurno($turno);
+            $mail->setEmail($turno->getMail1());
+            $mail->setNombre($turno->getNombreApellido());
+            $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(),$motivoCancelacion));
+            $mail->setEnviado($this->sendEmail($mail));
+            if ($mail->getEnviado()) {
+                $mail->setFechaEnviado(new \DateTime("now"));
+            }
+            $this->em->persist($mail);
+        }
+        $this->em->flush();
+    }
+
     public function getCuerpoMail($tipoEnvio)
     {
         $textoMail = null;
@@ -886,10 +970,10 @@ class TurnosManager
     public function sendEmail($mail)
     {
         $message = \Swift_Message::newInstance()
-                ->setSubject($mail->getAsunto())
-                ->setFrom($this->emailFrom)
-                ->setTo($mail->getEmail())
-                ->setBody(html_entity_decode($mail->getTexto()), 'text/html');
+            ->setSubject($mail->getAsunto())
+            ->setFrom($this->emailFrom)
+            ->setTo($mail->getEmail())
+            ->setBody(html_entity_decode($mail->getTexto()), 'text/html');
 
         if ($this->mailer->send($message) == 1) {
             return true;
@@ -898,36 +982,39 @@ class TurnosManager
         }
     }
 
-    private function formateTexto($turno, $texto)
+    private function formateTexto($turno, $texto,$motivoCancelacionMasiva = '')
     {
-        return str_replace('%LINK_COMPRBANTE%', '#',
-                    str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
-                        str_replace('%SEDE%', $turno->getSede()->getSede(),
-                            str_replace('%CUIT%', $turno->getCuit(),
-                                str_replace('%HORA_TURNO%', $turno->getHoraTurno()->format('H:i'),
-                                    str_replace('%FECHA_TURNO%', $turno->getFechaTurno()->format('d/m/Y'),
-                                        str_replace('%NUMERO_TURNO%', $turno->getSede()->getLetra() . '-' . $turno->getNumero(),
-                                            str_replace('%NOMBRE_PERSONA%', $turno->getNombreApellido(), $texto)
+        return  str_replace('%MOTIVO_CANCELACION_MASIVA%', $motivoCancelacionMasiva,
+                    str_replace('%LINK_CANCELACION%',$this->router->generate('cancelar_turno',array('turno'=>$turno),UrlGeneratorInterface::ABSOLUTE_URL),
+                        str_replace('%LINK_COMPRBANTE%', $this->router->generate('generar_comprobante',array('hash'=>$turno->getComprobante()->getHash()),UrlGeneratorInterface::ABSOLUTE_URL),
+                            str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
+                                str_replace('%SEDE%', $turno->getSede()->getSede(),
+                                    str_replace('%CUIT%', $turno->getCuit(),
+                                        str_replace('%HORA_TURNO%', $turno->getHoraTurno()->format('H:i'),
+                                            str_replace('%FECHA_TURNO%', $turno->getFechaTurno()->format('d/m/Y'),
+                                                str_replace('%NUMERO_TURNO%', $turno->getSede()->getLetra() . '-' . $turno->getNumero(),
+                                                    str_replace('%NOMBRE_PERSONA%', $turno->getNombreApellido(), $texto)
+                                                )
+                                            )
                                         )
                                     )
                                 )
                             )
                         )
                     )
-                );
+                )
+        ;
     }
 
-    public function getComprobanteByHash($hash)
-    {
-        try {
-            $comprobante = null;
-            $texto = explode("$", Crypto::decrypt($hash, Key::loadFromAsciiSafeString($this->secret)));
-            if (isset($texto[0])) {
-                $comprobante = $this->em->getRepository('AdminBundle:Comprobante')->findOneBy(array('id' => $texto[0]));
-            }
-            return $comprobante;
-        }catch (\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $ex){
-            return null;
+    public function cancelarTurnsoMasiva($cancelacionMasiva){
+
+        $repository = $this->em->getRepository('AdminBundle:Turno', 't')
+            ->createQueryBuilder('t')
+            ->where('(t.fechaTurno = :fecha) AND t.fechaCancelado iS NULL')->setParameter('fecha', $cancelacionMasiva->getFecha()->format('Y/m/d'))
+            ->andWhere('t.sede = :sede')->setParameter('sede', $cancelacionMasiva->getSede()->getId());
+        $turnos = $repository->getQuery()->getResult();
+        foreach ($turnos as $turno){
+            $this->cancelarTurno(null,null,false,$cancelacionMasiva,$turno);
         }
     }
 }

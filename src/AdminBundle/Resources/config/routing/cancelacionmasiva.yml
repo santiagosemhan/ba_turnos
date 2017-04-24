@@ -1,0 +1,24 @@
+cancelacionmasiva_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:CancelacionMasiva:index" }
+    methods:  GET
+
+cancelacionmasiva_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:CancelacionMasiva:show" }
+    methods:  GET
+
+cancelacionmasiva_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:CancelacionMasiva:new" }
+    methods:  [GET, POST]
+
+cancelacionmasiva_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:CancelacionMasiva:edit" }
+    methods:  [GET, POST]
+
+cancelacionmasiva_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:CancelacionMasiva:delete" }
+    methods:  DELETE

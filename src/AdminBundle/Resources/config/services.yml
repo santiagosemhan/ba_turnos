@@ -5,10 +5,14 @@ services:
         calls:
           - [ setSecret, [%secret%]]
           - [ setMailer, ['@mailer']]
+          - [ setRouter, ['@router' ]]
+
 
     manager.disponibilidad:
         class:        AdminBundle\Services\DisponibilidadManager
         autowire: true
+        calls:
+          - [ setMesAtincipacionTurnos, [%mes_anticipacion_turnos%]]
 
     manager.usuario:
         class:        AdminBundle\Services\UsuarioManager

@@ -1,0 +1,29 @@
+usuario_index:
+    path:     /
+    defaults: { _controller: "UserBundle:User:index" }
+    methods:  GET
+
+usuario_show:
+    path:     /{id}/show
+    defaults: { _controller: "UserBundle:User:show" }
+    methods:  GET
+
+usuario_new:
+    path:     /new
+    defaults: { _controller: "UserBundle:User:new" }
+    methods:  [GET, POST]
+
+usuario_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "UserBundle:User:edit" }
+    methods:  [GET, POST]
+
+usuario_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "UserBundle:User:delete" }
+    methods:  DELETE
+
+usuario_cambiar_password:
+    path:     /{id}/cambiar-password
+    defaults: { _controller: "UserBundle:User:cambiarPassword" }
+    methods:  [GET, POST]

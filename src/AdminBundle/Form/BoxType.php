@@ -17,7 +17,7 @@ class BoxType extends AbstractType
     {
         $builder->add('descripcion',TextType::class, array('required'=>true))
             ->add('activo')
-            ->add('sede',EntityType::class,array('class' => 'AdminBundle:Sede','choice_label' => 'Sede','required'=>true));
+            ->add('sede',EntityType::class,array('class' => 'AdminBundle:Sede','choice_label' => 'Sede','required'=>true,'attr'  => array('class'=>"select2")));
     }
     
     /**

@@ -23,8 +23,27 @@ turno_confirmar:
     defaults: { _controller: "AdminBundle:Turno:confirmarTurno" }
     methods:  [GET, POST]
 
+turno_show_prioritario:
+    path:     /{id}/show-prioritario
+    defaults: { _controller: "AdminBundle:Turno:showPrioritario" }
+    methods:  GET
+
+turno_confirmar_prioritario:
+    path:     /{id}/confirmar-prioritario
+    defaults: { _controller: "AdminBundle:Turno:confirmarTurnoPrioritario" }
+    methods:  [GET, POST]
+
 turno_imprimir:
     path:     /{id}/imprimir
     defaults: { _controller: "AdminBundle:Turno:imprimir" }
     methods:  GET
 
+turno_cancelar:
+    path:     /{id}/concelar-turno
+    defaults: { _controller: "AdminBundle:Turno:cancelar" }
+    methods:  GET
+
+turno_procesa_cancelar:
+    path:     /{id}/procesar-cancela-turno
+    defaults: { _controller: "AdminBundle:Turno:procesarCancelar" }
+    methods:  [GET, POST]

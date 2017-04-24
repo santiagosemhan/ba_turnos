@@ -31,6 +31,7 @@ class UsuarioSede extends BaseClass
      */
     private $usuario;
 
+
     /**
      * Set fechaCreacion
      *

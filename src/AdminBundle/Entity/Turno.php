@@ -132,6 +132,12 @@ class Turno extends BaseClass
     private $comprobante;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TurnoSede", inversedBy="turno")
+     * @ORM\JoinColumn(name="turno_sede_id", referencedColumnName="id")
+     */
+    private $turnoSede;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -829,5 +835,19 @@ class Turno extends BaseClass
     public function getComprobante()
     {
         return $this->comprobante;
+    }
+
+    /**
+     * Set turnoSede
+     *
+     * @param \AdminBundle\Entity\TurnoSede $turnoSede
+     *
+     * @return Turno
+     */
+    public function setTurnoSede(\AdminBundle\Entity\TurnoSede $turnoSede = null)
+    {
+        $this->turnoSede = $turnoSede;
+
+        return $this;
     }
 }

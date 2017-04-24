@@ -47,6 +47,13 @@ class User extends BaseUser
      */
     private $colaTurnoAtendio;
 
+    /**
+     * @var $usuarioTipoTramite
+     *
+     * @ORM\OneToMany(targetEntity="AdminBundle\Entity\UsuarioTurnoSede", mappedBy="usuario")
+     */
+    private $usuarioTipoTramite;
+
 
 
     public function __construct()
@@ -180,5 +187,53 @@ class User extends BaseUser
     public function getColaTurnoAtendio()
     {
         return $this->colaTurnoAtendio;
+    }
+
+    /**
+     * Set usuarioTipoTramite
+     *
+     * @param \AdminBundle\Entity\UsuarioTurnoSede $usuarioTipoTramite
+     *
+     * @return User
+     */
+    public function setUsuarioTipoTramite(\AdminBundle\Entity\UsuarioTurnoSede $usuarioTipoTramite = null)
+    {
+        $this->usuarioTipoTramite = $usuarioTipoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Get usuarioTipoTramite
+     *
+     * @return \AdminBundle\Entity\UsuarioTurnoSede
+     */
+    public function getUsuarioTipoTramite()
+    {
+        return $this->usuarioTipoTramite;
+    }
+
+    /**
+     * Add usuarioTipoTramite
+     *
+     * @param \AdminBundle\Entity\UsuarioTurnoSede $usuarioTipoTramite
+     *
+     * @return User
+     */
+    public function addUsuarioTipoTramite(\AdminBundle\Entity\UsuarioTurnoSede $usuarioTipoTramite)
+    {
+        $this->usuarioTipoTramite[] = $usuarioTipoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Remove usuarioTipoTramite
+     *
+     * @param \AdminBundle\Entity\UsuarioTurnoSede $usuarioTipoTramite
+     */
+    public function removeUsuarioTipoTramite(\AdminBundle\Entity\UsuarioTurnoSede $usuarioTipoTramite)
+    {
+        $this->usuarioTipoTramite->removeElement($usuarioTipoTramite);
     }
 }

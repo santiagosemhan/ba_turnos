@@ -1,0 +1,73 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Turnos Sede' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                    <td>{{ turnosSede.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dias</th>
+                                    <td>{{ turnosSede.diasAtiende }}</td>
+                            </tr>
+                            <tr>
+                                <th>Hora Desde</th>
+                                    <td>{% if turnosSede.horaTurnosDesde %}{{ turnosSede.horaTurnosDesde|date('H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Hora Hasta</th>
+                                    <td>{% if turnosSede.horaTurnosHasta %}{{ turnosSede.horaTurnosHasta|date('H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad</th>
+                                    <td>{{ turnosSede.cantidadTurnos }}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad Frecuencia</th>
+                                    <td>{{ turnosSede.cantidadFrecuencia }}</td>
+                            </tr>
+                            <tr>
+                                <th>Frecunciaturnocontrol</th>
+                                    <td>{{ turnosSede.frecunciaTurnoControl }}</td>
+                            </tr>
+                            <tr>
+                                <th>Vigenciadesde</th>
+                                    <td>{% if turnosSede.vigenciaDesde %}{{ turnosSede.vigenciaDesde|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Vigenciahasta</th>
+                                    <td>{% if turnosSede.vigenciaHasta %}{{ turnosSede.vigenciaHasta|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Activo</th>
+                                    <td>{% if turnosSede.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fechacreacion</th>
+                                    <td>{% if turnosSede.fechaCreacion %}{{ turnosSede.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fechaactualizacion</th>
+                                    <td>{% if turnosSede.fechaActualizacion %}{{ turnosSede.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="box-footer">
+                        <a class="btn btn-success" href="{{ path('turnosede_edit', { 'id': turnosSede.id }) }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ path('turnosede_index') }}"> Volver al Listado</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

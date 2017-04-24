@@ -213,13 +213,17 @@
                                 {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
                                     <span class="label label-success">{{ turno.estadoInformativo }}</span>
                                 {% else %}
-                                    <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                    <span class="label label-danger">{{ turno.estadoInformativo }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ turno.tipoTramite }}</td>
-                            <td> {% if turno.estadoInformativo == 'Sin Corfirmar' %}
-                                    <a class="btn btn-primary pull-left" href="{{ path('turno_show', { 'id': turno.id }) }}"> Confirmar</a>
-                                    <button type="submit" class="btn btn-danger pull-right">Cancelar</button>
+                            <td>
+                                {% if turno.estadoInformativo == 'Sin Corfirmar' %}
+                                <div class="box-tools pull-right">
+                                    <a class="btn btn-primary"  href="{{ path('turno_show', { 'id': turno.id }) }}"> Confirmar</a>
+                                    <a class="btn btn-primary" href="{{ path('turno_show_prioritario', { 'id': turno.id }) }}"> Confirmar <i class="fa fa-fw fa-star"></i></a>
+                                    <a class="btn btn-danger" href="{{ path('turno_cancelar', { 'id': turno.id }) }}"> Cancelar</a>
+                                </div>
                                 {% endif %}
                             </td>
                         </tr>
@@ -281,7 +285,7 @@
                                         {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
                                             <span class="label label-success">{{ turno.estadoInformativo }}</span>
                                         {% else %}
-                                            <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                            <span class="label label-danger">{{ turno.estadoInformativo }}</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ turno.tipoTramite }}</td>
@@ -344,7 +348,7 @@
                                         {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
                                             <span class="label label-success">{{ turno.estadoInformativo }}</span>
                                         {% else %}
-                                            <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                            <span class="label label-danger">{{ turno.estadoInformativo }}</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ turno.tipoTramite }}</td>
