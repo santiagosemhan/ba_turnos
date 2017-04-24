@@ -27,6 +27,11 @@ class DisponibilidadManager
         return $this->mesAtincipacionTurnos;
     }
 
+    public function getOpcionesGenerales($hidrate_array = false){
+        $opcionesGenerales= $this->getDoctrine()->getRepository('AdminBundle:OpcionesGenerales');
+        return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hidrate_array);
+    }
+
     public function obtenerTipoTramite($opcionGeneralId){
         $opcionClase = $this->em->getRepository('AdminBundle:OpcionesGenerales')->findOneById($opcionGeneralId);
         return  $opcionClase->getTipoTramite();
@@ -122,17 +127,12 @@ class DisponibilidadManager
                     if($turnoSedeDefineTramite){
                         $turnosDelMes = $this->getCantidadDiaTurno($tipoTramiteId,$turnoSede,$turnosDelMes,$diaRecorrido,$ultimoDiaMes,$mes,$anio);
                         $turnosSedeUtilizados[] = $turnoSede;
-                        dump($turnosDelMes);
                     }
                 }else{
                     $turnosDelMes = $this->getCantidadDiaTurno($tipoTramiteId,$turnoSede,$turnosDelMes,$diaRecorrido,$ultimoDiaMes,$mes,$anio);
                     $turnosSedeUtilizados[] = $turnoSede;
-                    dump($turnosDelMes);
                 }
             }
-
-            dump($turnosSedeUtilizados);
-
 
             //Busco y Resto por día los turnos  dados
             $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
@@ -416,12 +416,10 @@ class DisponibilidadManager
                     if($turnoSedeDefineTramite){
                         $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
                         $turnosSedeUtilizados[] = $turnoSede;
-                        dump($turnosDeldia);
                     }
                 }else{
                     $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
                     $turnosSedeUtilizados[] = $turnoSede;
-                    dump($turnosDeldia);
                 }
 
                 /*$turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
