@@ -28,12 +28,12 @@ class DisponibilidadManager
     }
 
     public function getOpcionesGenerales($hydrate_array = false){
-        $opcionesGenerales= $this->getDoctrine()->getRepository('AdminBundle:OpcionesGenerales');
+        $opcionesGenerales= $this->em->getRepository('AdminBundle:OpcionesGenerales');
         return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hydrate_array);
     }
 
     public function obtenerTipoTramite($opcionGeneralId,$hydrate_array=false){
-        $tiposTramites= $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
+        $tiposTramites= $this->em->getRepository('AdminBundle:TipoTramite');
         return $opcionGeneral = $tiposTramites->getTipoTramiteByOpcionesGenerales($opcionGeneralId,$hydrate_array);
     }
 
@@ -705,7 +705,9 @@ class DisponibilidadManager
             $horaTurno = new \DateTime($horaTurno);
         }
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId);
+
         $array = $array['horasHabiles'];
+
         if(in_array ($horaTurno->format('H:i'),$array)){
             return true;
         }else{
@@ -713,7 +715,7 @@ class DisponibilidadManager
         }
     }
 
-    public function verificaTurnoSinConfirmar($cuit,$mail=null){
+    public function verificaTurnoSinConfirmarByPersona($cuit,$mail=null){
         $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
             ->where('p.cuit = :cuit')->setParameter('cuit', $cuit);
         if(!is_null($mail)){
@@ -723,10 +725,12 @@ class DisponibilidadManager
         $repositoryT
             ->andWhere('p.fechaCancelado IS NULL AND p.fechaConfirmacion IS NULL');
         $turnos = $repositoryT->getQuery()->getResult();
+
         if(count($turnos)>0){
             return false;
         }else{
             return true;
         }
+
     }
 }
