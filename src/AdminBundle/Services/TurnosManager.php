@@ -807,11 +807,14 @@ class TurnosManager
     {
         //Controlo Disponibilidad
         if ($this->checkDatos($turno)) {
-            if ($this->disponibilidad->verificaTurnoSinConfirmar($turno->getCuit())) {
-                if ($this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId())) {
+            if ($this->disponibilidad->verificaTurnoSinConfirmarByPersona($turno->getCuit())) {
+                $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
+                if ($status['status']) {
+                    exit;
                     $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                     try {
                         $turno->setViaMostrador(false);
+                        $turno->setTurnoSede($status['data']);
                         $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 
                         $comprobante = new Comprobante();

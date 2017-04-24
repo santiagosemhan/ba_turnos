@@ -377,7 +377,7 @@ class DisponibilidadManager
         return $pertenece;
     }
 
-    public function getHorasDisponibles($dia,$mes,$anio,$tipoTurnoId,$sedeId){
+    public function getHorasDisponibles($dia,$mes,$anio,$tipoTurnoId,$sedeId,$conTurnoSede = false){
         $busca =false;
         $horasHabiles = array();
         $diaDesde = $this->util->getFechaDateTime(sprintf("%02d",$dia) . '/' . sprintf("%02d",$mes) . '/' . $anio, '00:00:00');
@@ -404,6 +404,7 @@ class DisponibilidadManager
             $turnosSedeArray = array();
 
             $turnosDeldia = array();
+            $turnosSedeUtilizados  = array();
             $existe = false;
             foreach ($turnosSede as $turnoSede) {
                 $diaActual = false;
@@ -425,11 +426,21 @@ class DisponibilidadManager
                     }
                     if($turnoSedeDefineTramite){
                         $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
-                        $turnosSedeUtilizados[] = $turnoSede;
+                        if($conTurnoSede){
+                            $turnosSedeUtilizados[] = array ('turnoSede' => $turnoSede, 'tipoTramite'=> $tipoTurnoId, 'turnosDeldia' => $turnosDeldia);
+                        }else{
+                            $turnosSedeUtilizados[] = $turnoSede;
+                        }
+
                     }
                 }else{
                     $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
-                    $turnosSedeUtilizados[] = $turnoSede;
+                    if($conTurnoSede){
+                        $turnosSedeUtilizados[] = array ('turnoSede' => $turnoSede,  'tipoTramite'=> false, 'turnosDeldia' => $turnosDeldia);
+                    }else{
+                        $turnosSedeUtilizados[] = $turnosDeldia;
+                    }
+
                 }
 
                 /*$turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
@@ -515,8 +526,11 @@ class DisponibilidadManager
                     $horasHabiles[] = $clave;
                 }
             }
-
-            $horasHabiles = array( 'horasHabiles' => $horasHabiles);
+            if($conTurnoSede){
+                $horasHabiles = array( 'horasHabiles' => $horasHabiles, 'turnosSedeUtilizados'=>$turnosSedeUtilizados);
+            }else{
+                $horasHabiles = array( 'horasHabiles' => $horasHabiles);
+            }
         }
         return $horasHabiles;
     }
@@ -704,14 +718,22 @@ class DisponibilidadManager
         if(is_string($horaTurno)){
             $horaTurno = new \DateTime($horaTurno);
         }
-        $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId);
+        $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')),intval($fechaTurno->format('m')),intval($fechaTurno->format('Y')),$tipoTurnoId,$sedeId,true);
 
-        $array = $array['horasHabiles'];
+        $arrayHoras = $array['horasHabiles'];
+        $arrayTurno = $array['turnosSedeUtilizados'];
 
-        if(in_array ($horaTurno->format('H:i'),$array)){
-            return true;
+        if(in_array ($horaTurno->format('H:i'),$arrayHoras)){
+            $index = 0;
+            while($index < count( $arrayTurno ) ){
+                if($arrayTurno[$index][tipoTramite] != false){
+                    return array('status'=> true,'data'=>$arrayTurno[$index][turnoSede]);
+                }
+                $index++;
+            }
+            return array('status'=> true,'data'=>$arrayTurno[0][turnoSede]);
         }else{
-            return false;
+            return array('status'=> false);
         }
     }
 
