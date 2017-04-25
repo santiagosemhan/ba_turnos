@@ -46,6 +46,7 @@ class DefaultController extends Controller
         $sedes = [];
 
         if ($tipoTramite) {
+            $sedes = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sede);
             $sedes = $sedeRepository->getSedesByTipoTramite($tipoTramite, true);
         }
 

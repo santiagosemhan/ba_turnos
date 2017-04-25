@@ -1,7 +1,7 @@
     {% extends 'admin_base.html.twig' %}
 
 
-    {% set __title = 'Nuevo Opcion de Tipo Tramite' %}
+    {% set __title = 'Nuevo OpcionGeneral' %}
 
     {% block content %}
     <div class="box box-success">
@@ -13,7 +13,7 @@
                     {{ form_widget(form) }}
                     <div class="box-footer">
                         <input class="btn btn-success" type="submit" value="Crear"/>
-                        <a class="btn btn-default" href="{{ path('opcionesgenerales_index') }}"> Volver al Listado</a>
+                        <a class="btn btn-default" href="{{ path('opciongeneral_index') }}"> Volver al Listado</a>
                     </div>
 
                     {{ form_end(form) }}

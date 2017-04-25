@@ -4,7 +4,7 @@ namespace AdminBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class OpcionesGeneralesControllerTest extends WebTestCase
+class OpcionGeneralControllerTest extends WebTestCase
 {
     /*
     public function testCompleteScenario()
@@ -13,13 +13,13 @@ class OpcionesGeneralesControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Create a new entry in the database
-        $crawler = $client->request('GET', '/opcionesgenerales/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /opcionesgenerales/");
+        $crawler = $client->request('GET', '/opciongeneral/');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /opciongeneral/");
         $crawler = $client->click($crawler->selectLink('Create a new entry')->link());
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            'adminbundle_opcionesgenerales[field_name]'  => 'Test',
+            'adminbundle_opciongeneral[field_name]'  => 'Test',
             // ... other fields to fill
         ));
 
@@ -33,7 +33,7 @@ class OpcionesGeneralesControllerTest extends WebTestCase
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Update')->form(array(
-            'adminbundle_opcionesgenerales[field_name]'  => 'Foo',
+            'adminbundle_opciongeneral[field_name]'  => 'Foo',
             // ... other fields to fill
         ));
 

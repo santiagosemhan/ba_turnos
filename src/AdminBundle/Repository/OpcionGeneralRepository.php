@@ -9,7 +9,7 @@
 namespace AdminBundle\Repository;
 
 
-class OpcionesGeneralesRepository  extends \Doctrine\ORM\EntityRepository
+class OpcionGeneralRepository  extends \Doctrine\ORM\EntityRepository
 {
 
     public function getOpcionesGenerales($hidrate_array = false)

@@ -89,10 +89,10 @@ class TipoTramite extends BaseClass implements \JsonSerializable
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="OpcionesGenerales", inversedBy="tipoTramite")
-     * @ORM\JoinColumn(name="opciones_generales_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="OpcionGeneral", inversedBy="tipoTramite")
+     * @ORM\JoinColumn(name="opcion_general_id", referencedColumnName="id")
      */
-    private $opcionesGenerales;
+    private $opcionGeneral;
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -687,7 +687,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      */
     public function __toString()
     {
-        return $this->opcionesGenerales->getDescripcion().' - '.$this->getDescripcion();
+        return $this->opcionGeneral->getDescripcion().' - '.$this->getDescripcion();
     }
 
     public function jsonSerialize()
@@ -761,26 +761,25 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     }
 
     /**
-     * Set opcionesGenerales
+     * Set opcionGeneral
      *
-     * @param \AdminBundle\Entity\OpcionesGenerales $opcionesGenerales
+     * @param \AdminBundle\Entity\OpcionGeneral $opcionGeneral
      *
      * @return TipoTramite
      */
-    public function setOpcionesGenerales(\AdminBundle\Entity\OpcionesGenerales $opcionesGenerales = null)
+    public function setOpcionGeneral(\AdminBundle\Entity\OpcionGeneral $opcionGeneral = null)
     {
-        $this->opcionesGenerales = $opcionesGenerales;
-
+        $this->opcionGeneral = $opcionGeneral;
         return $this;
     }
 
     /**
      * Get opcionesGenerales
      *
-     * @return \AdminBundle\Entity\OpcionesGenerales
+     * @return \AdminBundle\Entity\OpcionGeneral
      */
-    public function getOpcionesGenerales()
+    public function getOpcionGeneral()
     {
-        return $this->opcionesGenerales;
+        return $this->opcionGeneral;
     }
 }

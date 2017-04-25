@@ -51,6 +51,6 @@ app_turno_sede_usuario_tipo_tramite:
         resource: "@AdminBundle/Resources/config/routing/turnosedeusuariotipotramite.yml"
         prefix:   /asignacion-turno-sede-usuario-tipo-tramite
 
-app_opciones_generales:
-        resource: "@AdminBundle/Resources/config/routing/opcionesgenerales.yml"
-        prefix:   /opciones-generales
+app_opcion_general:
+        resource: "@AdminBundle/Resources/config/routing/opciongeneral.yml"
+        prefix:   /opcion-general

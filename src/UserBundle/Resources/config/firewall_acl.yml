@@ -75,8 +75,8 @@ acl:
       turnosedeusuariotipotramite_show: true
       turnosedeusuariotipotramite_new: true
       turnosedeusuariotipotramite_edit: true
-      opcionesgenerales_index: true
-      opcionesgenerales_show: true
-      opcionesgenerales_new: true
-      opcionesgenerales_edit: true
-      opcionesgenerales_delete: true
+      opciongeneral_index: true
+      opciongeneral_show: true
+      opciongeneral_new: true
+      opciongeneral_edit: true
+      opciongeneral_delete: true

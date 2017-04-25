@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="opciones_generales")
- * @ORM\Entity(repositoryClass="AdminBundle\Repository\OpcionesGeneralesRepository")
+ * @ORM\Table(name="opcion_general")
+ * @ORM\Entity(repositoryClass="AdminBundle\Repository\OpcionGeneralRepository")
  */
-class OpcionesGenerales extends BaseClass
+class OpcionGeneral extends BaseClass
 {
     /**
      * @ORM\Id
@@ -36,7 +36,7 @@ class OpcionesGenerales extends BaseClass
     private $descripcionLarga;
 
     /**
-     * @ORM\OneToMany(targetEntity="TipoTramite", mappedBy="opcionesGenerales")
+     * @ORM\OneToMany(targetEntity="TipoTramite", mappedBy="opcionGeneral")
      */
     private $tipoTramite;
     /**
@@ -67,7 +67,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param string $descripcion
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function setDescripcion($descripcion)
     {
@@ -91,7 +91,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param string $descripcionLarga
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function setDescripcionLarga($descripcionLarga)
     {
@@ -115,7 +115,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param \DateTime $fechaCreacion
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function setFechaCreacion($fechaCreacion)
     {
@@ -129,7 +129,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param \DateTime $fechaActualizacion
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function setFechaActualizacion($fechaActualizacion)
     {
@@ -143,7 +143,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param \AdminBundle\Entity\TipoTramite $tipoTramite
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function addTipoTramite(\AdminBundle\Entity\TipoTramite $tipoTramite)
     {
@@ -177,7 +177,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param \UserBundle\Entity\User $creadoPor
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function setCreadoPor(\UserBundle\Entity\User $creadoPor = null)
     {
@@ -191,7 +191,7 @@ class OpcionesGenerales extends BaseClass
      *
      * @param \UserBundle\Entity\User $actualizadoPor
      *
-     * @return OpcionesGenerales
+     * @return OpcionGeneral
      */
     public function setActualizadoPor(\UserBundle\Entity\User $actualizadoPor = null)
     {

@@ -28,7 +28,7 @@ class DisponibilidadManager
     }
 
     public function getOpcionesGenerales($hydrate_array = false){
-        $opcionesGenerales= $this->em->getRepository('AdminBundle:OpcionesGenerales');
+        $opcionesGenerales= $this->em->getRepository('AdminBundle:OpcionGeneral');
         return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hydrate_array);
     }
 

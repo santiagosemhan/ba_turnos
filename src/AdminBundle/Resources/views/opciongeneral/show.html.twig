@@ -1,6 +1,6 @@
     {% extends 'admin_base.html.twig' %}
 
-    {% set __title = 'Opcion de Tipo Tramite' %}
+    {% set __title = 'Opcion General' %}
 
     {% block content %}
     <div class="box box-success">
@@ -11,34 +11,34 @@
                         <tbody>
                             <tr>
                                 <th>Id</th>
-                                    <td>{{ opcionesGenerale.id }}</td>
+                                    <td>{{ opcionGeneral.id }}</td>
                             </tr>
                             <tr>
                                 <th>Descripcion</th>
-                                    <td>{{ opcionesGenerale.descripcion }}</td>
+                                    <td>{{ opcionGeneral.descripcion }}</td>
                             </tr>
                             <tr>
                                 <th>Descripcionlarga</th>
-                                    <td>{{ opcionesGenerale.descripcionLarga }}</td>
+                                    <td>{{ opcionGeneral.descripcionLarga }}</td>
                             </tr>
                             <tr>
                                 <th>Activo</th>
-                                    <td>{% if opcionesGenerale.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                                    <td>{% if opcionGeneral.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Fechacreacion</th>
-                                    <td>{% if opcionesGenerale.fechaCreacion %}{{ opcionesGenerale.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                                    <td>{% if opcionGeneral.fechaCreacion %}{{ opcionGeneral.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Fechaactualizacion</th>
-                                    <td>{% if opcionesGenerale.fechaActualizacion %}{{ opcionesGenerale.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                                    <td>{% if opcionGeneral.fechaActualizacion %}{{ opcionGeneral.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="box-footer">
-                        <a class="btn btn-success" href="{{ path('opcionesgenerales_edit', { 'id': opcionesGenerale.id }) }}"> Editar</a>
-                        <a class="btn btn-default" href="{{ path('opcionesgenerales_index') }}"> Volver al Listado</a>
+                        <a class="btn btn-success" href="{{ path('opciongeneral_edit', { 'id': opcionGeneral.id }) }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ path('opciongeneral_index') }}"> Volver al Listado</a>
                     </div>
 
                 </div>
