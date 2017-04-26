@@ -89,7 +89,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="OpcionGeneral", inversedBy="tipoTramite")
+     * @ORM\ManyToOne(targetEntity="OpcionGeneral", inversedBy="tiposTramites")
      * @ORM\JoinColumn(name="opcion_general_id", referencedColumnName="id")
      */
     private $opcionGeneral;
