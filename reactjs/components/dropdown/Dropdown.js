@@ -11,7 +11,7 @@ class Dropdown extends Component {
     opciones() {
         const opciones = this.props.opciones;
 
-        const listOpciones = opciones.map((opcion,i) => <li key={i} id={opcion.id}><a href={opcion.url}> { opcion.nombre } </a></li> );
+        const listOpciones = opciones.map((opcion,i) => <li key={i}><a href={opcion.url}> { opcion.nombre } </a></li> );
 
         return ( <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1"> { listOpciones } < /ul> );
     };

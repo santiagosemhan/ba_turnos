@@ -700,24 +700,25 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         ];
     }
 
-    public function getPathFiles(){
+    public function getPathFiles()
+    {
         $array = array();
-        if($this->documento1){
+        if ($this->documento1) {
             $array[] = 'documento1';
         }
-        if($this->documento2){
+        if ($this->documento2) {
             $array[] = 'documento2';
         }
-        if($this->documento3){
+        if ($this->documento3) {
             $array[] = 'documento3';
         }
-        if($this->documento4){
+        if ($this->documento4) {
             $array[] = 'documento4';
         }
-        if($this->documento5){
+        if ($this->documento5) {
             $array[] = 'documento5';
         }
-        if($this->documento6){
+        if ($this->documento6) {
             $array[] = 'documento6';
         }
         //how to use:

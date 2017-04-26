@@ -24,7 +24,8 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
 
-            new Beelab\Recaptcha2Bundle\BeelabRecaptcha2Bundle()
+            new Beelab\Recaptcha2Bundle\BeelabRecaptcha2Bundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
 
         ];
 

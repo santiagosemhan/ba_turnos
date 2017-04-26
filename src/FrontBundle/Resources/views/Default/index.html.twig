@@ -8,6 +8,7 @@
   .dropdown .btn-text {
     width: 234px !important;
     margin-bottom: 5px;
+    text-transform: uppercase;
   }
   </style>
 {% endblock %}
@@ -17,12 +18,13 @@
 
     <script type="text/javascript">
 
-      var Dropdown = window.components.getComponent('Dropdown');
+      var OpcionesGenerales = window.components.getComponent('OpcionesGenerales');
 
-      var sacarTurnoUrlConTurno = "{{ path('seleccionar_tramite', {'sinTurno': tramites_con_turno })}}";
+      var sacarTurnoUrlConTurno = "{ { path('seleccionar_tramite', {'sinTurno': tramites_con_turno })}}";
 
-      var sacarTurnoUrlSinTurno = "{{ path('seleccionar_tramite', {'sinTurno': tramites_sin_turno })}}";
+      var sacarTurnoUrlSinTurno = "{ { path('seleccionar_tramite', {'sinTurno': tramites_sin_turno })}}";
 
+      let acciones = [{url:'#',nombre:'sacar turno'},{url:'#',nombre:'cancelar'}];
 
       var opciones = [
         { id:1, url: sacarTurnoUrlConTurno, nombre: "Sacar Turno" },
@@ -33,32 +35,21 @@
         { id:1, url: sacarTurnoUrlSinTurno, nombre: "Consultar" }
       ];
 
-      var opcionesGenerales = [
-        { id:1, text:"INGRESO DE TRÁMITE",html_id:"ingreso-tramite"},
-        { id:2, text:"INFORME/ASESORAMIENTO",html_id:"informe"},
-        { id:3, text:"RECLAMO/RECTIFICATORIA",html_id:"reclamo"},
-        { id:4, text:"TEMATICAS SIN TURNO",html_id:"tematica-sin-turno"},
-      ];
 
+      var opcionesGenerales = {{ opciones | raw }}
 
-      for (let opcion of opcionesGenerales) {
-
-        ReactDOM.render(
-          React.createElement(Dropdown, {
-             text: opcion.text,
-             opciones: opcion.id != 4 ? opciones : opcionesTematicasSinTurno
-          }),
-          document.getElementById(opcion.html_id)
-        );
-
-      }
-
+      ReactDOM.render(
+        React.createElement(OpcionesGenerales,{ opciones: opcionesGenerales}),
+        document.getElementById('opciones-container')
+      );
 
     </script>
 
 {% endblock %}
 
 {% block body %}
+
+    <!-- { {dump(opcionesGenerales)}} -->
 
     <div class="container-fluid">
         <!-- <div class="row">
@@ -69,12 +60,7 @@
         </div> -->
         <div class="row">
           <div class="container">
-            <div class="col-sm-12 text-center">
-              <div id="ingreso-tramite"></div>
-              <div id="informe"></div>
-              <div id="reclamo"></div>
-              <div id="tematica-sin-turno"></div>
-            </div>
+            <div id='opciones-container' class="col-sm-12 text-center"></div>
           </div>
         </div>
     </div>

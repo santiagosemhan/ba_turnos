@@ -21,17 +21,18 @@ class TipoTramiteRepository extends EntityRepository
     public function getTiposByAgrupador($sinTurno, $hidrate_array = false)
     {
         $qb = $this->createQueryBuilder('tr')
-        ->where('tr.sinTurno = :sin_turno AND tr.activo = true' )
+        ->where('tr.sinTurno = :sin_turno AND tr.activo = true')
         ->setParameter("sin_turno", $sinTurno)
         ->getQuery();
 
         return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
     }
 
-    public function getTipoTramiteByOpcionesGenerales($id,$hidrate_array = false){
+    public function getTipoTramiteByOpcionesGenerales($id, $hidrate_array = false)
+    {
         $qb = $this->createQueryBuilder('tr')
-            ->leftJoin('AdminBundle:TurnoTipoTramite','tt','WITH','tt.tipoTramite = tr.id')
-            ->leftJoin('AdminBundle:TurnoSede','ts','WITH','ts.id = tt.turnoSede')
+            ->leftJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')
+            ->leftJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'ts.id = tt.turnoSede')
             ->where('tr.opcionGeneral = :opcionGeneral AND tr.activo = true')
             ->setParameter("opcionGeneral", $id)
             ->getQuery();

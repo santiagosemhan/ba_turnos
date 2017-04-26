@@ -31,14 +31,14 @@ class OpcionGeneral extends BaseClass
     private $descripcion;
 
     /**
-     * @ORM\Column(name="descripcion_arga",type="string", length=5500, nullable=true)
+     * @ORM\Column(name="descripcion_larga",type="string", length=5500, nullable=true)
      */
     private $descripcionLarga;
 
     /**
      * @ORM\OneToMany(targetEntity="TipoTramite", mappedBy="opcionGeneral")
      */
-    private $tipoTramite;
+    private $tiposTramites;
     /**
      * Constructor
      */
@@ -49,7 +49,7 @@ class OpcionGeneral extends BaseClass
 
     public function __toString()
     {
-       return $this->getDescripcion();
+        return $this->getDescripcion();
     }
 
     /**
@@ -147,7 +147,7 @@ class OpcionGeneral extends BaseClass
      */
     public function addTipoTramite(\AdminBundle\Entity\TipoTramite $tipoTramite)
     {
-        $this->tipoTramite[] = $tipoTramite;
+        $this->tiposTramites[] = $tipoTramite;
 
         return $this;
     }
@@ -159,7 +159,7 @@ class OpcionGeneral extends BaseClass
      */
     public function removeTipoTramite(\AdminBundle\Entity\TipoTramite $tipoTramite)
     {
-        $this->tipoTramite->removeElement($tipoTramite);
+        $this->tiposTramites->removeElement($tipoTramite);
     }
 
     /**
@@ -167,9 +167,9 @@ class OpcionGeneral extends BaseClass
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getTipoTramite()
+    public function getTiposTramites()
     {
-        return $this->tipoTramite;
+        return $this->tiposTramites;
     }
 
     /**

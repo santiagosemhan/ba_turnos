@@ -4,32 +4,45 @@ namespace FrontBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use AdminBundle\Entity\Turno;
+use AdminBundle\Entity\OpcionesGenerales;
 use FrontBundle\Form\TurnoType;
 
 class DefaultController extends Controller
 {
-    const TRAMITES_CON_TURNO = 0;
-
-    const TRAMITES_SIN_TURNO = 1;
-
     public function indexAction()
     {
+        $opcionesGenerales = $this->get('manager.disponibilidad')->getOpcionesGenerales();
+
+        $opciones = [];
+
+        foreach ($opcionesGenerales as $key => $opcion) {
+            $opciones[] = [
+              'id'          => $opcion->getId(),
+              'descripcion' => $opcion->getDescripcion(),
+              'acciones'    => [
+                ['url'     => $this->generateUrl('seleccionar_tramite', ['opcion' => $opcion->getId()]),'nombre'  => 'Sacar Turno'],
+                ['url'     => '#','nombre'  => 'Cancelar Turno']
+              ]
+            ];
+        }
+
+
         return $this->render('FrontBundle:Default:index.html.twig', [
-          "tramites_con_turno" => self::TRAMITES_CON_TURNO,
-          "tramites_sin_turno" => self::TRAMITES_SIN_TURNO
+          "opciones"  => json_encode($opciones, true)
         ]);
     }
 
-    public function seleccionarTipoTramiteAction(Request $request, $sinTurno)
+    public function seleccionarTipoTramiteAction(Request $request, OpcionesGenerales $opcion)
     {
         $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
-        if (in_array($sinTurno, [0,1])) {
-            $tiposTramites = $tipoTramiteRepository->getTiposByAgrupador($sinTurno, true);
+        if ($opcion) {
+            $tiposTramites = $this->get('manager.disponibilidad')->obtenerTipoTramite($opcion->getId(), true);
         } else {
-            throw new HttpException(500, "Tipo de trámite inválido.");
+            throw new HttpException(500, "Opción inválida.");
         }
 
         return $this->render('FrontBundle:Default:seleccionar_tipo_tramite.html.twig', [
@@ -39,15 +52,20 @@ class DefaultController extends Controller
 
     public function seleccionarSedeAction(Request $request)
     {
+        $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
+
         $tipoTramite = $request->get('tipoTramite');
+
+        $tipoTramite = $tipoTramiteRepository->findOneById($tipoTramite);
 
         $sedeRepository = $this->getDoctrine()->getRepository('AdminBundle:Sede');
 
         $sedes = [];
 
         if ($tipoTramite) {
-            $sedes = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sede);
-            $sedes = $sedeRepository->getSedesByTipoTramite($tipoTramite, true);
+            $sedes = $this->get('manager.disponibilidad')->obtenerSedePorTipoTramte($tipoTramite, true);
+        } else {
+            throw new HttpException(500, "Tipo de trámite inválido.");
         }
 
         // $sedes[] = ['id'=>9,'sede'=>'otra sede','direccion'=>'asdfadsaf'];
@@ -166,5 +184,38 @@ class DefaultController extends Controller
         return $this->render('FrontBundle:Default:cancelar_turno.html.twig', [
           'turno' => $turno
         ]);
+    }
+
+
+    public function redisAction(Request $request)
+    {
+        $redis = $this->container->get('snc_redis.default');
+
+        $cola = $redis->lrange('cola', 0, -1);
+        //$cola = $redis->get('cola');
+
+        return $this->render('FrontBundle:Default:redis.html.twig', [
+          'cola' => $cola
+        ]);
+    }
+
+    public function agregaColaAction(Request $request)
+    {
+        $redis = $this->container->get('snc_redis.default');
+
+        $cola = $redis->rpush('cola', '{turno:1}');
+
+        $redis->publish('cola', $cola);
+
+        return new Response('ok');
+    }
+
+    public function sacaColaAction(Request $request)
+    {
+        $redis = $this->container->get('snc_redis.default');
+
+        $item = $redis->lpop('cola');
+
+        return new Response($item);
     }
 }
