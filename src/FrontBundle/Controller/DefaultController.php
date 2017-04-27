@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use AdminBundle\Entity\Turno;
-use AdminBundle\Entity\OpcionesGenerales;
+use AdminBundle\Entity\OpcionGeneral;
 use FrontBundle\Form\TurnoType;
 
 class DefaultController extends Controller
@@ -35,7 +35,7 @@ class DefaultController extends Controller
         ]);
     }
 
-    public function seleccionarTipoTramiteAction(Request $request, OpcionesGenerales $opcion)
+    public function seleccionarTipoTramiteAction(Request $request, OpcionGeneral $opcion)
     {
         $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
@@ -71,23 +71,37 @@ class DefaultController extends Controller
         // $sedes[] = ['id'=>9,'sede'=>'otra sede','direccion'=>'asdfadsaf'];
         return $this->render('FrontBundle:Default:seleccionar_sede.html.twig', [
           'sedes' => json_encode($sedes, true),
-          'tipoTramite' => $tipoTramite
+          'tipoTramite' => $tipoTramite->getId()
         ]);
     }
 
     public function elegirTurnoAction(Request $request)
     {
-        $tipoTramite = $request->get('tipoTramite');
+        $tipoTramiteId = $request->get('tipoTramite');
 
-        $sede = $request->get('sede');
+        $sedeId = $request->get('sede');
 
-        $diasNoDisponibles = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sede);
+        $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
-        return $this->render('FrontBundle:Default:elegir_turno.html.twig', [
-          'tipoTramite' => $tipoTramite,
-          'sede' => $sede,
-          'diasNoDisponibles' => $diasNoDisponibles
-        ]);
+        $tipoTramite = $tipoTramiteRepository->findOneById($tipoTramiteId);
+
+
+        if ($tipoTramite) {
+            if (!$tipoTramite->getSinTurno()) {
+                $diasNoDisponibles = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sede);
+
+                return $this->render('FrontBundle:Default:elegir_turno.html.twig', [
+                  'tipoTramite' => $tipoTramite,
+                  'sede' => $sede,
+                  'diasNoDisponibles' => $diasNoDisponibles
+                ]);
+            } else {
+                $request->getSession()->set('tipoTramite', $tipoTramiteId);
+                $request->getSession()->set('sede', $sedeId);
+
+                return $this->redirectToRoute('ingreso_datos');
+            }
+        }
     }
 
     public function ingresoDatosAction(Request $request)

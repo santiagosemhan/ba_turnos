@@ -687,7 +687,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      */
     public function __toString()
     {
-        return $this->opcionGeneral->getDescripcion().' - '.$this->getDescripcion();
+        return $this->getOpcionGeneral() ? $this->getOpcionGeneral()->getDescripcion().' - '.$this->getDescripcion() : '';
     }
 
     public function jsonSerialize()

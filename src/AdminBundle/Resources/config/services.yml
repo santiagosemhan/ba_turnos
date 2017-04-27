@@ -3,7 +3,7 @@ services:
         class:        AdminBundle\Services\TurnosManager
         autowire: true
         calls:
-          - [ setSecret, [%secret%]]
+          - [ setSecret, ['%secret%']]
           - [ setMailer, ['@mailer']]
           - [ setRouter, ['@router' ]]
 
@@ -12,7 +12,7 @@ services:
         class:        AdminBundle\Services\DisponibilidadManager
         autowire: true
         calls:
-          - [ setMesAtincipacionTurnos, [%mes_anticipacion_turnos%]]
+          - [ setMesAtincipacionTurnos, ['%mes_anticipacion_turnos%']]
 
     manager.usuario:
         class:        AdminBundle\Services\UsuarioManager
