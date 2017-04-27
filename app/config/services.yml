@@ -1,7 +1,7 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/service_container.html
 parameters:
-#    parameter_name: value
+#
 
 services:
 #    service_name:
@@ -14,3 +14,10 @@ services:
               - 'mysql:host=%database_host%;port=%database_port%;dbname=%database_name%'
               - { db_username: '%database_user%', db_password: '%database_password%' }
 
+
+
+  # authentication success event listener
+  milentar.security.interactive_login_listener:
+          class: AdminBundle\EventListener\AuthenticationListener
+          tags:
+              - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
