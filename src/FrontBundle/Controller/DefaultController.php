@@ -88,7 +88,7 @@ class DefaultController extends Controller
 
         if ($tipoTramite) {
             if (!$tipoTramite->getSinTurno()) {
-                $diasNoDisponibles = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sede);
+                $diasNoDisponibles = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sedeId);
 
                 return $this->render('FrontBundle:Default:elegir_turno.html.twig', [
                   'tipoTramite' => $tipoTramite,
