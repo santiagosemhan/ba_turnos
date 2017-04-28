@@ -43,10 +43,11 @@ class TurnosManager
     public function setRouter(Router $router){
         $this->router = $router;
     }
+
     /**
      * Obtener turnos sin confirmador
      *
-     * @param interger $sedeId
+     * @param integer $sedeId
      * @param date $fecha
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -64,7 +65,7 @@ class TurnosManager
     /**
      * Obtener turnos via filtro
      *
-     * @param interger $sedeId
+     * @param integer $sedeId
      * @param time $horaDesde
      * @param time $horaHasta
      * @param integer $estado
@@ -810,7 +811,6 @@ class TurnosManager
             if ($this->disponibilidad->verificaTurnoSinConfirmarByPersona($turno->getCuit())) {
                 $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
                 if ($status['status']) {
-                    exit;
                     $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                     try {
                         $turno->setViaMostrador(false);
@@ -988,7 +988,7 @@ class TurnosManager
     private function formateTexto($turno, $texto,$motivoCancelacionMasiva = '')
     {
         return  str_replace('%MOTIVO_CANCELACION_MASIVA%', $motivoCancelacionMasiva,
-                    str_replace('%LINK_CANCELACION%',$this->router->generate('cancelar_turno',array('turno'=>$turno),UrlGeneratorInterface::ABSOLUTE_URL),
+                    str_replace('%LINK_CANCELACION%','',//$this->router->generate('cancelar_turno',array('turno'=>$turno),UrlGeneratorInterface::ABSOLUTE_URL),
                         str_replace('%LINK_COMPRBANTE%', $this->router->generate('generar_comprobante',array('hash'=>$turno->getComprobante()->getHash()),UrlGeneratorInterface::ABSOLUTE_URL),
                             str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
                                 str_replace('%SEDE%', $turno->getSede()->getSede(),

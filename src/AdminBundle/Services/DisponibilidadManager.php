@@ -70,7 +70,7 @@ class DisponibilidadManager
     /**
      * Obtiene los días disponibles para turnos en base al mes/año, tipoTurno y Sede
      *
-     * @param interger $mes
+     * @param integer $mes
      * @param integer $anio
      * @param integer $tipoTurnoId
      * @param integer $sedeId
@@ -733,12 +733,12 @@ class DisponibilidadManager
         if (in_array($horaTurno->format('H:i'), $arrayHoras)) {
             $index = 0;
             while ($index < count($arrayTurno)) {
-                if ($arrayTurno[$index][tipoTramite] != false) {
-                    return array('status'=> true,'data'=>$arrayTurno[$index][turnoSede]);
+                if ($arrayTurno[$index]['tipoTramite'] != false) {
+                    return array('status'=> true,'data'=>$arrayTurno[$index]['turnoSede']);
                 }
                 $index++;
             }
-            return array('status'=> true,'data'=>$arrayTurno[0][turnoSede]);
+            return array('status'=> true,'data'=>$arrayTurno[0]['turnoSede']);
         } else {
             return array('status'=> false);
         }
