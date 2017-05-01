@@ -500,10 +500,10 @@ class DisponibilidadManager
                             $slot --;
                         }
                     }
-                } else { //como no tiene definido un tiempo por tipo de tramit. Busco todos los turnos que tiene ocupan slots
+                } else { //como no tiene definido un tiempo por tipo de tramite. Busco todos los turnos que tiene ocupan slots
                     //Controlo si el turno pase mas de un slot
                     $repositoryTT = $this->em->getRepository('AdminBundle:TurnoTipoTramite')->createQueryBuilder('tt')
-                        ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnosSede = ts.id')
+                        ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnoSede = ts.id')
                         ->where('tt.activo = true')
                         ->andWhere('(ts.sede = :sedeId) AND ts.activo = true ')->setParameter('sedeId', $sedeId)
                         ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')->setParameter('horaTurno', $this->util->getHoraString($turno->getHoraTurno()))
@@ -728,23 +728,39 @@ class DisponibilidadManager
         if (is_string($horaTurno)) {
             $horaTurno = new \DateTime($horaTurno);
         }
+
+        //Obtengo los horarios disponibles para el tipo de tramite
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')), intval($fechaTurno->format('m')), intval($fechaTurno->format('Y')), $tipoTurnoId, $sedeId, true);
 
         $arrayHoras = $array['horasHabiles'];
         $arrayTurno = $array['turnosSedeUtilizados'];
 
-        if (in_array($horaTurno->format('H:i'), $arrayHoras)) {
-            $index = 0;
-            while ($index < count($arrayTurno)) {
+        //indice para recorrer el array
+        $index = 0;
+        //Indice utilizado para determinar si un turnoSede no tiene asociado un tramite y tiene disponibilidad.
+        $indiceSede = null;
+        while ($index < count($arrayTurno)) {
+            //Controlo que el exista disponiblidad del turno para el turnoSede
+            if (isset( $arrayTurno[$index]['turnosDeldia'][$horaTurno->format('H:i')])) {
+                //determino si existe asociado el tramite al turnoSde
                 if ($arrayTurno[$index]['tipoTramite'] != false) {
                     return array('status'=> true,'data'=>$arrayTurno[$index]['turnoSede']);
+                }else{
+                    //Determina que existe un turnoSede sin tipo de tramite asociado
+                    $indiceSede = $index;
                 }
-                $index++;
             }
-            return array('status'=> true,'data'=>$arrayTurno[0]['turnoSede']);
-        } else {
+            $index++;
+        }
+        //verfico si encontre un turnoSede sin tipo de tramite
+        if(!is_null($indiceSede)){
+            return array('status'=> true,'data'=>$arrayTurno[$indiceSede]['turnoSede']);
+        }else{
+            //No encontre ninguno
             return array('status'=> false);
         }
+
+
     }
 
     public function verificaTurnoSinConfirmarByPersona($cuit, $mail=null)

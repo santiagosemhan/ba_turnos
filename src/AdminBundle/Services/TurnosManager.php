@@ -806,10 +806,13 @@ class TurnosManager
 
     public function guardarTurno($turno)
     {
-        //Controlo Disponibilidad
+        //Controlo que existan los datos del Turno
         if ($this->checkDatos($turno)) {
+            //Controlo Disponibilidad sobre la Persona
             if ($this->disponibilidad->verificaTurnoSinConfirmarByPersona($turno->getCuit())) {
+                //Controlo Disponibilidad del Turno
                 $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
+                //Controlo como retorno la disponiblidad
                 if ($status['status']) {
                     $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                     try {
@@ -867,6 +870,13 @@ class TurnosManager
         return $turno;
     }
 
+    /**
+     * Verfica que los datos del Turnos existan
+     *
+     * @param AdminBundle:Turno $turno
+     *
+     * @return boolean
+     */
     private function checkDatos($turno)
     {
         //Controlo la sede
@@ -875,6 +885,7 @@ class TurnosManager
             $exp = new Exception('No se encuentra la sede');
             throw $exp;
         }
+        //Controlo el tipo de tramite
         $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findById($turno->getTipoTramite()->getId());
         if (is_null($tipoTramite)) {
             $exp = new Exception('No se encuentra el tipo de tramite');
