@@ -31,8 +31,8 @@ class TipoTramiteRepository extends EntityRepository
     public function getTipoTramiteByOpcionesGenerales($id, $hidrate_array = false)
     {
         $qb = $this->createQueryBuilder('tr')
-            ->leftJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')
-            ->leftJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'ts.id = tt.turnoSede')
+            ->innerJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')
+            ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'ts.id = tt.turnoSede')
             ->where('tr.opcionGeneral = :opcionGeneral AND tr.activo = true')
             ->setParameter("opcionGeneral", $id)
             ->getQuery();
