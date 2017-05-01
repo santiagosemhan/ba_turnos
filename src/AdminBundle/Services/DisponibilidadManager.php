@@ -472,17 +472,20 @@ class DisponibilidadManager
             }
             $turnos = $repositoryT->getQuery()->getResult();
             foreach ($turnos as $turno) {
+
                 if (isset($turnosDeldia[$turno->getHoraTurno()->format('H:i')])) {
                     $turnosDeldia[$turno->getHoraTurno()->format('H:i')] = $turnosDeldia[$turno->getHoraTurno()->format('H:i')] - 1;
                 }
+
                 //Controlo si el turno pase mas de un slot
                 $repositoryTT = $this->em->getRepository('AdminBundle:TurnoTipoTramite')->createQueryBuilder('tt')
-                    ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnosSede = ts.id')
+                    ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnoSede = ts.id')
                     ->where('(tt.tipoTramite = :tipoTramite) AND tt.activo = true')->setParameter('tipoTramite', $tipoTurnoId)
                     ->andWhere('(ts.sede = :sedeId) AND ts.activo = true ')->setParameter('sedeId', $sedeId)
                     ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')->setParameter('horaTurno', $this->util->getHoraString($turno->getHoraTurno()))
                 ;
                 $turnosTramites = $repositoryTT->getQuery()->getResult();
+
                 //Controlo que sea con regla de un tipoTurno o global
                 if (count($turnosTramites) > 0) { //corresponde a uno que tiene defino
                     foreach ($turnosTramites as $turnoTramite) {
