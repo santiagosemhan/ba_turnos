@@ -54,3 +54,7 @@ app_turno_sede_usuario_tipo_tramite:
 app_opcion_general:
         resource: "@AdminBundle/Resources/config/routing/opciongeneral.yml"
         prefix:   /opcion-general
+
+app_exportar:
+        resource: "@AdminBundle/Resources/config/routing/exportar.yml"
+        prefix:   /exportar

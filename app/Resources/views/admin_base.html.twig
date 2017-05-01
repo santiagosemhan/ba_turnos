@@ -115,6 +115,21 @@
                         <i class="fa fa-user-times"></i> <span>Cancelacion Masiva</span>
                     </a>
                 </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-download"></i>
+                        <span>Exportacion</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{ path('exportar_turnos_show') }}"><i class="fa fa-file-pdf-o"></i> Turnos</a></li>
+                        <li><a href="{{ path('exportar_sesion_show') }}"><i class="fa  fa-building-o"></i> Inicio de Session</a></li>
+                    </ul>
+                </li>
+
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-pencil-square"></i>

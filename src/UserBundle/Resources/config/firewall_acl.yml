@@ -92,3 +92,5 @@ acl:
       opciongeneral_new: true
       opciongeneral_edit: true
       opciongeneral_delete: true
+      exportar_turnos_show: true
+      exportar_sesion_show: true

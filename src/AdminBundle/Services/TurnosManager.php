@@ -1020,4 +1020,226 @@ class TurnosManager
             $this->cancelarTurno(null,null,false,$cancelacionMasiva,$turno);
         }
     }
+
+    /**
+     * Obtener turnos para la exportacion
+     *
+     * @param array $sedeId
+     * @param time $horaDesde
+     * @param time $horaHasta
+     * @param array $estado
+     * @param array $tipoTramite
+     * @param date $fechaDesde
+     * @param date $fechaHasta
+     * @param string $cuit
+     * @param integer $nroTurno
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function obtenerExportacion($sedeId, $horaDesde, $horaHasta, $estados, $tipoTramite, $fechaDesde, $fechaHasta, $cuit=null, $nroTurno=null)
+    {
+        $fechaDesde = date("Y/m/d", mktime(0, 0, 0, substr($fechaDesde, 3, 2), substr($fechaDesde, 0, 2), substr($fechaDesde, 6, 4)));
+        $fechaHasta = date("Y/m/d", mktime(0, 0, 0, substr($fechaHasta, 3, 2), substr($fechaHasta, 0, 2), substr($fechaHasta, 6, 4)));
+
+        $repository = $this->em->getRepository('AdminBundle:Turno', 'p');
+        $repository = $repository->createQueryBuilder('p');
+
+        //Obtengo las horas y minutos
+        $hora=0;
+        $min=0;
+        $min=0;
+        if (strlen($horaDesde) == 7) {
+            $hora = (substr($horaDesde, 0, 1));
+            $min = (substr($horaDesde, 2, 2));
+            if (substr($horaDesde, 5, 2) == 'PM') {
+                if ($hora != 12) {
+                    $hora = $hora + 12;
+                }
+            }
+        } else {
+            $hora = (substr($horaDesde, 0, 2));
+            $min = (substr($horaDesde, 3, 2));
+            if (substr($horaDesde, 6, 2) == 'PM') {
+                if ($hora != 12) {
+                    $hora = $hora + 12;
+                }
+            }
+        }
+        $hora2=0;
+        $min2=0;
+        if (strlen($horaHasta) == 7) {
+            $hora2 = (substr($horaHasta, 0, 1));
+            $min2 = (substr($horaHasta, 2, 2));
+            if (substr($horaHasta, 5, 2) == 'PM') {
+                if ($hora2 != 12) {
+                    $hora = $hora2 + 12;
+                }
+            }
+        } else {
+            $hora2 = (substr($horaHasta, 0, 2));
+            $min2 = (substr($horaHasta, 3, 2));
+            if (substr($horaHasta, 6, 2) == 'PM') {
+                if ($hora2 != 12) {
+                    $hora2 = $hora2 + 12;
+                }
+            }
+        }
+
+        $repository->where('p.horaTurno >= :horaDesde AND p.horaTurno  <=  :horaHasta')
+            ->setParameter('horaDesde', ($hora.':'.$min.':00'))
+            ->setParameter('horaHasta', ($hora2.':'.$min2).':00');
+
+
+        $arraySede = array();
+        foreach($sedeId as $sede){
+            $arraySede[] = $sede->getId();
+        }
+        $repository->andWhere('p.sede IN (:sedeId)')->setParameter('sedeId', $arraySede);
+
+        $repository->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fechaDesde.' 00:00:00')->setParameter('fecha_turno_hasta', $fechaHasta.' 23:59:59');
+
+        $arrayTipoTramite = array();
+        $noTodosLosTramites = true;
+        foreach ($tipoTramite as $tipoTramiteId){
+            if( $tipoTramiteId == 0 ){
+                $noTodosLosTramites = false;
+            }else{
+                $arrayTipoTramite[]=$tipoTramiteId;
+            }
+        }
+        if ($noTodosLosTramites) {
+            $repository->andWhere('p.tipoTramite IN (:tipoTramite)')->setParameter('tipoTramite', $arrayTipoTramite);
+        }
+
+        if ($cuit) {
+            $repository->andWhere('p.cuit = :cuit')->setParameter('cuit', $cuit);
+        }
+
+        if ($nroTurno) {
+            $repository->andWhere('p.numero = :numero')->setParameter('numero', $nroTurno);
+        }
+
+        $indistinto = false;
+        $str  ='';
+        $primero = true;
+        $conDqlBusquedaAtendido = false;
+        $conDqlBusquedaNoAtendido = false;
+        foreach($estados as $estado){
+            if($estado < 0){
+                $indistinto  = true;
+            }
+            //Estado Sin Corfirmar
+            if($estado == 0 OR $indistinto == true){
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Confirmados
+            if($estado == 1 OR $indistinto == true){
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Confirmados Sin Turnos
+            if($estado == 2 OR $indistinto == true){
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Confirmados Con Turnos
+            if($estado == 3  OR $indistinto == true){
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Atendidos
+            if($estado == 4 OR $indistinto == true){
+                $conDqlBusquedaAtendido = true;
+                if($primero){
+                    $str ='(p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Atendidos Sin Turnos
+            if($estado == 5 OR $indistinto == true){
+                $conDqlBusquedaAtendido = true;
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Atendidos Con Turnos
+            if($estado == 6 OR $indistinto == true){
+                $conDqlBusquedaAtendido = true;
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                }
+            }
+            //Estado Confirmados y no Atendido
+            if($estado == 7 OR $indistinto == true){
+                if($primero){
+                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                }
+                $conDqlBusquedaNoAtendido = true;
+            }
+            //Estado Cancelados
+            if($estado == 8  OR $indistinto == true){
+                if($primero){
+                    $str ='(p.fechaCancelado IS NOT NULL)';
+                    $primero = false;
+                }else{
+                    $str = $str.' OR (p.fechaCancelado IS NOT NULL)';
+                }
+            }
+        }
+        $repository->andWhere($str);
+
+        if($indistinto == false){
+            if($conDqlBusquedaAtendido == true OR $conDqlBusquedaNoAtendido == true){
+                $sub =  $this->em->createQueryBuilder();
+                $sub->select("t");
+                $sub->from("AdminBundle:ColaTurno", "t");
+                if($conDqlBusquedaAtendido == true AND $conDqlBusquedaNoAtendido == false){
+                    $sub->andWhere('t.turno = p.id AND t.atendido = true');
+                }else if($conDqlBusquedaAtendido == false AND $conDqlBusquedaNoAtendido == true){
+                    $sub->andWhere('t.turno = p.id AND t.atendido = false');
+                }else{
+                    $sub->andWhere('t.turno = p.id');
+                }
+
+                $repository->andWhere($repository->expr()->exists($sub->getDQL()));
+
+
+            }
+        }
+
+        $repository->orderBy('p.fechaTurno', 'ASC');
+        $repository->orderBy('p.horaTurno', 'ASC');
+
+
+        return  $repository->getQuery()->getResult();
+    }
+
 }

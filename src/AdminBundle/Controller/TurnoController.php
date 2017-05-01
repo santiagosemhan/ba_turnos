@@ -65,7 +65,7 @@ class TurnoController extends Controller
         $form = $this->createFormBuilder(array('attr'=>array('class'=>'form-admin')))
             ->add('horaDesde', TextType::class,array('attr'  => array('class'=>"form-control timepicker","value"=>$horaDesde)))
             ->add('horaHasta', TextType::class,array('attr'  => array('class'=>"form-control timepicker","value"=>$horaHasta)))
-            ->add('estados',  ChoiceType::class,array( 'attr' =>array('class'=>'form-control'),
+            ->add('estados',  ChoiceType::class,array( 'attr' =>array('class'=>'form-control select2'),
                                                         'choices'  => array(
                                                             'Sin Corfirmar' => 0,
                                                             'Confirmados' => 1,
@@ -76,7 +76,7 @@ class TurnoController extends Controller
                                                             'Atendidos Con Turnos' => 6,
                                                             'Cancelados' => 8
                                                         )))
-            ->add('tipoTramite', ChoiceType::class,array( 'attr' =>array('class'=>'form-control'),
+            ->add('tipoTramite', ChoiceType::class,array( 'attr' =>array('class'=>'form-control select2'),
                                                             'choices'  => $tiposTramitesArray))
             ->add('fecha', TextType::class, array('attr' => array('class' => "form-control pull-right datepicker", 'value' => $fechaHoy)))
             ->add('cuit', TextType::class,array('attr'  => array('class'=>"form-control"),'required'=>false))

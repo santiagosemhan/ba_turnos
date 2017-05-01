@@ -1,0 +1,9 @@
+exportar_turnos_show:
+    path:     /turnos
+    defaults: { _controller: "AdminBundle:Exportar:turnos" }
+    methods:  [GET, POST]
+
+exportar_sesion_show:
+    path:     /sesion
+    defaults: { _controller: "AdminBundle:Exportar:sesion" }
+    methods:  [GET, POST]
