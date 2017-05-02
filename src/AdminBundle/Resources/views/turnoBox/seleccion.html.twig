@@ -1,0 +1,44 @@
+{% extends 'admin_base.html.twig' %}
+
+{% set __title = 'Adminitrar Box' %}
+
+{% set __descripcion_opcional = sede %}
+
+{% block content %}
+
+    <!-- Filters-->
+    <div class="box box-success">
+
+        <div class="box-header with-border">
+            <h3 class="box-title">Seleccion Box</h3>
+        </div>
+        <!-- /.box-header -->
+
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-11">
+                    <!-- form start -->
+                    {{ form_start(form) }}
+                    <div id="adminbundle_turno">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turno_nombreApellido">Box</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(form.box) }}
+                                {{ form_errors(form.box) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input class="btn btn-success" type="submit" value="Seleccionar"/>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.box-body -->
+
+    </div>
+    <!-- /.box -->
+
+{% endblock %}

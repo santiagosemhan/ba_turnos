@@ -58,3 +58,7 @@ app_opcion_general:
 app_exportar:
         resource: "@AdminBundle/Resources/config/routing/exportar.yml"
         prefix:   /exportar
+
+app_box_atencion:
+        resource: "@AdminBundle/Resources/config/routing/boxatencion.yml"
+        prefix:   /administrar-box

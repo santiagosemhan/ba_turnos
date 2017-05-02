@@ -446,18 +446,6 @@ class DisponibilidadManager
                     }
                 }
 
-                /*$turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId,$turnoSede,$turnosDeldia,$dia,$mes,$anio,$diaActual);
-                if(count($turnoSede->getTurnoTipoTramite())>0){
-
-                    foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno){
-                        if($tipoTramiteTurno->getActivo()) {
-                            if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId) {
-                                $existe = true;
-                                $turnosSedeArray[] = array($tempHora, $tipoTramiteTurno->getCantidadSlot(),$tempFrecuencia ,$temp2Hora);
-                            }
-                        }
-                    }
-                }*/
             }
 
             //Busca los turnos reservados
@@ -670,15 +658,18 @@ class DisponibilidadManager
             }
         }
 
+        //Actualizo el array $cantidadDiaTurno con los nuevos datos del turnoSede
         if (count($cantidadDiaTurno)>0) {
             foreach ($turnosHora as $clave => $valor) {
-                if (isset($turnosHora[$clave])) {
+                //Controlo que si en el array existe la hora para sumar turnos o creo un nuevo registro
+                if (isset($cantidadDiaTurno[$clave])) {
                     $cantidadDiaTurno[$clave] = $valor + $turnosHora[$clave];
                 } else {
                     $cantidadDiaTurno[$clave] = $valor;
                 }
             }
         } else {
+            //Si el array esta vacio lo completo con el array obtenido con los turnosSede
             $cantidadDiaTurno = $turnosHora;
         }
         return $cantidadDiaTurno;
@@ -781,4 +772,5 @@ class DisponibilidadManager
             return true;
         }
     }
+
 }
