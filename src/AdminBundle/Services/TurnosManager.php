@@ -816,10 +816,12 @@ class TurnosManager
                 if ($status['status']) {
                     $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                     try {
+                        //Seteo los valores del turno
                         $turno->setViaMostrador(false);
                         $turno->setTurnoSede($status['data']);
                         $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 
+                        //creo el asociado al turno comprobante y lo guardo
                         $comprobante = new Comprobante();
                         $comprobante->setTurno($turno);
                         $comprobante->setSede($turno->getSede()->getSede());
@@ -831,10 +833,17 @@ class TurnosManager
                         $comprobante->setSecretKey($this->secret);
                         $this->em->persist($comprobante);
 
+                        //relaciono el turno con el comprobante y guardo el turno
                         $turno->setComprobante($comprobante);
                         $this->em->persist($turno);
 
 
+                        //confirmo los cambios
+                        $this->em->flush();
+                        $this->em->getConnection()->commit();
+
+                        //Luego de confirmar los datos, envio el mail y guardo los cambios
+                        //Creo el mail con los datos del turno y comprobante para guardarlo
                         $mail = new Mail();
                         $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
                         $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
@@ -847,9 +856,8 @@ class TurnosManager
                             $mail->setFechaEnviado(new \DateTime("now"));
                         }
                         $this->em->persist($mail);
-
                         $this->em->flush();
-                        $this->em->getConnection()->commit();
+
                     } catch (Exception $e) {
                         $this->em->getConnection()->rollBack();
                         throw $e;
@@ -959,13 +967,15 @@ class TurnosManager
             $mail->setEmail($turno->getMail1());
             $mail->setNombre($turno->getNombreApellido());
             $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(),$motivoCancelacion));
+
             $mail->setEnviado($this->sendEmail($mail));
             if ($mail->getEnviado()) {
                 $mail->setFechaEnviado(new \DateTime("now"));
             }
             $this->em->persist($mail);
+            $this->em->flush();
         }
-        $this->em->flush();
+
     }
 
     public function getCuerpoMail($tipoEnvio)
@@ -1000,7 +1010,8 @@ class TurnosManager
     {
         return  str_replace('%MOTIVO_CANCELACION_MASIVA%', $motivoCancelacionMasiva,
                     str_replace('%LINK_CANCELACION%','',//$this->router->generate('cancelar_turno',array('turno'=>$turno),UrlGeneratorInterface::ABSOLUTE_URL),
-                        str_replace('%LINK_COMPRBANTE%', $this->router->generate('generar_comprobante',array('hash'=>$turno->getComprobante()->getHash()),UrlGeneratorInterface::ABSOLUTE_URL),
+                        str_replace('%LINK_COMPRBANTE%',
+                            $_SERVER['SERVER_NAME'].$this->router->generate('generar_comprobante', array('hash' => $turno->getComprobante()->getHash())),
                             str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
                                 str_replace('%SEDE%', $turno->getSede()->getSede(),
                                     str_replace('%CUIT%', $turno->getCuit(),

@@ -295,8 +295,6 @@ class Comprobante extends BaseClass
             $this->getLetra().'#'.
             $this->getNumero().'&'.
             $this->getTipoTramite();
-            //$key = Key::createNewRandomKey();
-            //var_dump($key->saveToAsciiSafeString());exit;
         return Crypto::encrypt($texto,Key::loadFromAsciiSafeString($this->getSecretKey()));
     }
 
