@@ -22,7 +22,7 @@
                         {% for tipoTramite in tipoTramites %}
                         <tr>
                             <td><a href="{{ path('tipotramite_show', { 'id': tipoTramite.id }) }}">{{ tipoTramite.id }}</a></td>
-                            <td>{{ tipoTramite.opcionesGenerales }}</td>
+                            <td>{{ tipoTramite.opcionGeneral }}</td>
                             <td>{{ tipoTramite.descripcion }}</td>
                             <td>{% if tipoTramite.sinTurno %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
                             <td>{% if tipoTramite.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>

@@ -17,7 +17,7 @@ class TipoTramiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('opcionesGenerales',EntityType::class,array('class' => 'AdminBundle:OpcionesGenerales','choice_label' => 'descripcion','required'=>true,'attr'  => array('class'=>"select2")))
+        $builder->add('opcionGeneral',EntityType::class,array('class' => 'AdminBundle:OpcionGeneral','choice_label' => 'descripcion','required'=>true,'attr'  => array('class'=>"select2")))
             ->add('descripcion')
             ->add('texto',TextareaType::class,array('attr'  => array('rows'=>"10", 'cols'=>"80")))
             ->add('sinTurno')
