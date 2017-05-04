@@ -81,6 +81,7 @@ class TurnoController extends Controller
             ->add('fecha', TextType::class, array('attr' => array('class' => "form-control pull-right datepicker", 'value' => $fechaHoy)))
             ->add('cuit', TextType::class,array('attr'  => array('class'=>"form-control"),'required'=>false))
             ->add('nroTurno', TextType::class,array('attr'  => array('class'=>"form-control"),'required'=>false))
+            ->setMethod('GET')
             ->getForm();
 
         $form->handleRequest($request);
