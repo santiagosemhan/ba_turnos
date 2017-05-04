@@ -53,11 +53,11 @@ class DefaultController extends Controller
             foreach ($tiposTramites as $tramite) {
                 $docs = [];
 
-                foreach ($tramite->getPathFiles() as $path) {
+                foreach ( $tramite->getPathFiles()  as $fileName =>$path) {
                     $fileUrl = $helper->asset($tramite, $path);
 
                     $docs[] = [
-                      'nombre' => $path,
+                      'nombre' => $fileName,
                       'link'   => $baseUrl.$assetServices->getUrl($fileUrl)
                     ];
                 }

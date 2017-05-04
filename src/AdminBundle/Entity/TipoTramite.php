@@ -704,22 +704,22 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     {
         $array = array();
         if ($this->documento1) {
-            $array[] = 'documento1File';
+            $array[substr(strstr($this->documento1, '_'),1)] = 'documento1File';
         }
         if ($this->documento2) {
-            $array[] = 'documento2File';
+            $array[substr(strstr($this->documento2, '_'),1)] = 'documento2File';
         }
         if ($this->documento3) {
-            $array[] = 'documento3File';
+            $array[substr(strstr($this->documento3, '_'),1)] = 'documento3File';
         }
         if ($this->documento4) {
-            $array[] = 'documento4File';
+            $array[substr(strstr($this->documento4, '_'),1)] = 'documento4File';
         }
         if ($this->documento5) {
-            $array[] = 'documento5File';
+            $array[substr(strstr($this->documento5, '_'),1)] = 'documento5File';
         }
         if ($this->documento6) {
-            $array[] = 'documento6File';
+            $array[substr(strstr($this->documento6, '_'),1)] = 'documento6File';
         }
         //how to use:
         //$helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
