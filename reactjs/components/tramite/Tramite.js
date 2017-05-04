@@ -4,7 +4,7 @@ class Tramite extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { tipoTramite: '', submitEnabled: false};
+        this.state = { tipoTramite: '', submitEnabled: false, documentos: []};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -14,19 +14,6 @@ class Tramite extends Component {
 
       if(this.state.tipoTramite != prevState.tipoTramite){
 
-        // axios.get(this.props.onChangeUrl, {
-        //   params: {
-        //     tipoTramiteId: this.state.tipoTramite
-        //   }
-        // })
-        // .then(({ data }) => {
-        //    this.setState({infoHtml: data.texto});
-        //
-        //    this.setState({submitEnabled:true});
-        // })
-        // .catch(function (error) {
-        //   console.log("error",error);
-        // });
         for (let tramite of this.props.tramites) {
 
             if(tramite.id == this.state.tipoTramite){
@@ -39,6 +26,14 @@ class Tramite extends Component {
 
 
     handleChange(event) {
+
+        let documentos = this.props.documentosList;
+
+        documentos.forEach((item)=>{
+          if(item.tramite == event.target.value){
+            this.setState({documentos: item.documentos });
+          }
+        })
 
         this.setState({tipoTramite: event.target.value});
 
@@ -70,6 +65,17 @@ class Tramite extends Component {
 
     }
 
+    getDocumentos(){
+
+      const documentos = this.state.documentos;
+
+      const  linksDocumentos = documentos ? documentos.map((documento,i) =>  <a key={i} href={documento.link} target="_blank" className="list-group-item">{documento.nombre}</a>
+ ) : null;
+
+      return linksDocumentos;
+
+    }
+
     render() {
         return <div className="container-fluid">
             <form role="form" onSubmit={this.handleSubmit} >
@@ -85,11 +91,27 @@ class Tramite extends Component {
                     </div>
                 </div>
 
-                <div className="panel panel-primary">
-                    <div className="panel-heading">
+                <div className="row">
+                  <div className=" col-12 col-md-8 col-sm-8">
+                    <div className="panel panel-primary">
+                      <div className="panel-heading">
                         <h3 className="panel-title">Información</h3>
+                      </div>
+                      <div className="panel-body">
+                        <div className="" dangerouslySetInnerHTML={{__html: this.state.infoHtml}}></div>
+                      </div>
                     </div>
-                    <div className="panel-body" dangerouslySetInnerHTML={{__html: this.state.infoHtml}}></div>
+                  </div>
+                  <div className="col-12 col-md-4 col-sm-4">
+                    <div className="bs-component">
+                      <div className="list-group">
+                        <a href="#" className="list-group-item active">
+                          Documentación
+                        </a>
+                        { this.getDocumentos() }
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
 

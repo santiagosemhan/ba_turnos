@@ -40,13 +40,40 @@ class DefaultController extends Controller
         $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
         if ($opcion) {
-            $tiposTramites = $this->get('manager.disponibilidad')->obtenerTipoTramite($opcion->getId(), true);
+            $tiposTramites = $this->get('manager.disponibilidad')->obtenerTipoTramite($opcion->getId());
+
+            $helper = $this->get('vich_uploader.templating.helper.uploader_helper');
+
+            $assetServices = $this->get('assets.packages');
+
+            $documentos = [];
+
+            $baseUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl();
+
+            foreach ($tiposTramites as $tramite) {
+                $docs = [];
+
+                foreach ($tramite->getPathFiles() as $path) {
+                    $fileUrl = $helper->asset($tramite, $path);
+
+                    $docs[] = [
+                      'nombre' => $path,
+                      'link'   => $baseUrl.$assetServices->getUrl($fileUrl)
+                    ];
+                }
+
+                $documentos[] = [
+                    'tramite' => $tramite->getId(),
+                    'documentos' => $docs
+              ];
+            }
         } else {
             throw new HttpException(500, "Opción inválida.");
         }
 
         return $this->render('FrontBundle:Default:seleccionar_tipo_tramite.html.twig', [
-        'tramites' => json_encode($tiposTramites, true)
+          'tramites'   => json_encode($tiposTramites, true),
+          'documentos' => json_encode($documentos, true)
       ]);
     }
 

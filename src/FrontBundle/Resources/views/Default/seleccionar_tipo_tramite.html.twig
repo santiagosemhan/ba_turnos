@@ -9,10 +9,13 @@
 
       var tramitesData = {{ tramites | raw}};
 
+      var documentosData = {{ documentos | raw}};
+
       ReactDOM.render(
         React.createElement(Tramite, {
            placeholder: "Escriba el nombre del trámite o despliegue la lista para seleccionar uno",
            tramites: tramitesData,
+           documentosList: documentosData,
            //onChangeUrl: "{ { path('get_tipo_tramite')}}",
            submitUrl: "{{path('seleccionar_sede')}}"
         }),

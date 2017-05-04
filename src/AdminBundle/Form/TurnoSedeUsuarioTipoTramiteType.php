@@ -52,22 +52,24 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
         ;
     }
 
-    private function getChoiseDataUsuarioTurnoSede($options){
+    private function getChoiseDataUsuarioTurnoSede($options)
+    {
         $turnoSede = $options['data'];
         $usuariosTurnoPorTurno = $turnoSede->getUsuarioTurnoSede();
         $array = array();
-        foreach($usuariosTurnoPorTurno as $usuarioTurnoPorTurno){
+        foreach ($usuariosTurnoPorTurno as $usuarioTurnoPorTurno) {
             $array[$usuarioTurnoPorTurno->getUsuario()->getUsername()] = $usuarioTurnoPorTurno;
         }
         return $array;
     }
 
-    private function getChoiseUsuarioTurnoSede($options){
+    private function getChoiseUsuarioTurnoSede($options)
+    {
         $this->em  = $options['compound']['em'];
         $turnoSede = $options['data'];
         $array = array();
         $repositoryTT = $this->em->getRepository('UserBundle:User')->createQueryBuilder('t')
-            ->innerJoin('AdminBundle:UsuarioSede','us','WITH','us.usuario = t.id')
+            ->innerJoin('AdminBundle:UsuarioSede', 'us', 'WITH', 'us.usuario = t.id')
             ->where('us.activo = true')
             ->andWhere('us.sede = :sedeId')->setParameter('sedeId', $turnoSede->getSede()->getId());
 
@@ -75,16 +77,16 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
 
         $usuariosTurnoPorTurno = $turnoSede->getUsuarioTurnoSede();
 
-        foreach($usuariosPorSede as $usuarioPorSede){
+        foreach ($usuariosPorSede as $usuarioPorSede) {
             $noExite = true;
             $tipo = null;
-            foreach($usuariosTurnoPorTurno as $usuarioTurnoPorTurno ){
-                if($usuarioTurnoPorTurno->getUsuario()->getId() == $usuarioPorSede->getId() ){
+            foreach ($usuariosTurnoPorTurno as $usuarioTurnoPorTurno) {
+                if ($usuarioTurnoPorTurno->getUsuario()->getId() == $usuarioPorSede->getId()) {
                     $tipo = $usuarioTurnoPorTurno;
                     $noExite = false;
                 }
             }
-            if($noExite){
+            if ($noExite) {
                 $tipo = new UsuarioTurnoSede();
                 $tipo->setUsuario($usuarioPorSede);
                 $tipo->setTurnoSede($turnoSede);
@@ -95,18 +97,20 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
         return $array;
     }
 
-    private function getChoiseDataTurnoTipoTramite($options){
+    private function getChoiseDataTurnoTipoTramite($options)
+    {
         $turnoSede = $options['data'];
         $tipostramitesPorTurno = $turnoSede->getTurnoTipoTramite();
         $array = array();
-        foreach($tipostramitesPorTurno as $tipoTramite){
+        foreach ($tipostramitesPorTurno as $tipoTramite) {
             $tipo = $tipoTramite->getTipoTramite();
             $array[$tipo->getDescripcion()] = $tipoTramite;
         }
         return $array;
     }
 
-    private function getChoiseTurnoTipoTramite($options){
+    private function getChoiseTurnoTipoTramite($options)
+    {
         $this->em  = $options['compound']['em'];
         $turnoSede = $options['data'];
         $array = array();
@@ -117,16 +121,16 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
         $turnoSede = $options['data'];
         $tipostramitesPorTurno = $turnoSede->getTurnoTipoTramite();
 
-        foreach($tiposTramites as $tipoTramite){
+        foreach ($tiposTramites as $tipoTramite) {
             $noExite = true;
             $tipo = null;
-            foreach($tipostramitesPorTurno as $tipoTramitePorTurno ){
-                if($tipoTramitePorTurno->getTipoTramite()->getId() == $tipoTramite->getId() ){
+            foreach ($tipostramitesPorTurno as $tipoTramitePorTurno) {
+                if ($tipoTramitePorTurno->getTipoTramite()->getId() == $tipoTramite->getId()) {
                     $tipo = $tipoTramitePorTurno;
                     $noExite = false;
                 }
             }
-            if($noExite){
+            if ($noExite) {
                 $tipo = new TurnoTipoTramite();
                 $tipo->setTipoTramite($tipoTramite);
                 $tipo->setTurnoSede($turnoSede);
