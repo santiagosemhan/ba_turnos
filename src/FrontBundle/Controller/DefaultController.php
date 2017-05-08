@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AdminBundle\Entity\Turno;
 use AdminBundle\Entity\OpcionGeneral;
 use FrontBundle\Form\TurnoType;
@@ -53,7 +54,7 @@ class DefaultController extends Controller
             foreach ($tiposTramites as $tramite) {
                 $docs = [];
 
-                foreach ( $tramite->getPathFiles()  as $fileName =>$path) {
+                foreach ($tramite->getPathFiles()  as $fileName =>$path) {
                     $fileUrl = $helper->asset($tramite, $path);
 
                     $docs[] = [
@@ -220,11 +221,56 @@ class DefaultController extends Controller
     }
 
 
-    public function cancelarTurnoAction(Request $request, Turno $turno)
+    public function cancelarTurnoAction(Request $request, String $hash)
     {
+        $turnoManager = $this->get('manager.turnos');
+
+        $comprobante = $turnoManager->getComprobanteByHash($hash);
+
+        if (!$comprobante) {
+            throw new HttpException(404, "No se ha podido determinar el comprobante requerido.");
+        }
+
+        $turno = $comprobante->getTurno();
+
+        $cancelarForm  = $this->createCancelarForm($turno);
+
         return $this->render('FrontBundle:Default:cancelar_turno.html.twig', [
-          'turno' => $turno
+          'turno' => $turno,
+          'cancelarForm' => $cancelarForm->createView()
         ]);
+    }
+
+    public function procesarCancelacionTurnoAction(Request $request, Turno $turno)
+    {
+        $cancelarForm = $this->createCancelarForm($turno);
+        $cancelarForm->handleRequest($request);
+
+        if ($cancelarForm->isSubmitted() && $cancelarForm->isValid()) {
+            $turnoManager = $this->get('manager.turnos');
+
+            $comprobante = $turnoManager->cancelarTurno($turno->getCuit(), $turno->getTurnoSede());
+
+            $this->get('session')->getFlashBag()->add('success', 'El turno se ha cancelado satisfactoriamente.');
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'El turno no se ha podido cancelar.');
+        }
+
+        return $this->render('FrontBundle:Default:procesar_cancelacion_turno.html.twig');
+    }
+
+    /**
+    * Creates a form to cancel a Turno entity.
+    *
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createCancelarForm(Turno $turno)
+    {
+        return $this->createFormBuilder()
+          ->setAction($this->generateUrl('procesar_cancelacion_turno', array('id' => $turno->getId())))
+          ->setMethod('POST')
+          ->getForm();
     }
 
 
