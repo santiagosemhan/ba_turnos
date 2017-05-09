@@ -13,6 +13,8 @@ acl:
       get_tipo_tramite: true
       get_horarios: true
       pre_reserva: true
+      cancelar_turno: true
+      procesar_cancelacion_turno: true
 
   ROLE_SEDE:
       turno_administrar: true

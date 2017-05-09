@@ -356,11 +356,12 @@ class TurnosManager
                             //todo determinar si existe ya un turno con este valor (caso que se determine mas de un turno por hora)
                             $fecha = $turno->getFechaTurno()->format('Y/m/d');
                             $repository = $this->em->getRepository('AdminBundle:ColaTurno', 'p')->createQueryBuilder('p');
-                            $repository->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'p.turnosSede = ts.id');
+                            $repository->innerJoin('AdminBundle:Turno', 't', 'WITH', 'p.turno = t.id');
+                            $repository->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 't.turnoSede = ts.id');
                             $repository->where('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
                                 ->setParameter('fecha_turno_desde', $fecha . ' 00:00:00')
                                 ->setParameter('fecha_turno_hasta', $fecha . ' 23:59:59')
-                                ->andWhere('ts.horaTurno = :horaTurno')
+                                ->andWhere('t.horaTurno = :horaTurno')
                                 ->setParameter('horaTurno',$turno->getHoraTurno())
                                 ->andWhere('p.sede = :sedeId')
                                 ->setParameter('sedeId', $cola->getSede()->getId());
@@ -1074,8 +1075,6 @@ class TurnosManager
                 $turnos[] = $turno;
             }
             foreach ($turnos as $turno){
-                //Commienzo la transaccion
-                $this->em->getConnection()->beginTransaction(); // suspend auto-commit
 
                 $turno->setFechaCancelado(new \DateTime("now"));
 
@@ -1103,8 +1102,7 @@ class TurnosManager
                     $tipoMail = 3;
                 }
                 $this->em->persist($turno);
-                $this->em->getConnection()->commit();
-
+                
                 $mail = new Mail();
                 $mail->setTextoMail($this->getCuerpoMail($tipoMail));
                 $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
@@ -1123,7 +1121,6 @@ class TurnosManager
             }
 
         }catch (\Exception $e){
-            $this->em->getConnection()->rollBack();
             throw $e;
         }
 
