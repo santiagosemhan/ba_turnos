@@ -173,7 +173,7 @@ class DisponibilidadManager
                 if (isset($turnosDelMes[$turno->getFechaTurno()->format('d')])) {
                     //Controlo si el turno pase mas de un slot
                     $repositoryTT = $this->em->getRepository('AdminBundle:TurnoTipoTramite')->createQueryBuilder('tt')
-                        ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnosSede = ts.id')
+                        ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnoSede = ts.id')
                         ->where('(tt.tipoTramite = :tipoTramite) AND tt.activo = true')->setParameter('tipoTramite', $tipoTramiteId)
                         ->andWhere('(ts.sede = :sedeId) AND ts.activo = true ')->setParameter('sedeId', $sedeId)
                         ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')->setParameter('horaTurno', $turno->getHoraTurno());
