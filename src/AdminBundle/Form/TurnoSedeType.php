@@ -27,6 +27,7 @@ class TurnoSedeType extends AbstractType
                 ->add('horaTurnosDesde',TextType::class, array('attr'  => array('class'=>"timepicker"),'required'=>true,'label'=>'Hora Desde'))
                 ->add('horaTurnosHasta',TextType::class, array('attr'  => array('class'=>"timepicker"),'required'=>true,'label'=>'Hora Hasta'))
                 ->add('cantidadTurnos',IntegerType::class,array('required'=>true,'label'=>'Cantidad Turnos'))
+                ->add('cantidadSinTurnos',IntegerType::class,array('required'=>true,'label'=>'Cantidad  Sin Turnos'))
                 ->add('cantidadFrecuencia',IntegerType::class,array('required'=>true,'label'=>'Cantidad Frecuencia'))
                 ->add('frecunciaTurnoControl',ChoiceType::class, array( 'label'=>'Frecuencia de Turnos',
                     'choices'  => array(

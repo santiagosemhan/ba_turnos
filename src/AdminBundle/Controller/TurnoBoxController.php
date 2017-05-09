@@ -63,9 +63,19 @@ class TurnoBoxController extends Controller
 
         $session = new Session();
         $box = $session->get('box');
+
+        $tipoTramte = $this->getDoctrine()->getManager()->getRepository('AdminBundle:TipoTramite')->findOneById(1);
+        $pathArray = array();
+        $docs = $tipoTramte->getPathFiles();
+        $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+        foreach ($docs as $doc){
+            $pathArray[]=$helper->asset($tipoTramte, $doc);
+        }
         return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
             'box'  => 'Administrar ' .$box,
             'sede'  => $sede,
+            'tipoTramte' => $tipoTramte,
+            'paths'=> $pathArray
         ));
     }
 

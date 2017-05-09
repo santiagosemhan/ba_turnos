@@ -64,6 +64,11 @@ class TurnoSede extends BaseClass
     private $cantidadTurnos;
 
     /**
+     * @ORM\Column(name="cantidad_sin_turnos",type="integer", nullable=true)
+     */
+    private $cantidadSinTurnos;
+
+    /**
      * @ORM\Column(name="cantidad_frecuencia",type="integer", nullable=true)
      */
     private $cantidadFrecuencia;
@@ -340,6 +345,30 @@ class TurnoSede extends BaseClass
     public function getCantidadTurnos()
     {
         return $this->cantidadTurnos;
+    }
+
+    /**
+     * Set cantidadSinTurnos
+     *
+     * @param integer $cantidadSinTurnos
+     *
+     * @return TurnoSede
+     */
+    public function setCantidadSinTurnos($cantidadSinTurnos)
+    {
+        $this->cantidadSinTurnos = $cantidadSinTurnos;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadSinTurnos
+     *
+     * @return integer
+     */
+    public function getCantidadSinTurnos()
+    {
+        return $this->cantidadSinTurnos;
     }
 
     /**

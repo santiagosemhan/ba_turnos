@@ -18,6 +18,10 @@ class DisponibilidadManager
         $this->util = $util;
     }
 
+    public function getUtil(){
+        return $this->util;
+    }
+
     public function setMesAtincipacionTurnos($mesAtincipacionTurnos)
     {
         $this->mesAtincipacionTurnos=$mesAtincipacionTurnos;
@@ -251,53 +255,9 @@ class DisponibilidadManager
 
     private function getCantidadDiaTurno($tipoTramiteId, $turnoSede, $cantidadDiaTurno, $diaRecorrido, $ultimoDiaMes, $mes, $anio)
     {
+        //Obtengo las cantidades de Turnos por hora
+        $cantidadPorTurno = $this->obtenerCantidadesTurnosPorHorario($turnoSede,$tipoTramiteId);
 
-        //Obtengo la cantidad de horas que atienden en la sede
-        $horaDesde = $turnoSede->getHoraTurnosDesde();
-        $horaHasta = $turnoSede->getHoraTurnosHasta();
-        $horasTurno = $horaHasta->diff($horaDesde);
-        $difHoras = intval($horasTurno->format('%H'));
-        $difMinutos = intval($horasTurno->format('%i'));
-
-        //Obtengo como esta repartido los turnos
-        $cantidadPorTurno = 0;
-        if ($turnoSede->getFrecunciaTurnoControl() == 'minutos') {
-            $difMinutos = $difMinutos + ($difHoras * 60);
-            $difMinutos = ($difMinutos / $turnoSede->getCantidadFrecuencia());
-            $cantidad = 0;
-            if (count($turnoSede->getTurnoTipoTramite())>0) {
-                foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
-                    if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTramiteId) {
-                        if (!is_null($tipoTramiteTurno->getCantidadTurno()) or $tipoTramiteTurno->getCantidadTurno() > 0) {
-                            $cantidad = $tipoTramiteTurno->getCantidadTurno();
-                        } else {
-                            $cantidad = $turnoSede->getCantidadTurnos();
-                        }
-                    } else {
-                        $cantidad = $turnoSede->getCantidadTurnos();
-                    }
-                }
-            } else {
-                $cantidad = $turnoSede->getCantidadTurnos();
-            }
-            $cantidadPorTurno = $cantidadPorTurno + ($cantidad * $difMinutos);
-        } else {
-            $difHoras = $difHoras + ($difMinutos / 60);
-            $difHoras = ($difHoras / $turnoSede->getCantidadFrecuencia());
-            $cantidad = 0;
-            if (count($turnoSede->getTurnoTipoTramite())>0) {
-                foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
-                    if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTramiteId) {
-                        $cantidad = $tipoTramiteTurno->getCantidadTurno();
-                    } else {
-                        $cantidad = $turnoSede->getCantidadTurnos();
-                    }
-                }
-            } else {
-                $cantidad = $turnoSede->getCantidadTurnos();
-            }
-            $cantidadPorTurno = $cantidadPorTurno + ($cantidad * $difHoras);
-        }
         $cantidadDiaTurnoAux = array();
         if ($turnoSede->getLunes()) {
             if (isset($cantidadDiaTurnoAux[1])) {
@@ -359,6 +319,55 @@ class DisponibilidadManager
         return $cantidadDiaTurno;
     }
 
+    public function obtenerCantidadesTurnosPorHorario($turnoSede,$tipoTramiteId){
+        //Obtengo la cantidad de horas que atienden en la sede
+        $horaDesde = $turnoSede->getHoraTurnosDesde();
+        $horaHasta = $turnoSede->getHoraTurnosHasta();
+        $horasTurno = $horaHasta->diff($horaDesde);
+        $difHoras = intval($horasTurno->format('%H'));
+        $difMinutos = intval($horasTurno->format('%i'));
+
+        //Obtengo como esta repartido los turnos
+        $cantidadPorTurno = 0;
+        if ($turnoSede->getFrecunciaTurnoControl() == 'minutos') {
+            $difMinutos = $difMinutos + ($difHoras * 60);
+            $difMinutos = ($difMinutos / $turnoSede->getCantidadFrecuencia());
+            $cantidad = 0;
+            if (count($turnoSede->getTurnoTipoTramite())>0) {
+                foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
+                    if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTramiteId) {
+                        if (!is_null($tipoTramiteTurno->getCantidadTurno()) or $tipoTramiteTurno->getCantidadTurno() > 0) {
+                            $cantidad = $tipoTramiteTurno->getCantidadTurno();
+                        } else {
+                            $cantidad = $turnoSede->getCantidadTurnos();
+                        }
+                    } else {
+                        $cantidad = $turnoSede->getCantidadTurnos();
+                    }
+                }
+            } else {
+                $cantidad = $turnoSede->getCantidadTurnos();
+            }
+            $cantidadPorTurno = $cantidadPorTurno + ($cantidad * $difMinutos);
+        } else {
+            $difHoras = $difHoras + ($difMinutos / 60);
+            $difHoras = ($difHoras / $turnoSede->getCantidadFrecuencia());
+            $cantidad = 0;
+            if (count($turnoSede->getTurnoTipoTramite())>0) {
+                foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
+                    if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTramiteId) {
+                        $cantidad = $tipoTramiteTurno->getCantidadTurno();
+                    } else {
+                        $cantidad = $turnoSede->getCantidadTurnos();
+                    }
+                }
+            } else {
+                $cantidad = $turnoSede->getCantidadTurnos();
+            }
+            $cantidadPorTurno = $cantidadPorTurno + ($cantidad * $difHoras);
+        }
+        return $cantidadPorTurno;
+    }
     private function perteneceVigencia($turnoSede, $diaRecorrido, $ultimoDiaMes, $mes, $anio)
     {
         $pertenece = true;
@@ -562,7 +571,7 @@ class DisponibilidadManager
         return $turnosDeldia;
     }
 
-    private function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual)
+    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false)
     {
         //Obtengo la cantidad de horas que atienden en la sede
         $cantidadTurnosSegudo = 1;
@@ -591,7 +600,11 @@ class DisponibilidadManager
                     }
                 }
                 if ($sinTurnoTipoTramite) {
-                    $cantidad = $turnoSede->getCantidadTurnos();
+                    if($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())){
+                        $cantidad = $turnoSede->getCantidadTurnos()+$turnoSede->getCantidadSinTurnos();
+                    }else{
+                        $cantidad = $turnoSede->getCantidadTurnos();
+                    }
                 }
 
                 $difMinutos = $difMinutos + ($difHoras * 60);
@@ -610,6 +623,7 @@ class DisponibilidadManager
                     }
                     $cantidadTurnos--;
                 }
+
                 while ($cantidadTurnos > 0) {
                     $horaDesde->add($intervalo);
                     if ($diaActual) {
@@ -633,7 +647,11 @@ class DisponibilidadManager
                     }
                 }
                 if ($sinTurnoTipoTramite) {
-                    $cantidad = $turnoSede->getCantidadTurnos();
+                    if($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())){
+                        $cantidad = $turnoSede->getCantidadTurnos()+$turnoSede->getCantidadSinTurnos();
+                    }else{
+                        $cantidad = $turnoSede->getCantidadTurnos();
+                    }
                 }
                 $difHoras = $difHoras + ($difMinutos / 60);
                 $cantidadTurnos = ($difMinutos / $turnoSede->getCantidadFrecuencia());

@@ -296,8 +296,13 @@ class TurnoController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
             return $this->redirectToRoute('admin_homepage');
         }
-        $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
-        return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        try{
+            $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }catch (\Exception $e){
+            $this->get('session')->getFlashBag()->add('error', $e->getMessage());
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }
 
     }
 
@@ -351,8 +356,14 @@ class TurnoController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
             return $this->redirectToRoute('admin_homepage');
         }
-        $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
-        return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        try{
+            $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }catch (\Exception $e){
+            $this->get('session')->getFlashBag()->add('error', $e->getMessage());
+            return $this->redirectToRoute('admin_homepage');
+        }
+
 
     }
 
