@@ -249,7 +249,7 @@ class DefaultController extends Controller
         if ($cancelarForm->isSubmitted() && $cancelarForm->isValid()) {
             $turnoManager = $this->get('manager.turnos');
 
-            $comprobante = $turnoManager->cancelarTurno($turno->getCuit(), $turno->getTurnoSede());
+            $comprobante = $turnoManager->cancelarTurno($turno->getCuit(), $turno->getTurno());
 
             $this->get('session')->getFlashBag()->add('success', 'El turno se ha cancelado satisfactoriamente.');
         } else {

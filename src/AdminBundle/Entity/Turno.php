@@ -808,10 +808,12 @@ class Turno extends BaseClass
      *
      * @return string
      */
-    public function getTurnoSede()
+    public function getTurno()
     {
         return $this->getSede()->getLetra().$this->getNumero();
     }
+
+
 
     /**
      * Set comprobante
@@ -849,5 +851,23 @@ class Turno extends BaseClass
         $this->turnoSede = $turnoSede;
 
         return $this;
+    }
+
+    /**
+     * get TurnoSede
+     *
+     * @return \AdminBundle\Entity\TurnoSede $turnoSede
+     */
+    public function getTurnoSede(){
+        return $this->turnoSede;
+    }
+
+    /**
+     *  set Hash del Comprobante
+     */
+    public function setHashComprobante($hash){
+        if(!is_null($this->comprobante)){
+            $this->comprobante->setSecretKey($hash);
+        }
     }
 }
