@@ -36,7 +36,10 @@ class Box extends BaseClass
     private $sede;
 
 
-
+    public function __toString()
+    {
+        return $this->descripcion;
+    }
 
     /**
      * Constructor

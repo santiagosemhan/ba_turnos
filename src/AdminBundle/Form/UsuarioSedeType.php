@@ -14,8 +14,8 @@ class UsuarioSedeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('sede',EntityType::class,array('class' => 'AdminBundle:Sede','choice_label' => 'Sede','required'=>true))
-                ->add('usuario',EntityType::class,array('class' => 'UserBundle:User','choice_label' => 'username','required'=>true))
+        $builder->add('sede',EntityType::class,array('class' => 'AdminBundle:Sede','choice_label' => 'Sede','required'=>true,'attr'  => array('class'=>"select2")))
+                ->add('usuario',EntityType::class,array('class' => 'UserBundle:User','choice_label' => 'username','required'=>true,'attr'  => array('class'=>"select2")))
                 ->add('activo');
     }
     

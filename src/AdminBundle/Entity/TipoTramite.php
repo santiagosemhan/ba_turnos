@@ -76,10 +76,6 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      */
     private $slug;
 
-    /**
-     * @ORM\OneToMany(targetEntity="SedeTipoTramite", mappedBy="tipoTramite")
-     */
-    private $sedeTipoTramite;
 
     /**
      * @ORM\OneToMany(targetEntity="Turno", mappedBy="tipoTramite")
@@ -87,9 +83,17 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $turno;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurnoTramite", mappedBy="tipoTramite")
+     * @ORM\OneToMany(targetEntity="TurnoTipoTramite", mappedBy="tipoTramite")
      */
-    private $turnoTramite;
+    private $turnoTipoTramite;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="OpcionGeneral", inversedBy="tiposTramites")
+     * @ORM\JoinColumn(name="opcion_general_id", referencedColumnName="id")
+     */
+    private $opcionGeneral;
+
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
@@ -449,29 +453,6 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * Set sedeTipoTramite
-     *
-     * @param \AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite
-     *
-     * @return TipoTramite
-     */
-    public function setSedeTipoTramite(\AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite = null)
-    {
-        $this->sedeTipoTramite = $sedeTipoTramite;
-
-        return $this;
-    }
-
-    /**
-     * Get sedeTipoTramite
-     *
-     * @return \AdminBundle\Entity\SedeTipoTramite
-     */
-    public function getSedeTipoTramite()
-    {
-        return $this->sedeTipoTramite;
-    }
 
     /**
      * Add turno
@@ -507,39 +488,6 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this->turno;
     }
 
-    /**
-     * Add turnoTramite
-     *
-     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
-     *
-     * @return TipoTramite
-     */
-    public function addTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
-    {
-        $this->turnoTramite[] = $turnoTramite;
-
-        return $this;
-    }
-
-    /**
-     * Remove turnoTramite
-     *
-     * @param \AdminBundle\Entity\TurnoTramite $turnoTramite
-     */
-    public function removeTurnoTramite(\AdminBundle\Entity\TurnoTramite $turnoTramite)
-    {
-        $this->turnoTramite->removeElement($turnoTramite);
-    }
-
-    /**
-     * Get turnoTramite
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTurnoTramite()
-    {
-        return $this->turnoTramite;
-    }
 
     /**
      * Set creadoPor
@@ -739,7 +687,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
      */
     public function __toString()
     {
-        return $this->getDescripcion();
+        return $this->getOpcionGeneral() ? $this->getOpcionGeneral()->getDescripcion().' - '.$this->getDescripcion() : '';
     }
 
     public function jsonSerialize()
@@ -752,29 +700,87 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         ];
     }
 
-    public function getPathFiles(){
+    public function getPathFiles()
+    {
         $array = array();
-        if($this->documento1){
-            $array[] = 'documento1';
+        if ($this->documento1) {
+            $array[substr(strstr($this->documento1, '_'),1)] = 'documento1File';
         }
-        if($this->documento2){
-            $array[] = 'documento2';
+        if ($this->documento2) {
+            $array[substr(strstr($this->documento2, '_'),1)] = 'documento2File';
         }
-        if($this->documento3){
-            $array[] = 'documento3';
+        if ($this->documento3) {
+            $array[substr(strstr($this->documento3, '_'),1)] = 'documento3File';
         }
-        if($this->documento4){
-            $array[] = 'documento4';
+        if ($this->documento4) {
+            $array[substr(strstr($this->documento4, '_'),1)] = 'documento4File';
         }
-        if($this->documento5){
-            $array[] = 'documento5';
+        if ($this->documento5) {
+            $array[substr(strstr($this->documento5, '_'),1)] = 'documento5File';
         }
-        if($this->documento6){
-            $array[] = 'documento6';
+        if ($this->documento6) {
+            $array[substr(strstr($this->documento6, '_'),1)] = 'documento6File';
         }
         //how to use:
         //$helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
         //$path = $helper->asset(Tipo Tramite $entity, $array[$index]);
         return $array;
+    }
+
+    /**
+     * Add turnoTipoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite
+     *
+     * @return TipoTramite
+     */
+    public function addTurnoTipoTramite(\AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite)
+    {
+        $this->turnoTipoTramite[] = $turnoTipoTramite;
+
+        return $this;
+    }
+
+    /**
+     * Remove turnoTipoTramite
+     *
+     * @param \AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite
+     */
+    public function removeTurnoTipoTramite(\AdminBundle\Entity\TurnoTipoTramite $turnoTipoTramite)
+    {
+        $this->turnoTipoTramite->removeElement($turnoTipoTramite);
+    }
+
+    /**
+     * Get turnoTipoTramite
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTurnoTipoTramite()
+    {
+        return $this->turnoTipoTramite;
+    }
+
+    /**
+     * Set opcionGeneral
+     *
+     * @param \AdminBundle\Entity\OpcionGeneral $opcionGeneral
+     *
+     * @return TipoTramite
+     */
+    public function setOpcionGeneral(\AdminBundle\Entity\OpcionGeneral $opcionGeneral = null)
+    {
+        $this->opcionGeneral = $opcionGeneral;
+        return $this;
+    }
+
+    /**
+     * Get opcionesGenerales
+     *
+     * @return \AdminBundle\Entity\OpcionGeneral
+     */
+    public function getOpcionGeneral()
+    {
+        return $this->opcionGeneral;
     }
 }

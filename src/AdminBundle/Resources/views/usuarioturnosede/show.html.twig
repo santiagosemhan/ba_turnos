@@ -1,0 +1,49 @@
+    {% extends 'admin_base.html.twig' %}
+
+    {% set __title = 'Usuario por Turno y Sede' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                    <td>{{ usuarioTurnoSede.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Usuario</th>
+                                <td>{{ usuarioTurnoSede.usuario }}</td>
+                            </tr>
+                            <tr>
+                                <th>Turno Sede</th>
+                                <td>{{ usuarioTurnoSede.turnoSede }}</td>
+                            </tr>
+                            <tr>
+                                <th>Activo</th>
+                                    <td>{% if usuarioTurnoSede.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fechacreacion</th>
+                                    <td>{% if usuarioTurnoSede.fechaCreacion %}{{ usuarioTurnoSede.fechaCreacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Fechaactualizacion</th>
+                                    <td>{% if usuarioTurnoSede.fechaActualizacion %}{{ usuarioTurnoSede.fechaActualizacion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="box-footer">
+                        <a class="btn btn-success" href="{{ path('usuarioturnosede_edit', { 'id': usuarioTurnoSede.id }) }}"> Editar</a>
+                        <a class="btn btn-default" href="{{ path('usuarioturnosede_index') }}"> Volver al Listado</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

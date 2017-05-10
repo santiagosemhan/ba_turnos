@@ -29,7 +29,7 @@ class Sede extends BaseClass
     private $direccion;
 
     /**
-     * @ORM\Column(name="letra",type="string", length=2, nullable=true)
+     * @ORM\Column(name="letra",type="string", length=2,unique=true)
      */
     private $letra;
 
@@ -38,10 +38,6 @@ class Sede extends BaseClass
      */
     private $ultimoTurno;
 
-    /**
-     * @ORM\OneToMany(targetEntity="SedeTipoTramite", mappedBy="sede")
-     */
-    private $sedeTipoTramite;
 
     /**
      * @ORM\OneToMany(targetEntity="Feriado", mappedBy="sede")
@@ -74,9 +70,9 @@ class Sede extends BaseClass
     private $usuarioSede;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurnosSede", mappedBy="sede")
+     * @ORM\OneToMany(targetEntity="TurnoSede", mappedBy="sede")
      */
-    private $turnosSede;
+    private $turnoSede;
 
     /**
      * @ORM\OneToMany(targetEntity="ColaTurno", mappedBy="sede")
@@ -96,7 +92,7 @@ class Sede extends BaseClass
         $this->turno = new \Doctrine\Common\Collections\ArrayCollection();
         $this->login = new \Doctrine\Common\Collections\ArrayCollection();
         $this->usuarioSede = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->turnosSede = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->turnoSede = new \Doctrine\Common\Collections\ArrayCollection();
         $this->colaTurno = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -234,29 +230,6 @@ class Sede extends BaseClass
         return $this;
     }
 
-    /**
-     * Set sedeTipoTramite
-     *
-     * @param \AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite
-     *
-     * @return Sede
-     */
-    public function setSedeTipoTramite(\AdminBundle\Entity\SedeTipoTramite $sedeTipoTramite = null)
-    {
-        $this->sedeTipoTramite = $sedeTipoTramite;
-
-        return $this;
-    }
-
-    /**
-     * Get sedeTipoTramite
-     *
-     * @return \AdminBundle\Entity\SedeTipoTramite
-     */
-    public function getSedeTipoTramite()
-    {
-        return $this->sedeTipoTramite;
-    }
 
     /**
      * Add feriado
@@ -463,37 +436,37 @@ class Sede extends BaseClass
     }
 
     /**
-     * Add turnosSede
+     * Add turnosede
      *
-     * @param \AdminBundle\Entity\TurnosSede $turnosSede
+     * @param \AdminBundle\Entity\TurnoSede $turnoSede
      *
      * @return Sede
      */
-    public function addTurnosSede(\AdminBundle\Entity\TurnosSede $turnosSede)
+    public function addTurnoSede(\AdminBundle\Entity\TurnoSede $turnoSede)
     {
-        $this->turnosSede[] = $turnosSede;
+        $this->turnoSede[] = $turnoSede;
 
         return $this;
     }
 
     /**
-     * Remove turnosSede
+     * Remove turnoSede
      *
-     * @param \AdminBundle\Entity\TurnosSede $turnosSede
+     * @param \AdminBundle\Entity\TurnoSede $turnoSede
      */
-    public function removeTurnosSede(\AdminBundle\Entity\TurnosSede $turnosSede)
+    public function removeTurnoSede(\AdminBundle\Entity\TurnoSede $turnoSede)
     {
-        $this->turnosSede->removeElement($turnosSede);
+        $this->turnoSede->removeElement($turnoSede);
     }
 
     /**
-     * Get turnosSede
+     * Get turnoSede
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getTurnosSede()
+    public function getTurnoSede()
     {
-        return $this->turnosSede;
+        return $this->turnoSede;
     }
 
     /**

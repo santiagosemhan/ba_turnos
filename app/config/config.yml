@@ -137,3 +137,10 @@ beelab_recaptcha2:
     # request_method: curl_post
     site_key: "%recaptcha_site_key%"
     secret: "%recaptcha_secret%"
+
+snc_redis:
+    clients:
+        default:
+            type: phpredis
+            alias: default
+            dsn: redis://localhost

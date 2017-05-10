@@ -132,6 +132,12 @@ class Turno extends BaseClass
     private $comprobante;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TurnoSede", inversedBy="turno")
+     * @ORM\JoinColumn(name="turno_sede_id", referencedColumnName="id")
+     */
+    private $turnoSede;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -802,10 +808,12 @@ class Turno extends BaseClass
      *
      * @return string
      */
-    public function getTurnoSede()
+    public function getTurno()
     {
         return $this->getSede()->getLetra().$this->getNumero();
     }
+
+
 
     /**
      * Set comprobante
@@ -829,5 +837,37 @@ class Turno extends BaseClass
     public function getComprobante()
     {
         return $this->comprobante;
+    }
+
+    /**
+     * Set turnoSede
+     *
+     * @param \AdminBundle\Entity\TurnoSede $turnoSede
+     *
+     * @return Turno
+     */
+    public function setTurnoSede(\AdminBundle\Entity\TurnoSede $turnoSede = null)
+    {
+        $this->turnoSede = $turnoSede;
+
+        return $this;
+    }
+
+    /**
+     * get TurnoSede
+     *
+     * @return \AdminBundle\Entity\TurnoSede $turnoSede
+     */
+    public function getTurnoSede(){
+        return $this->turnoSede;
+    }
+
+    /**
+     *  set Hash del Comprobante
+     */
+    public function setHashComprobante($hash){
+        if(!is_null($this->comprobante)){
+            $this->comprobante->setSecretKey($hash);
+        }
     }
 }

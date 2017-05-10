@@ -23,7 +23,7 @@ class TurnoType extends AbstractType
             ->add('mail1',EmailType::class,array('required'=>true))
             ->add('mail2',EmailType::class,array('required'=>false))
             ->add('horaTurno',TextType::class, array('attr'  => array('class'=>"timepicker"),'required'=>true))
-            ->add('tipoTramite',EntityType::class, array('class' => 'AdminBundle:TipoTramite','choice_label' => 'descripcion'));
+            ->add('tipoTramite',EntityType::class, array('class' => 'AdminBundle:TipoTramite','choice_label' => 'descripcion','attr'  => array('class'=>"select2")));
 
         /**
          * TODO -> Permitir levantar tramites por sede

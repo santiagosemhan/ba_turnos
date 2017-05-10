@@ -3,12 +3,16 @@ services:
         class:        AdminBundle\Services\TurnosManager
         autowire: true
         calls:
-          - [ setSecret, [%secret%]]
+          - [ setSecret, ['%secret%']]
           - [ setMailer, ['@mailer']]
+          - [ setRouter, ['@router' ]]
+
 
     manager.disponibilidad:
         class:        AdminBundle\Services\DisponibilidadManager
         autowire: true
+        calls:
+          - [ setMesAtincipacionTurnos, ['%mes_anticipacion_turnos%']]
 
     manager.usuario:
         class:        AdminBundle\Services\UsuarioManager
@@ -17,3 +21,12 @@ services:
     manager.util:
         class:        AdminBundle\Services\UtilManager
         autowire: true
+
+
+  # authentication success event listener
+    milentar.security.interactive_login_listener:
+        class: AdminBundle\EventListener\AuthenticationListener
+        tags:
+          - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
+        calls:
+                  - [ setServiceContainer, [ '@service_container' ]]

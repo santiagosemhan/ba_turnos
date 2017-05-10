@@ -31,6 +31,7 @@ class UsuarioSede extends BaseClass
      */
     private $usuario;
 
+
     /**
      * Set fechaCreacion
      *
@@ -83,29 +84,6 @@ class UsuarioSede extends BaseClass
         return $this->sede;
     }
 
-    /**
-     * Set userio
-     *
-     * @param \UserBundle\Entity\User $userio
-     *
-     * @return UsuarioSede
-     */
-    public function setUserio(\UserBundle\Entity\User $userio)
-    {
-        $this->userio = $userio;
-
-        return $this;
-    }
-
-    /**
-     * Get userio
-     *
-     * @return \UserBundle\Entity\User
-     */
-    public function getUserio()
-    {
-        return $this->userio;
-    }
 
     /**
      * Set creadoPor

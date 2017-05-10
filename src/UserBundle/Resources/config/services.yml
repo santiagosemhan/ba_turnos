@@ -1,4 +1,21 @@
 services:
-#    user.example:
-#        class: UserBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    roles_helper:
+        class: UserBundle\Services\RolesHelper
+        arguments: ['%security.role_hierarchy.roles%']
+
+    app_user.registration.form.type:
+        class: UserBundle\Form\UserType
+        arguments: ['%fos_user.model.user.class%','@roles_helper']
+        tags:
+            - { name: form.type, alias: user_registration }
+
+    listener.request:
+        class: UserBundle\EventListener\FirewallListener
+        arguments: [ '@service_container' ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    security.manager:
+        class: UserBundle\Services\SecurityManager
+        arguments: [ '@doctrine.orm.entity_manager' ]

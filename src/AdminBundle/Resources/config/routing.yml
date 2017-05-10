@@ -27,14 +27,38 @@ app_sede_feriado:
         resource: "@AdminBundle/Resources/config/routing/feriado.yml"
         prefix:   /feriado
 
-app_sede_turnos_sede:
-        resource: "@AdminBundle/Resources/config/routing/turnossede.yml"
+app_sede_turno_sede:
+        resource: "@AdminBundle/Resources/config/routing/turnosede.yml"
         prefix:   /turnos-sede
 
-app_sede_turnos_tramite:
-        resource: "@AdminBundle/Resources/config/routing/turnotramite.yml"
-        prefix:   /turnos-tramite
+app_sede_turnos_tipo_tramite:
+        resource: "@AdminBundle/Resources/config/routing/turnotipotramite.yml"
+        prefix:   /turnos-tipo-tramite
 
 app_sede_texto_mail:
         resource: "@AdminBundle/Resources/config/routing/textomail.yml"
         prefix:   /texto-mail
+
+app_sede_cancelacion_masiva:
+        resource: "@AdminBundle/Resources/config/routing/cancelacionmasiva.yml"
+        prefix:   /cancelacion-masiva
+
+app_usuario_turno_sede:
+        resource: "@AdminBundle/Resources/config/routing/usuarioturnosede.yml"
+        prefix:   /usuario-turno-sede
+
+app_turno_sede_usuario_tipo_tramite:
+        resource: "@AdminBundle/Resources/config/routing/turnosedeusuariotipotramite.yml"
+        prefix:   /asignacion-turno-sede-usuario-tipo-tramite
+
+app_opcion_general:
+        resource: "@AdminBundle/Resources/config/routing/opciongeneral.yml"
+        prefix:   /opcion-general
+
+app_exportar:
+        resource: "@AdminBundle/Resources/config/routing/exportar.yml"
+        prefix:   /exportar
+
+app_box_atencion:
+        resource: "@AdminBundle/Resources/config/routing/boxatencion.yml"
+        prefix:   /administrar-box

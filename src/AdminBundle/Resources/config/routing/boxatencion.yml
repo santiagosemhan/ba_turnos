@@ -1,0 +1,9 @@
+app_box_atencion_seleccion_box:
+    path:     /seleccion-box
+    defaults: { _controller: "AdminBundle:TurnoBox:seleccionBox" }
+    methods:  [GET, POST]
+
+app_box_atencion_box:
+    path:     /atencion-box
+    defaults: { _controller: "AdminBundle:TurnoBox:atencionBox" }
+    methods:  [GET, POST]

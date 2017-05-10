@@ -4,71 +4,132 @@ namespace FrontBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AdminBundle\Entity\Turno;
+use AdminBundle\Entity\OpcionGeneral;
 use FrontBundle\Form\TurnoType;
 
 class DefaultController extends Controller
 {
-    const TRAMITES_CON_TURNO = 0;
-
-    const TRAMITES_SIN_TURNO = 1;
-
     public function indexAction()
     {
+        $opcionesGenerales = $this->get('manager.disponibilidad')->getOpcionesGenerales();
+
+        $opciones = [];
+
+        foreach ($opcionesGenerales as $key => $opcion) {
+            $opciones[] = [
+              'id'          => $opcion->getId(),
+              'descripcion' => $opcion->getDescripcion(),
+              'acciones'    => [
+                ['url'     => $this->generateUrl('seleccionar_tramite', ['opcion' => $opcion->getId()]),'nombre'  => 'Sacar Turno'],
+                ['url'     => '#','nombre'  => 'Cancelar Turno']
+              ]
+            ];
+        }
+
+
         return $this->render('FrontBundle:Default:index.html.twig', [
-          "tramites_con_turno" => self::TRAMITES_CON_TURNO,
-          "tramites_sin_turno" => self::TRAMITES_SIN_TURNO
+          "opciones"  => json_encode($opciones, true)
         ]);
     }
 
-    public function seleccionarTipoTramiteAction(Request $request, $sinTurno)
+    public function seleccionarTipoTramiteAction(Request $request, OpcionGeneral $opcion)
     {
         $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
-        if (in_array($sinTurno, [0,1])) {
-            $tiposTramites = $tipoTramiteRepository->getTiposByAgrupador($sinTurno, true);
+        if ($opcion) {
+            $tiposTramites = $this->get('manager.disponibilidad')->obtenerTipoTramite($opcion->getId());
+
+            $helper = $this->get('vich_uploader.templating.helper.uploader_helper');
+
+            $assetServices = $this->get('assets.packages');
+
+            $documentos = [];
+
+            $baseUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl();
+
+            foreach ($tiposTramites as $tramite) {
+                $docs = [];
+
+                foreach ($tramite->getPathFiles()  as $fileName =>$path) {
+                    $fileUrl = $helper->asset($tramite, $path);
+
+                    $docs[] = [
+                      'nombre' => $fileName,
+                      'link'   => $baseUrl.$assetServices->getUrl($fileUrl)
+                    ];
+                }
+
+                $documentos[] = [
+                    'tramite' => $tramite->getId(),
+                    'documentos' => $docs
+              ];
+            }
         } else {
-            throw new HttpException(500, "Tipo de trámite inválido.");
+            throw new HttpException(500, "Opción inválida.");
         }
 
         return $this->render('FrontBundle:Default:seleccionar_tipo_tramite.html.twig', [
-        'tramites' => json_encode($tiposTramites, true)
+          'tramites'   => json_encode($tiposTramites, true),
+          'documentos' => json_encode($documentos, true)
       ]);
     }
 
     public function seleccionarSedeAction(Request $request)
     {
+        $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
+
         $tipoTramite = $request->get('tipoTramite');
+
+        $tipoTramite = $tipoTramiteRepository->findOneById($tipoTramite);
 
         $sedeRepository = $this->getDoctrine()->getRepository('AdminBundle:Sede');
 
         $sedes = [];
 
         if ($tipoTramite) {
-            $sedes = $sedeRepository->getSedesByTipoTramite($tipoTramite, true);
+            $sedes = $this->get('manager.disponibilidad')->obtenerSedePorTipoTramte($tipoTramite, true);
+        } else {
+            throw new HttpException(500, "Tipo de trámite inválido.");
         }
 
         // $sedes[] = ['id'=>9,'sede'=>'otra sede','direccion'=>'asdfadsaf'];
         return $this->render('FrontBundle:Default:seleccionar_sede.html.twig', [
           'sedes' => json_encode($sedes, true),
-          'tipoTramite' => $tipoTramite
+          'tipoTramite' => $tipoTramite->getId()
         ]);
     }
 
     public function elegirTurnoAction(Request $request)
     {
-        $tipoTramite = $request->get('tipoTramite');
+        $tipoTramiteId = $request->get('tipoTramite');
 
-        $sede = $request->get('sede');
+        $sedeId = $request->get('sede');
 
-        $diasNoDisponibles = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramite, $sede);
+        $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
-        return $this->render('FrontBundle:Default:elegir_turno.html.twig', [
-          'tipoTramite' => $tipoTramite,
-          'sede' => $sede,
-          'diasNoDisponibles' => $diasNoDisponibles
-        ]);
+        $tipoTramite = $tipoTramiteRepository->findOneById($tipoTramiteId);
+
+
+        if ($tipoTramite) {
+            if (!$tipoTramite->getSinTurno()) {
+                $diasNoDisponibles = $this->get('manager.disponibilidad')->getDiasNoDisponibles($tipoTramiteId, $sedeId);
+
+                return $this->render('FrontBundle:Default:elegir_turno.html.twig', [
+                  'tipoTramite' => $tipoTramiteId,
+                  'sede' => $sedeId,
+                  'diasNoDisponibles' => $diasNoDisponibles
+                ]);
+            } else {
+                $request->getSession()->set('tipoTramite', $tipoTramiteId);
+                $request->getSession()->set('sede', $sedeId);
+
+                return $this->redirectToRoute('ingreso_datos');
+            }
+        }
     }
 
     public function ingresoDatosAction(Request $request)
@@ -160,10 +221,88 @@ class DefaultController extends Controller
     }
 
 
-    public function cancelarTurnoAction(Request $request, Turno $turno)
+    public function cancelarTurnoAction(Request $request, String $hash)
     {
+        $turnoManager = $this->get('manager.turnos');
+
+        $comprobante = $turnoManager->getComprobanteByHash($hash);
+
+        if (!$comprobante) {
+            throw new HttpException(404, "No se ha podido determinar el comprobante requerido.");
+        }
+
+        $turno = $comprobante->getTurno();
+
+        $cancelarForm  = $this->createCancelarForm($turno);
+
         return $this->render('FrontBundle:Default:cancelar_turno.html.twig', [
-          'turno' => $turno
+          'turno' => $turno,
+          'cancelarForm' => $cancelarForm->createView()
         ]);
+    }
+
+    public function procesarCancelacionTurnoAction(Request $request, Turno $turno)
+    {
+        $cancelarForm = $this->createCancelarForm($turno);
+        $cancelarForm->handleRequest($request);
+
+        if ($cancelarForm->isSubmitted() && $cancelarForm->isValid()) {
+            $turnoManager = $this->get('manager.turnos');
+
+            $comprobante = $turnoManager->cancelarTurno($turno->getCuit(), $turno->getTurno());
+
+            $this->get('session')->getFlashBag()->add('success', 'El turno se ha cancelado satisfactoriamente.');
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'El turno no se ha podido cancelar.');
+        }
+
+        return $this->render('FrontBundle:Default:procesar_cancelacion_turno.html.twig');
+    }
+
+    /**
+    * Creates a form to cancel a Turno entity.
+    *
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createCancelarForm(Turno $turno)
+    {
+        return $this->createFormBuilder()
+          ->setAction($this->generateUrl('procesar_cancelacion_turno', array('id' => $turno->getId())))
+          ->setMethod('POST')
+          ->getForm();
+    }
+
+
+    public function redisAction(Request $request)
+    {
+        $redis = $this->container->get('snc_redis.default');
+
+        $cola = $redis->lrange('cola', 0, -1);
+        //$cola = $redis->get('cola');
+
+        return $this->render('FrontBundle:Default:redis.html.twig', [
+          'cola' => $cola
+        ]);
+    }
+
+    public function agregaColaAction(Request $request)
+    {
+        $redis = $this->container->get('snc_redis.default');
+
+        $cola = $redis->rpush('cola', '{turno:1}');
+
+        $redis->publish('cola', $cola);
+
+        return new Response('ok');
+    }
+
+    public function sacaColaAction(Request $request)
+    {
+        $redis = $this->container->get('snc_redis.default');
+
+        $item = $redis->lpop('cola');
+
+        return new Response($item);
     }
 }

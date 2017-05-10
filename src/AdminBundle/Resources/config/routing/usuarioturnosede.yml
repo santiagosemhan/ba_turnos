@@ -1,0 +1,24 @@
+usuarioturnosede_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:UsuarioTurnoSede:index" }
+    methods:  GET
+
+usuarioturnosede_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:UsuarioTurnoSede:show" }
+    methods:  GET
+
+usuarioturnosede_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:UsuarioTurnoSede:new" }
+    methods:  [GET, POST]
+
+usuarioturnosede_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:UsuarioTurnoSede:edit" }
+    methods:  [GET, POST]
+
+usuarioturnosede_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:UsuarioTurnoSede:delete" }
+    methods:  DELETE

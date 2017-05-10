@@ -1,0 +1,26 @@
+    {% extends 'admin_base.html.twig' %}
+
+
+    {% set __title = 'Editar Opcion General' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <!-- form start -->
+                    {{ form_start(edit_form) }}
+                    {{ form_widget(edit_form) }}
+                    <div class="box-footer">
+                        <input class="btn btn-success" type="submit" value="Editar"/>
+                        <a class="btn btn-default" href="{{ path('opciongeneral_index') }}"> Volver al Listado</a>
+                    </div>
+
+                    {{ form_end(edit_form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+

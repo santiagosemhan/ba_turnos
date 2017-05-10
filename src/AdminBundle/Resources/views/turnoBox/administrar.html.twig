@@ -1,0 +1,62 @@
+{% extends 'admin_base.html.twig' %}
+
+{% set __title =  box %}
+
+{% set __descripcion_opcional = sede %}
+
+{% block content %}
+
+    <div class="example-modal">
+        <div class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Turno:</h4>
+                        <h2 class="modal-title" style="text-align: center"><b>AA-555</b></h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>CUIT: <b>333333333</b></p>
+                        <p>Nombre Completo: <b>Fernando</b></p>
+                        <p>Tipo de Tramite: <b>Consulta - Jubilacion</b></p>
+                        <p>Hora Turno: <b>14:40</b></p>
+                        <p>{{ tipoTramte }}</p>
+                        <p>
+                            <ul>
+                                {% for path in paths %}
+                                    <li>{{ path }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning pull-left" >Volver a Llamar</button>
+                        <button type="button" class="btn btn-primary">Llamar Proximo</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .example-modal .modal {
+            position: relative;
+            top: auto;
+            bottom: auto;
+            right: auto;
+            left: auto;
+            display: block;
+            z-index: 1;
+        }
+
+        .example-modal .modal {
+            background: transparent !important;
+        }
+    </style>
+{% endblock %}
+

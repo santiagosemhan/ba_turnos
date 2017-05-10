@@ -3,7 +3,7 @@ front_homepage:
     defaults: { _controller: FrontBundle:Default:index }
 
 seleccionar_tramite:
-    path:     /seleccionar-tipo-tramite/{sinTurno}
+    path:     /seleccionar-tipo-tramite/{opcion}
     defaults: { _controller: FrontBundle:Default:seleccionarTipoTramite }
     requirements:
       sinTurno: \d+
@@ -25,8 +25,13 @@ generar_comprobante:
     defaults: { _controller: FrontBundle:Default:generarComprobante }
 
 cancelar_turno:
-    path:     /cancelar_turno/{turno}
+    path:     /cancelar-turno/{hash}
     defaults: { _controller: FrontBundle:Default:cancelarTurno }
+
+procesar_cancelacion_turno:
+    path: /procesar-cancelacion-turno/{id}
+    defaults: { _controller: FrontBundle:Default:procesarCancelacionTurno }
+    methods:  POST
 
 ## AJAX ACTIONS ##
 get_tipo_tramite:
@@ -42,3 +47,13 @@ pre_reserva:
     path:     pre-reserva
     defaults: { _controller: FrontBundle:Ajax:postPreReserva }
     methods: ['POST']
+
+redis:
+    path:     /redis
+    defaults: { _controller: FrontBundle:Default:redis }
+redis_agrega:
+    path:     /redis_agrega
+    defaults: { _controller: FrontBundle:Default:agregaCola }
+redis_saca:
+    path:     /redis_saca
+    defaults: { _controller: FrontBundle:Default:sacaCola }

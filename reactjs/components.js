@@ -7,6 +7,7 @@ import Tramite from './components/tramite/Tramite';
 import Sede from './components/sede/Sede';
 import Turno from './components/turno/Turno';
 import Dropdown from './components/dropdown/Dropdown';
+import OpcionesGenerales from './components/opciones-generales/OpcionesGenerales';
 
 
 class Components {
@@ -20,6 +21,7 @@ class Components {
       {name: 'Sede', value: Sede},
       {name: 'Turno', value: Turno},
       {name: 'Dropdown', value: Dropdown},
+      {name: 'OpcionesGenerales', value: OpcionesGenerales},
     ]
 
     this.registerComponents(customComponents);

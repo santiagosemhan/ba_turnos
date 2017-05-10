@@ -1,0 +1,19 @@
+turnosedeusuariotipotramite_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:TurnoSedeUsuarioTipoTramite:index" }
+    methods:  GET
+
+turnosedeusuariotipotramite_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:TurnoSedeUsuarioTipoTramite:show" }
+    methods:  GET
+
+turnosedeusuariotipotramite_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:TurnoSedeUsuarioTipoTramite:new" }
+    methods:  [GET, POST]
+
+turnosedeusuariotipotramite_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:TurnoSedeUsuarioTipoTramite:edit" }
+    methods:  [GET, POST]

@@ -1,0 +1,48 @@
+    {% extends 'admin_base.html.twig' %}
+
+
+    {% set __title = 'Editar Cancelacion Masiva' %}
+
+    {% block content %}
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <!-- form start -->
+                    {{ form_start(edit_form) }}
+                    {{ form_widget(edit_form) }}
+                    <div class="box-footer">
+                        <input class="btn btn-success" type="submit" value="Editar"/>
+                        <a class="btn btn-default" href="{{ path('cancelacionmasiva_index') }}"> Volver al Listado</a>
+                    </div>
+
+                    {{ form_end(edit_form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+        <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/datepicker3.css') }}">
+    {% endblock %}
+
+    {% block footer_javascript %}
+        {{ parent() }}
+        <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+        <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/locales/bootstrap-datepicker.es.js') }}"></script>
+        <script>
+            $(function () {
+                //Date picker
+                $('.datepicker').datepicker({
+                    autoclose: true,
+                    format: 'dd/mm/yyyy',
+                    language: 'es',
+                    startDate: 'd',
+                    startView: '0 days'
+                });
+            });
+        </script>
+    {% endblock  %}

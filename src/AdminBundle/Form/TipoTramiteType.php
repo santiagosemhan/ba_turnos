@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class TipoTramiteType extends AbstractType
 {
@@ -16,7 +17,8 @@ class TipoTramiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('descripcion')
+        $builder->add('opcionGeneral',EntityType::class,array('class' => 'AdminBundle:OpcionGeneral','choice_label' => 'descripcion','required'=>true,'attr'  => array('class'=>"select2")))
+            ->add('descripcion')
             ->add('texto',TextareaType::class,array('attr'  => array('rows'=>"10", 'cols'=>"80")))
             ->add('sinTurno')
             ->add('documento1File',

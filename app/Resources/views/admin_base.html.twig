@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/bootstrap/css/font-awesome.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/bootstrap/css/ionicons.min.css') }}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/select2/select2.min.css') }}">
     <!-- jvectormap -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}">
     <!-- Theme style -->
@@ -92,7 +94,9 @@
                 <li class="header">Menu</li>
                 <li class="active treeview">
                     <ul class="treeview-menu">
-                        <li class="active"><a href="{{ path('admin_homepage') }}"><i class="fa fa-circle-o"></i> Inicio</a></li>
+                        <li class="active">
+                            <a href="{{ path('admin_homepage') }}"><i class="fa fa-circle-o"></i> Inicio</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="treeview">
@@ -102,10 +106,30 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ path('app_box_atencion_seleccion_box') }}">
                         <i class="fa fa-th"></i> <span>Administrar Box</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ path('cancelacionmasiva_index') }}">
+                        <i class="fa fa-user-times"></i> <span>Cancelacion Masiva</span>
+                    </a>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-download"></i>
+                        <span>Exportacion</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{ path('exportar_turnos_show') }}"><i class="fa fa-file-pdf-o"></i> Turnos</a></li>
+                        <li><a href="{{ path('exportar_sesion_show') }}"><i class="fa  fa-building-o"></i> Inicio de Session</a></li>
+                    </ul>
+                </li>
+
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-pencil-square"></i>
@@ -117,11 +141,25 @@
                     <ul class="treeview-menu">
                         <li><a href="{{ path('sede_index') }}"><i class="fa  fa-building-o"></i> Sede</a></li>
                         <li><a href="{{ path('box_index') }}"><i class="fa  fa-inbox"></i> Box</a></li>
+                        <li><a href="{{ path('opciongeneral_index') }}"><i class="fa fa-files-o"></i> Opciones de Tipo Tramite</a></li>
                         <li><a href="{{ path('tipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Tipo Tramite</a></li>
                         <li><a href="{{ path('feriado_index') }}"><i class="fa fa-sign-out"></i> Feriado</a></li>
-                        <li><a href="{{ path('turnossede_index') }}"><i class="fa fa-calendar-check-o"></i> Turnos por Sede</a></li>
-                        <li><a href="{{ path('turnotramite_index') }}"><i class="fa fa-calendar-check-o"></i> Turnos por Tramite por Sede </a></li>
                         <li><a href="{{ path('texto_mail_index') }}"><i class="fa fa-envelope-o"></i> Parametrización Mail</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-calendar-check-o"></i>
+                        <span>Parametrización Turnos</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{ path('turnosede_index') }}"><i class="fa fa-building-o"></i> Por Sede</a></li>
+                        <li><a href="{{ path('turnotipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Por Tramite por Sede </a></li>
+                        <li><a href="{{ path('turnosedeusuariotipotramite_index') }}"><i class="fa fa-users"></i> Usuario y Tipo Tramite </a></li>
 
                     </ul>
                 </li>
@@ -134,7 +172,9 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
+                        <li><a href="{{ path('usuario_index') }}"><i class="fa  fa-users"></i> Usuarios</a></li>
                         <li><a href="{{ path('usuariosede_index') }}"><i class="fa  fa-building-o"></i> Sede Usuario</a></li>
+                        <li><a href="{{ path('usuarioturnosede_index') }}"><i class="fa  fa-user-plus"></i> Usuarios por Turnos</a></li>
                     </ul>
                 </li>
 
@@ -219,6 +259,8 @@
     <script src="{{ asset('assets/vendor/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
     <!-- FastClick -->
     <script src="{{ asset('assets/vendor/AdminLTE/plugins/fastclick/fastclick.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('assets/vendor/AdminLTE/plugins/select2/select2.full.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/vendor/AdminLTE/dist/js/app.min.js') }}"></script>
 

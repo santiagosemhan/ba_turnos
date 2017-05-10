@@ -34,6 +34,24 @@ class TurnoController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
             return $this->redirectToRoute('admin_homepage');
         }
+
+        $fechaHoy = date("d").'/'.date("m").'/'.date("Y");
+        $horaDesde = "06:00 AM";
+        $horaHasta = "09:00 PM";
+
+        if($request->getMethod() == 'POST') {
+            $datos = $request->request->get('form');
+            if(isset($datos['fecha'])){
+                $fechaHoy = $datos['fecha'];
+            }
+            if(isset($datos['horaDesde'])){
+                $horaDesde = $datos['horaDesde'];
+            }
+            if(isset($datos['horaHasta'])){
+                $horaHasta = $datos['horaHasta'];
+            }
+        }
+
         $em = $this->getDoctrine()->getManager();
         $tiposTramitesArray = array();
         $tiposTramitesArray['Todos'] = 0;
@@ -42,12 +60,12 @@ class TurnoController extends Controller
             $tiposTramitesArray[$tipo->getDescripcion()] = $tipo->getId();
         }
 
-        $fechaHoy = date("d").'/'.date("m").'/'.date("Y");
+
 
         $form = $this->createFormBuilder(array('attr'=>array('class'=>'form-admin')))
-            ->add('horaDesde', TextType::class,array('attr'  => array('class'=>"form-control timepicker","value"=>"06:00 AM")))
-            ->add('horaHasta', TextType::class,array('attr'  => array('class'=>"form-control timepicker","value"=>"09:00 PM")))
-            ->add('estados',  ChoiceType::class,array( 'attr' =>array('class'=>'form-control'),
+            ->add('horaDesde', TextType::class,array('attr'  => array('class'=>"form-control timepicker","value"=>$horaDesde)))
+            ->add('horaHasta', TextType::class,array('attr'  => array('class'=>"form-control timepicker","value"=>$horaHasta)))
+            ->add('estados',  ChoiceType::class,array( 'attr' =>array('class'=>'form-control select2'),
                                                         'choices'  => array(
                                                             'Sin Corfirmar' => 0,
                                                             'Confirmados' => 1,
@@ -56,12 +74,14 @@ class TurnoController extends Controller
                                                             'Atendidos' => 4,
                                                             'Atendidos Sin Turnos'=> 5,
                                                             'Atendidos Con Turnos' => 6,
+                                                            'Cancelados' => 8
                                                         )))
-            ->add('tipoTramite', ChoiceType::class,array( 'attr' =>array('class'=>'form-control'),
+            ->add('tipoTramite', ChoiceType::class,array( 'attr' =>array('class'=>'form-control select2'),
                                                             'choices'  => $tiposTramitesArray))
-            ->add('fecha', TextType::class,array('attr'  => array('class'=>"form-control pull-right datepicker",'value'=> $fechaHoy)))
+            ->add('fecha', TextType::class, array('attr' => array('class' => "form-control pull-right datepicker", 'value' => $fechaHoy)))
             ->add('cuit', TextType::class,array('attr'  => array('class'=>"form-control"),'required'=>false))
             ->add('nroTurno', TextType::class,array('attr'  => array('class'=>"form-control"),'required'=>false))
+            ->setMethod('GET')
             ->getForm();
 
         $form->handleRequest($request);
@@ -113,6 +133,7 @@ class TurnoController extends Controller
             $optionsPaginate3
         );
 
+
         return $this->render('AdminBundle:turno:administrar.html.twig', array(
             'form'                  => $form->createView(),
             'sede'                  => $sede,
@@ -123,7 +144,34 @@ class TurnoController extends Controller
             'sinTurno'              => $this->get('manager.turnos')->getCantidadSinTurnos($sede->getId(),$fechaHoy),
             'fechaHoy'              => $fechaHoy,
             'turnosConfirmadosList' => $turnosConfirmadosList,
-            'turnosAtendidosList'   => $turnosAtendidosList,
+            'turnosAtendidosList'   => $turnosAtendidosList
+        ));
+    }
+
+    public function procesarCancelarAction(Request $request, Turno $turno)
+    {
+        $sede= $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        if(is_null($sede)){
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+            return $this->redirectToRoute('admin_homepage');
+        }
+        $this->get('manager.turnos')->cancelarTurno($turno->getCuit(),$sede->getLetra().$turno->getNumero(),true);
+        return $this->redirectToRoute('turno_cancelar', array('id' => $turno->getId()));
+
+    }
+
+    public function cancelarAction(Request $request, Turno $turno)
+    {
+        $sede= $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        if(is_null($sede)){
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+            return $this->redirectToRoute('admin_homepage');
+        }
+
+        return $this->render('AdminBundle:turno:cancelar.html.twig', array(
+            'turno' => $turno
         ));
     }
 
@@ -248,8 +296,13 @@ class TurnoController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
             return $this->redirectToRoute('admin_homepage');
         }
-        $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
-        return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        try{
+            $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }catch (\Exception $e){
+            $this->get('session')->getFlashBag()->add('error', $e->getMessage());
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }
 
     }
 
@@ -266,9 +319,52 @@ class TurnoController extends Controller
             return $this->redirectToRoute('admin_homepage');
         }
 
+        $titulo = "Confirmar Turno";
+        $prioritario = false;
+
         return $this->render('AdminBundle:turno:show.html.twig', array(
-            'turno' => $turno
+            'turno' => $turno,
+            'titulo' => $titulo,
+            'priotitario' =>$prioritario,
         ));
+    }
+
+    public function showPrioritarioAction(Turno $turno)
+    {
+        $sede= $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        if(is_null($sede)){
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+            return $this->redirectToRoute('admin_homepage');
+        }
+
+        $titulo = "Confirmar Turno Prioritario";
+        $prioritario = true;
+
+        return $this->render('AdminBundle:turno:show.html.twig', array(
+            'turno' => $turno,
+            'titulo' => $titulo,
+            'priotitario' =>$prioritario,
+        ));
+    }
+
+    public function confirmarTurnoPrioritarioAction(Turno $turno)
+    {
+        $sede= $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        if(is_null($sede)){
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+            return $this->redirectToRoute('admin_homepage');
+        }
+        try{
+            $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }catch (\Exception $e){
+            $this->get('session')->getFlashBag()->add('error', $e->getMessage());
+            return $this->redirectToRoute('admin_homepage');
+        }
+
+
     }
 
     public function imprimirAction(Turno $turno)

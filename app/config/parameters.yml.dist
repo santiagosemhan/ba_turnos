@@ -21,3 +21,5 @@ parameters:
 
     recaptcha_site_key : ~
     recaptcha_secret:    ~
+
+    mes_anticipacion_turnos: ~

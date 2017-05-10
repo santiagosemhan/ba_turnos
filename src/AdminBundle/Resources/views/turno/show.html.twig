@@ -1,6 +1,6 @@
     {% extends 'admin_base.html.twig' %}
 
-    {% set __title = 'Turno' %}
+    {% set __title = titulo %}
 
     {% block content %}
     <div class="box box-success">
@@ -46,8 +46,14 @@
                     </table>
 
                     <div class="box-footer">
-                        {% if turno.fechaConfirmacion %}<a class="btn btn-success" href="{{ path('turno_imprimir', { 'id': turno.id }) }}" target="_blank"> Imprimir</a>
-                        {% else %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar', { 'id': turno.id }) }}"> Confirmar</a>
+                        {% if priotitario %}
+                            {% if turno.fechaConfirmacion %}<a class="btn btn-success" href="{{ path('turno_imprimir', { 'id': turno.id }) }}" target="_blank"> Imprimir</a>
+                            {% else %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar_prioritario', { 'id': turno.id }) }}"> Confirmar Prioritario</a>
+                            {% endif %}
+                        {% else %}
+                            {% if turno.fechaConfirmacion %}<a class="btn btn-success" href="{{ path('turno_imprimir', { 'id': turno.id }) }}" target="_blank"> Imprimir</a>
+                            {% else %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar', { 'id': turno.id }) }}"> Confirmar</a>
+                            {% endif %}
                         {% endif %}
                         <a class="btn btn-default" href="{{ path('turno_administrar') }}"> Volver al Listado</a>
                     </div>

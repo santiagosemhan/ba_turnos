@@ -1,0 +1,24 @@
+opcionesgenerales_index:
+    path:     /
+    defaults: { _controller: "AdminBundle:OpcionesGenerales:index" }
+    methods:  GET
+
+opcionesgenerales_show:
+    path:     /{id}/show
+    defaults: { _controller: "AdminBundle:OpcionesGenerales:show" }
+    methods:  GET
+
+opcionesgenerales_new:
+    path:     /new
+    defaults: { _controller: "AdminBundle:OpcionesGenerales:new" }
+    methods:  [GET, POST]
+
+opcionesgenerales_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AdminBundle:OpcionesGenerales:edit" }
+    methods:  [GET, POST]
+
+opcionesgenerales_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AdminBundle:OpcionesGenerales:delete" }
+    methods:  DELETE

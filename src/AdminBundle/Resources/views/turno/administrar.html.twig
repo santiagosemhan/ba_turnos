@@ -73,91 +73,97 @@
             </div>
         </div>
         <!-- /.box-header -->
-        <div class="box-body">
+        <div class="bs-example" style="margin: 10px 15px 10px;">
             <div class="row">
                 <div class = "col-md-12">
                     {{ form_start(form, {'attr': {'class': 'form-admin'} }) }}
+                    <div style="width: 100%; float: left;">
 
-                    <div class="col-lg-5">
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <div class="form-group">
+                                            <label>Hora Desde:</label>
 
-                        <div class="col-lg-6">
-
-
-                            <div class="bootstrap-timepicker">
-                                <div class="form-group">
-                                    <label>Hora Desde:</label>
-
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-clock-o"></i>
+                                                </div>
+                                                {{ form_widget(form.horaDesde) }}
+                                            </div>
+                                            <!-- /.input group -->
                                         </div>
-                                        {{ form_widget(form.horaDesde) }}
+                                        <!-- /.form group -->
                                     </div>
-                                    <!-- /.input group -->
                                 </div>
-                                <!-- /.form group -->
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="bootstrap-timepicker">
-                                <div class="form-group">
-                                    <label>Hora Hasta:</label>
+                                <div class="col-lg-6">
+                                    <div class="bootstrap-timepicker">
+                                        <div class="form-group">
+                                            <label>Hora Hasta:</label>
 
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-clock-o"></i>
+                                                </div>
+                                                {{ form_widget(form.horaHasta) }}
+                                            </div>
+                                            <!-- /.input group -->
                                         </div>
-                                        {{ form_widget(form.horaHasta) }}
+                                        <!-- /.form group -->
                                     </div>
-                                    <!-- /.input group -->
                                 </div>
-                                <!-- /.form group -->
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label>Estados Turnos</label>
-                            {{ form_widget(form.estados) }}
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipo de Tramite</label>
-                            {{ form_widget(form.tipoTramite) }}
-                        </div>
-
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-1"></div>
-                    <div class="col-lg-5">
-
-                        <div class="form-group">
-                            <label>Date:</label>
-
-                            <div class="input-group date">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                {{ form_widget(form.fecha) }}
+                            <div class="form-group">
+                                <label>Estados Turnos</label>
+                                {{ form_widget(form.estados) }}
                             </div>
-                            <!-- /.input group -->
-                        </div>
 
-                        <div class="form-group">
-                            <label>CUIT</label>
-                            {{ form_widget(form.cuit) }}
-                        </div>
+                            <div class="form-group">
+                                <label>Tipo de Tramite</label>
+                                {{ form_widget(form.tipoTramite) }}
+                            </div>
 
-                        <div class="form-group">
-                            <label>Nro. Turno</label>
-                            {{ form_widget(form.nroTurno) }}
                         </div>
-
-                    </div>
                         <!-- /.col -->
-                    <!-- /.col -->
+
+                        <div class="col-md-1"></div>
+
+                        <div class="col-lg-5">
+
+                            <div class="form-group">
+                                <label>Date:</label>
+
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    {{ form_widget(form.fecha) }}
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+
+                            <div class="form-group">
+                                <label>CUIT</label>
+                                {{ form_widget(form.cuit) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Nro. Turno</label>
+                                {{ form_widget(form.nroTurno) }}
+                            </div>
+
+                        </div>
+                            <!-- /.col -->
+                        <!-- /.col -->
+                    </div>
+
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success pull-right">Filtrar</button>
                     </div>
+
+
                     {{ form_end(form) }}
                 </div>
             </div>
@@ -213,13 +219,17 @@
                                 {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
                                     <span class="label label-success">{{ turno.estadoInformativo }}</span>
                                 {% else %}
-                                    <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                    <span class="label label-danger">{{ turno.estadoInformativo }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ turno.tipoTramite }}</td>
-                            <td> {% if turno.estadoInformativo == 'Sin Corfirmar' %}
-                                    <a class="btn btn-primary pull-left" href="{{ path('turno_show', { 'id': turno.id }) }}"> Confirmar</a>
-                                    <button type="submit" class="btn btn-danger pull-right">Cancelar</button>
+                            <td>
+                                {% if turno.estadoInformativo == 'Sin Corfirmar' %}
+                                <div class="box-tools pull-right">
+                                    <a class="btn btn-primary"  href="{{ path('turno_show', { 'id': turno.id }) }}"> Confirmar</a>
+                                    <a class="btn btn-primary" href="{{ path('turno_show_prioritario', { 'id': turno.id }) }}"> Confirmar <i class="fa fa-fw fa-star"></i></a>
+                                    <a class="btn btn-danger" href="{{ path('turno_cancelar', { 'id': turno.id }) }}"> Cancelar</a>
+                                </div>
                                 {% endif %}
                             </td>
                         </tr>
@@ -281,7 +291,7 @@
                                         {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
                                             <span class="label label-success">{{ turno.estadoInformativo }}</span>
                                         {% else %}
-                                            <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                            <span class="label label-danger">{{ turno.estadoInformativo }}</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ turno.tipoTramite }}</td>
@@ -344,7 +354,7 @@
                                         {% elseif turno.estadoInformativo == 'Atendidos Con Turnos' %}
                                             <span class="label label-success">{{ turno.estadoInformativo }}</span>
                                         {% else %}
-                                            <span class="label label-error">{{ turno.estadoInformativo }}</span>
+                                            <span class="label label-danger">{{ turno.estadoInformativo }}</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ turno.tipoTramite }}</td>
