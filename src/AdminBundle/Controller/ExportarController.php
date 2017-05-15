@@ -126,18 +126,24 @@ class ExportarController extends Controller
 
                     $cola = $turno->getColaTurno();
                     $prioritario = 'No';
-                    if($cola->getPrioritario()){
-                        $prioritario = 'Si';
+                    if(count($cola)> 0){
+                        $cola = $cola[0];
+                        if($cola->getPrioritario()){
+                            $prioritario = 'Si';
+                        }
                     }
 
                     $phpExcelObject->setActiveSheetIndex(0)
                         ->setCellValue('I'.$rowNumber, 'Si')
-                        ->setCellValue('J'.$rowNumber, $prioritario)
-                        ->setCellValue('K'.$rowNumber, $cola->getCreadoPor())
-                        ->setCellValue('L'.$rowNumber, $cola->getFechaCreacion())
-                        ->setCellValue('M'.$rowNumber, $cola->getFechaAtendido())
-                        ->setCellValue('N'.$rowNumber, $cola->getUsuarioAtendido())
-                        ->setCellValue('O'.$rowNumber, $cola->getBbox());
+                        ->setCellValue('J'.$rowNumber, $prioritario);
+                    if($cola) {
+                        $phpExcelObject->setActiveSheetIndex(0)
+                            ->setCellValue('K' . $rowNumber, $cola->getCreadoPor())
+                            ->setCellValue('L' . $rowNumber, $cola->getFechaCreacion())
+                            ->setCellValue('M' . $rowNumber, $cola->getFechaAtendido())
+                            ->setCellValue('N' . $rowNumber, $cola->getUsuarioAtendido())
+                            ->setCellValue('O' . $rowNumber, $cola->getBbox());
+                    }
 
                 }else{
 

@@ -72,7 +72,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $documento6;
 
     /**
-     * @ORM\Column(name="slug",type="string", length=50, nullable=false)
+     * @ORM\Column(name="slug",type="string", length=50, nullable=true)
      */
     private $slug;
 
