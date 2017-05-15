@@ -1,0 +1,20 @@
+.turnos-container {
+    width: 100%;
+    float: left;
+}
+
+ul.turnos-list {
+    list-style-type: none;
+    margin: 0 auto;
+    width: 450px;
+}
+
+.pulse-enter {
+    animation: 1s pulse ease;
+    animation-iteration-count: 20;
+}
+
+
+/*.pulse-enter.pulse-active {
+    animation: 0.5s pulse ease;
+}*/

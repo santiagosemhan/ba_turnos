@@ -1,0 +1,25 @@
+{% extends "::base.html.twig" %}
+
+
+{% block body %}
+
+<h1>Redis</h1>
+
+<table>
+  <thead>
+    <th>Clave</th>
+    <th>Valor</th>
+  </thead>
+  <tbody>
+    {% for item in cola %}
+
+    <tr>
+      <th></th>
+      <th> {{ item }} </th>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
