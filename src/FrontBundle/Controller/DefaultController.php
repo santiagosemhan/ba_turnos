@@ -23,10 +23,7 @@ class DefaultController extends Controller
             $opciones[] = [
               'id'          => $opcion->getId(),
               'descripcion' => $opcion->getDescripcion(),
-              'acciones'    => [
-                ['url'     => $this->generateUrl('seleccionar_tramite', ['opcion' => $opcion->getId()]),'nombre'  => 'Sacar Turno'],
-                ['url'     => '#','nombre'  => 'Cancelar Turno']
-              ]
+              'link'        => $this->generateUrl('seleccionar_tramite', ['opcion' => $opcion->getId()])
             ];
         }
 

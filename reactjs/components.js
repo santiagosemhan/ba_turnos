@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import Tramite from './components/tramite/Tramite';
 import Sede from './components/sede/Sede';
 import Turno from './components/turno/Turno';
-import Dropdown from './components/dropdown/Dropdown';
+import Link from './components/link/Link';
 import OpcionesGenerales from './components/opciones-generales/OpcionesGenerales';
 
 
@@ -20,7 +20,7 @@ class Components {
       {name: 'Tramite', value: Tramite},
       {name: 'Sede', value: Sede},
       {name: 'Turno', value: Turno},
-      {name: 'Dropdown', value: Dropdown},
+      {name: 'Link', value: Link},
       {name: 'OpcionesGenerales', value: OpcionesGenerales},
     ]
 

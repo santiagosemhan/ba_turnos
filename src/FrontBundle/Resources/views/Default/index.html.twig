@@ -19,23 +19,7 @@
     <script type="text/javascript">
 
       var OpcionesGenerales = window.components.getComponent('OpcionesGenerales');
-
-      var sacarTurnoUrlConTurno = "{ { path('seleccionar_tramite', {'sinTurno': tramites_con_turno })}}";
-
-      var sacarTurnoUrlSinTurno = "{ { path('seleccionar_tramite', {'sinTurno': tramites_sin_turno })}}";
-
-      let acciones = [{url:'#',nombre:'sacar turno'},{url:'#',nombre:'cancelar'}];
-
-      var opciones = [
-        { id:1, url: sacarTurnoUrlConTurno, nombre: "Sacar Turno" },
-        { id:2, nombre: "Cancelar Turno" }
-      ];
-
-      var opcionesTematicasSinTurno = [
-        { id:1, url: sacarTurnoUrlSinTurno, nombre: "Consultar" }
-      ];
-
-
+      
       var opcionesGenerales = {{ opciones | raw }}
 
       ReactDOM.render(
