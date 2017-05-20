@@ -298,6 +298,8 @@ class TurnoController extends Controller
         }
         try{
             $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
+            $this->agregarTurnoLista($turno,false);
+
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         }catch (\Exception $e){
             $this->get('session')->getFlashBag()->add('error', $e->getMessage());
@@ -358,6 +360,8 @@ class TurnoController extends Controller
         }
         try{
             $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+            $this->agregarTurnoLista($turno,true);
+
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         }catch (\Exception $e){
             $this->get('session')->getFlashBag()->add('error', $e->getMessage());
@@ -381,6 +385,74 @@ class TurnoController extends Controller
             'sede'  => $sede,
             'fechaImpresion' => 'Fecha Impresión: '.date("d/m/Y H:i:s"),
         ));
+    }
+
+    private function agregarTurnoLista($turno,$prioritario){
+
+        //genero el nombre de la lista
+        if($prioritario){
+            $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId().'/Prioritario';
+        }else{
+            $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId();
+        }
+        //creo el formato del texto a guardar
+        $cola=$turno->getColaTurno()->first();
+        $formatoLiso = $cola->getNumero().'/'.$turno->getHoraTurno()->getTimestamp().'/'.$turno->getId();
+
+        //obtengo la clase redis
+        $redis = $this->get('snc_redis.default');
+
+        //verfica si es el primer turno de la cola
+        if($this->get('manager.turnos')->primerTurno($turno)){
+            $this->borrarListaTurnoSede($turno);
+            $redis->rpush($nombreLista,$formatoLiso);
+        }else {
+            //obtengo todos los resultados de la lista
+            $result = $redis->lRange($nombreLista,'0','-1');
+
+            //utilizado para determinar desde de que elemento se inserta
+            $indiceInsert = null;
+            foreach($result as $lista){
+                $id = explode('/',$lista);
+                $id = intval($id[0]);
+                if($id > $cola->getNumero()){
+                    //Determino si el valor anterior es el primero
+                    if(is_null($indiceInsert)){
+                        $indiceInsert = $lista;
+                        break;
+                    }
+                }
+            }
+
+            //determino si tiene algun elemento en la lista
+            if(count($result)> 0 ){
+                //determino si corresponde al ultimo elemento de la lista
+                if(is_null($indiceInsert)){
+                    //coloco en el ultimo lugar de la lista
+                    $redis->rpush($nombreLista, $formatoLiso);
+                }else{
+                    //Inserto en el primer lugar que el valor es mayor al indice a guardar.
+                    //Ej.LINSERT mylist BEFORE "World" "There" para insertar "There" antes de "Word"
+                    $redis->lInsert($nombreLista,'BEFORE',$indiceInsert,$formatoLiso);
+                }
+            }else {
+                //coloco en el ultimo lugar de la lista
+                $redis->rpush($nombreLista, $formatoLiso);
+            }
+        }
+    }
+
+    private function borrarListaTurnoSede($turno){
+        //obtengo la clase redis
+        $redis = $this->get('snc_redis.default');
+
+        //Borro lista prioritaria
+        $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId().'/Prioritario';
+        $redis->del($nombreLista);
+
+        //Borro lista comun
+        $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId();
+        $redis->del($nombreLista);
     }
 
 }

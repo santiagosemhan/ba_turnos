@@ -290,9 +290,12 @@ class DefaultController extends Controller
     {
         $redis = $this->container->get('snc_redis.default');
 
-        $cola = $redis->rpush('cola', '{turno:1}');
+        //Si corresponde a la primera
+        $redis->rpush('NombreCola','A definir');
+        //Si no corresponde hacer el insert de la siguiente forma
+        //LINSERT mylist BEFORE "World" "There" para insertar "There" antes de "Word"
 
-        $redis->publish('cola', $cola);
+
 
         return new Response('ok');
     }
@@ -301,7 +304,23 @@ class DefaultController extends Controller
     {
         $redis = $this->container->get('snc_redis.default');
 
+        //Controlo a que cola corresponde.
+        // Si el usuario controla mas de un turnoSede.
+        //controlo por el lindex cola 0 para verificar cual tiene una fecha mas antigua
         $item = $redis->lpop('cola');
+
+        //ejemplo del push
+        $sede = "sede"; //Letra de la Sede
+        $turno = '';    //Numero del Turno
+        $box = '';      //Nombre del Box
+        $payload = [
+            'channel' => $sede,
+            'data' => [
+                'turno' => $turno,
+                'box' => $box
+            ]
+        ];
+        $redis->publish('message', json_encode($payload));
 
         return new Response($item);
     }

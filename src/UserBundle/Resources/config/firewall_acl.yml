@@ -31,6 +31,8 @@ acl:
   ROLE_BOX:
       app_box_atencion_seleccion_box: true
       app_box_atencion_box: true
+      app_box_nuevo_turno: true
+      app_box_volver_llamar_turno: true
 
   ROLE_PARAMETRIZAR:
       usuario_index: true

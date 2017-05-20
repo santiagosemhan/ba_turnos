@@ -1415,4 +1415,32 @@ class TurnosManager
         return  $repository->getQuery()->getResult();
     }
 
+    public function primerTurno($turno){
+        $consulta =  $this->em->createQueryBuilder();
+        $consulta->select("ct");
+        $consulta->from("AdminBundle:ColaTurno", "ct");
+        $consulta->innerJoin('AdminBundle:Turno','t', 'WITH','ct.turno = t.id');
+        $consulta->where('t.turnoSede = :turnoSede')->setParameter('turnoSede',$turno->getTurnoSede());
+        $consulta->andWhere('t.fechaTurno = :fechaTurno')->setParameter('fechaTurno',$turno->getFechaTurno());
+
+        $resultado = $consulta->getQuery()->getResult();
+        if(count($resultado) > 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public function buscarTurnoPorNumeroYTurnoSede($numero,$turnoSede,$idTurno){
+        $consulta =  $this->em->createQueryBuilder();
+        $consulta->select("t");
+        $consulta->from("AdminBundle:Turno", "t");
+        $consulta->innerJoin("AdminBundle:ColaTurno","ct","WITH","ct.turno = t.id");
+        $consulta->where('t.turnoSede = :turnoSede')->setParameter('turnoSede',$turnoSede->getId());
+        $consulta->andWhere('ct.numero = :numero')->setParameter('numero',$numero);
+        $consulta->andWhere('t.id = :id')->setParameter('id',$idTurno);
+        return $consulta->getQuery()->getResult();
+
+    }
+
 }

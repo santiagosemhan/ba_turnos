@@ -7,3 +7,13 @@ app_box_atencion_box:
     path:     /atencion-box
     defaults: { _controller: "AdminBundle:TurnoBox:atencionBox" }
     methods:  [GET, POST]
+
+app_box_nuevo_turno:
+    path:     /obtener-proximo
+    defaults: { _controller: "AdminBundle:TurnoBox:obtenerProximo" }
+    methods:  [GET, POST]
+
+app_box_volver_llamar_turno:
+    path:     /volver-llamar
+    defaults: { _controller: "AdminBundle:TurnoBox:volverLLamar" }
+    methods:  [GET, POST]

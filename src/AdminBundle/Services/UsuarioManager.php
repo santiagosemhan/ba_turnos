@@ -113,4 +113,18 @@ class UsuarioManager
         return  $repository->getQuery()->getResult();
     }
 
+    /**
+     * Busca los TurnoSede que estan asignados a un usuaior
+     * @param $user
+     * @return array
+     */
+    public function getTurnoSede($user){
+
+        $repositoryT = $this->em->getRepository('AdminBundle:TurnoSede', 'ts')->createQueryBuilder('ts')
+            ->innerJoin('AdminBundle:UsuarioTurnoSede','uts','WITH','uts.turnoSede=ts.id')
+            ->where('uts.usuario = :usuario')->setParameter('usuario', $user);
+
+        return $repositoryT->getQuery()->getResult();
+    }
+
 }
