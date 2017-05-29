@@ -73,3 +73,6 @@
 #redis client
 /redis-client/node_modules/
 /redis-client/.env
+
+
+.idea/
