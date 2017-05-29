@@ -21,4 +21,14 @@ class OpcionGeneralRepository  extends \Doctrine\ORM\EntityRepository
         return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
     }
 
+    public function getOpcionesGeneralesConTramite($hidrate_array = false)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('TipoTramite','t','WITH','o.id = t.opcionGeneral')
+            ->where('o.activo = true')
+            ->getQuery();
+
+        return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
+    }
+
 }

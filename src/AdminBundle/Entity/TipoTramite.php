@@ -30,7 +30,7 @@ class TipoTramite extends BaseClass implements \JsonSerializable
     private $descripcion;
 
     /**
-     * @ORM\Column(name="texto",type="string", length=2000, nullable=true)
+     * @ORM\Column(name="texto",type="text", nullable=true)
      */
     private $texto;
 

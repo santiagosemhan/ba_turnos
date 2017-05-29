@@ -1,0 +1,17 @@
+{
+  "name": "redis-client",
+  "version": "1.0.0",
+  "description": "Cliente Redis nodejs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Santiago Semhan",
+  "license": "BSD",
+  "dependencies": {
+    "express": "^4.15.2",
+    "node-env-file": "^0.1.8",
+    "redis": "^2.7.1",
+    "socket.io": "^1.7.3"
+  }
+}

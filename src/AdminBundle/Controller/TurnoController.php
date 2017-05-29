@@ -8,12 +8,14 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Entity\Comprobante;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AdminBundle\Entity\Turno;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Turno controller.
@@ -189,35 +191,49 @@ class TurnoController extends Controller
         }
 
         $turno = new Turno();
+        $turno->setSede($sede);
+        $turno->setViaMostrador(true);
         $form = $this->createForm('AdminBundle\Form\TurnoType', $turno);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $turno->setSede($sede);
             $turno->setFechaTurno(new \DateTime("now"));
-            $turno->setViaMostrador(true);
             $turno->setNumero( $this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()) );
+            $turno->setHoraTurno( new \DateTime($turno->getHoraTurno()->format('H:i').':00'));
 
-            $hora = (substr($turno->getHoraTurno(),0,2)); $min = (substr($turno->getHoraTurno(),3,2));
-            if(substr($turno->getHoraTurno(),6,2) == 'PM'){ $hora = $hora +12; }
-            $turno->setHoraTurno( new \DateTime($hora.':'.$min.':00'));
+            //determino el turnoSede
+            $status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
+            if($status['status']){
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($turno);
+                $turno->setTurnoSede($status['data']);
 
-            $comprobante = new Comprobante();
-            $comprobante->setTurnoId($turno);
-            $comprobante->setSede($turno->getSede()->getSede());
-            $comprobante->setLetra($turno->getSede()->getLetra());
-            $comprobante->setNumero($turno->getNumero());
-            $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
-            $em->persist($comprobante);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($turno);
 
-            $em->flush();
+                $comprobante = new Comprobante();
+                $comprobante->setTurno($turno);
+                $comprobante->setSede($sede);
+                $comprobante->setLetra($sede->getLetra());
+                $comprobante->setNumero($turno->getNumero());
+                $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                $em->persist($comprobante);
 
-            $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
+                $em->flush();
 
-            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+                $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
+
+                return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+
+            }else{
+                $exp = ('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
+                $this->get('session')->getFlashBag()->add('error', $exp);
+            }
+
+
         }
 
         return $this->render('AdminBundle:turno:new.html.twig', array(
@@ -241,6 +257,8 @@ class TurnoController extends Controller
         }
 
         $turno = new Turno();
+        $turno->setViaMostrador(true);
+        $turno->setSede($sede);
         $form = $this->createForm('AdminBundle\Form\TurnoType', $turno);
         $form->handleRequest($request);
 
@@ -248,24 +266,39 @@ class TurnoController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction(); // suspend auto-commit
             try {
+
                 $turno->setSede($sede);
                 $turno->setFechaTurno(new \DateTime("now"));
-                $turno->setViaMostrador(true);
                 $turno->setNumero( $this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()) );
-                $turno->setHoraTurno($this->get('manager.util')->getHoraDateTime($turno->getHoraTurno()));
-                $em->persist($turno);
+                $turno->setHoraTurno( new \DateTime($turno->getHoraTurno()->format('H:i').':00'));
 
-                $comprobante = new Comprobante();
-                $comprobante->setTurnoId($turno);
-                $comprobante->setSede($turno->getSede()->getSede());
-                $comprobante->setLetra($turno->getSede()->getLetra());
-                $comprobante->setNumero($turno->getNumero());
-                $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
-                $em->persist($comprobante);
+                //determino el turnoSede
+                $status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
+                if($status['status']){
 
-                $em->flush();
+                    $turno->setTurnoSede($status['data']);
 
-                $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($turno);
+
+                    $comprobante = new Comprobante();
+                    $comprobante->setTurno($turno);
+                    $comprobante->setSede($sede);
+                    $comprobante->setLetra($sede->getLetra());
+                    $comprobante->setNumero($turno->getNumero());
+                    $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                    $em->persist($comprobante);
+
+                    $em->flush();
+
+                    $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+
+                    return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+
+                }else{
+                    $exp = ('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
+                    $this->get('session')->getFlashBag()->add('error', $exp);
+                }
 
                 $em->getConnection()->commit();
             } catch (Exception $e) {
@@ -285,6 +318,32 @@ class TurnoController extends Controller
     }
 
     /**
+     * Ajax que permite obtener los horarios disponible en base al tipo de Tramite y sede el usuario
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function horariosPorTipoTramitoAction(Request $request)
+    {
+        $tipoTramiteId = $request->request->get('tipo_tramite_id');
+        $sede= $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        $result = null;
+        if(is_null($sede)){
+            return new JsonResponse('No tiene seleccionado una sede',404);
+        }else {
+            $horas = $this->get('manager.disponibilidad')->getHorasDisponibles(
+                date('d'), date('m'), date('Y'),
+                $tipoTramiteId, $sede,
+                false, true);
+            if (count($horas['horasHabiles']) > 0) {
+                $result = $horas['horasHabiles'];
+            } else {
+                return new JsonResponse('Sin horarios Disponibles',404);
+            }
+        }
+        return new JsonResponse($result,200, array('Content-Type' => 'application/json'));
+    }
+
+    /**
      * Creates a new turno Prioritario entity.
      *
      */
@@ -298,6 +357,8 @@ class TurnoController extends Controller
         }
         try{
             $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),false);
+            $this->agregarTurnoLista($turno,false);
+
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         }catch (\Exception $e){
             $this->get('session')->getFlashBag()->add('error', $e->getMessage());
@@ -358,6 +419,8 @@ class TurnoController extends Controller
         }
         try{
             $this->get('manager.turnos')->confirmarTurno($turno,$this->getUser(),true);
+            $this->agregarTurnoLista($turno,true);
+
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         }catch (\Exception $e){
             $this->get('session')->getFlashBag()->add('error', $e->getMessage());
@@ -367,6 +430,9 @@ class TurnoController extends Controller
 
     }
 
+    public function procesarCambioTurnoAction(Turno $turno){
+
+    }
     public function imprimirAction(Turno $turno)
     {
         $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
@@ -381,6 +447,74 @@ class TurnoController extends Controller
             'sede'  => $sede,
             'fechaImpresion' => 'Fecha Impresión: '.date("d/m/Y H:i:s"),
         ));
+    }
+
+    private function agregarTurnoLista($turno,$prioritario){
+
+        //genero el nombre de la lista
+        if($prioritario){
+            $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId().'/Prioritario';
+        }else{
+            $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId();
+        }
+        //creo el formato del texto a guardar
+        $cola=$turno->getColaTurno()->first();
+        $formatoLiso = $cola->getNumero().'/'.$turno->getHoraTurno()->getTimestamp().'/'.$turno->getId();
+
+        //obtengo la clase redis
+        $redis = $this->get('snc_redis.default');
+
+        //verfica si es el primer turno de la cola
+        if($this->get('manager.turnos')->primerTurno($turno)){
+            $this->borrarListaTurnoSede($turno);
+            $redis->rpush($nombreLista,$formatoLiso);
+        }else {
+            //obtengo todos los resultados de la lista
+            $result = $redis->lRange($nombreLista,'0','-1');
+
+            //utilizado para determinar desde de que elemento se inserta
+            $indiceInsert = null;
+            foreach($result as $lista){
+                $id = explode('/',$lista);
+                $id = intval($id[0]);
+                if($id > $cola->getNumero()){
+                    //Determino si el valor anterior es el primero
+                    if(is_null($indiceInsert)){
+                        $indiceInsert = $lista;
+                        break;
+                    }
+                }
+            }
+
+            //determino si tiene algun elemento en la lista
+            if(count($result)> 0 ){
+                //determino si corresponde al ultimo elemento de la lista
+                if(is_null($indiceInsert)){
+                    //coloco en el ultimo lugar de la lista
+                    $redis->rpush($nombreLista, $formatoLiso);
+                }else{
+                    //Inserto en el primer lugar que el valor es mayor al indice a guardar.
+                    //Ej.LINSERT mylist BEFORE "World" "There" para insertar "There" antes de "Word"
+                    $redis->lInsert($nombreLista,'BEFORE',$indiceInsert,$formatoLiso);
+                }
+            }else {
+                //coloco en el ultimo lugar de la lista
+                $redis->rpush($nombreLista, $formatoLiso);
+            }
+        }
+    }
+
+    private function borrarListaTurnoSede($turno){
+        //obtengo la clase redis
+        $redis = $this->get('snc_redis.default');
+
+        //Borro lista prioritaria
+        $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId().'/Prioritario';
+        $redis->del($nombreLista);
+
+        //Borro lista comun
+        $nombreLista = $turno->getTurnoSede()->getSede()->getLetra().'/'.$turno->getTurnoSede()->getId();
+        $redis->del($nombreLista);
     }
 
 }

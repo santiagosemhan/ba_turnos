@@ -92,8 +92,6 @@ class TipoTramiteController extends Controller
     $editForm = $this->createForm(TipoTramiteType::class, $tipoTramite);
     $editForm->handleRequest($request);
 
-    dump($tipoTramite->getPathFiles());
-
     if ($editForm->isSubmitted() && $editForm->isValid()) {
         $em = $this->getDoctrine()->getManager();
         $em->persist($tipoTramite);

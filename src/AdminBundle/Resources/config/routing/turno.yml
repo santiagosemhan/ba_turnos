@@ -47,3 +47,13 @@ turno_procesa_cancelar:
     path:     /{id}/procesar-cancela-turno
     defaults: { _controller: "AdminBundle:Turno:procesarCancelar" }
     methods:  [GET, POST]
+
+turno_horarios_por_tipo_tramite:
+    path:     /obtener-horarios-tipo-tramite
+    defaults: { _controller: "AdminBundle:Turno:horariosPorTipoTramito" }
+    methods:  [GET, POST]
+
+turno_confirmar:
+    path:     /{turno}/procesar-cambio-turno
+    defaults: { _controller: "AdminBundle:Turno:procesarCambioTurno" }
+    methods:  [GET, POST]

@@ -27,10 +27,13 @@ acl:
       turno_imprimir: true
       turno_cancelar: true
       turno_procesa_cancelar: true
+      turno_horarios_por_tipo_tramite: true
 
   ROLE_BOX:
       app_box_atencion_seleccion_box: true
       app_box_atencion_box: true
+      app_box_nuevo_turno: true
+      app_box_volver_llamar_turno: true
 
   ROLE_PARAMETRIZAR:
       usuario_index: true
