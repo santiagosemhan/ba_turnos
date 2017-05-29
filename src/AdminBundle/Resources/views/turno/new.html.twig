@@ -47,26 +47,19 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label required" for="adminbundle_turno_horaTurno">
-                                {{ form_label(form.horaTurno) }}
-                            </label>
-                            <div class="col-sm-8 ">
-                                <div class="bootstrap-timepicker">
-                                    <div class="input-group">
-                                        {{ form_widget(form.horaTurno) }}
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                        {{ form_errors(form.horaTurno) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-sm-2 control-label required" for="adminbundle_turno_tipoTramite">{{ form_label(form.tipoTramite) }}</label>
                             <div class="col-sm-10">
                                 {{ form_widget(form.tipoTramite) }}
                                 {{ form_errors(form.tipoTramite) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="adminbundle_turno_horaTurno">
+                                {{ form_label(form.horaTurno) }}
+                            </label>
+                            <div class="col-sm-10 ">
+                                    {{ form_widget(form.horaTurno) }}
+                                    {{ form_errors(form.horaTurno) }}
                             </div>
                         </div>
                     </div>
@@ -101,12 +94,48 @@
         <script src="{{ asset('assets/vendor/AdminLTE/plugins/datepicker/locales/bootstrap-datepicker.es.js') }}"></script>
         <script>
             $(function () {
+
                 $("[data-mask]").inputmask();
 
                 //Timepicker
                 $(".timepicker").timepicker({
                     showInputs: false
                 });
+
+                window.onload = buscarHorarioPorTipoTramite;
+
+                function buscarHorarioPorTipoTramite() {
+                    var data = {
+                        tipo_tramite_id: $("#adminbundle_turno_tipoTramite").val()
+                    };
+                    $.ajax({
+                        type: 'post',
+                        url: '{{ path("turno_horarios_por_tipo_tramite") }}',
+                        data: data,
+                        success: function(data) {
+
+                            $('.btn-success').removeClass('disabled');
+
+                            var $horaTurnoSelector = $('#adminbundle_turno_horaTurno');
+
+                            $horaTurnoSelector.html('<option value="null">Seleccione un horario</option>');
+
+                            for (var i=0, total = data.length; i < total; i++) {
+                                $horaTurnoSelector.append('<option value="' + data[i] + '">' + data[i] + '</option>');
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var $horaTurnoSelector = $('#adminbundle_turno_horaTurno');
+                            $horaTurnoSelector.html('<option>Sin horarios disponible, seleccione otro Tipo de Tramite</option>');
+                            $('.btn-success').addClass('disabled');
+                        }
+                    });
+                }
+
+                $("#adminbundle_turno_tipoTramite").change(buscarHorarioPorTipoTramite);
             });
+
+
         </script>
+
     {% endblock  %}

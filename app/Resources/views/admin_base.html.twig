@@ -33,6 +33,7 @@
 
 </head>
 
+{% set currentPath =  app.request.attributes.get('_route') %}
 
 <body class="hold-transition skin-green sidebar-mini">
 <!-- Site wrapper -->
@@ -92,31 +93,54 @@
 
             <ul class="sidebar-menu">
                 <li class="header">Menu</li>
+                {% if currentPath == 'admin_homepage' %}
                 <li class="active treeview">
+                {% else %}
+                <li class="treeview">
+                {% endif %}
                     <ul class="treeview-menu">
                         <li class="active">
                             <a href="{{ path('admin_homepage') }}"><i class="fa fa-circle-o"></i> Inicio</a>
                         </li>
                     </ul>
                 </li>
+
+                {% if currentPath == 'turno_administrar' %}
+                <li class="active treeview">
+                {% else %}
                 <li class="treeview">
+                {% endif %}
                     <a href="{{ path('turno_administrar') }}">
                         <i class="fa fa-files-o"></i>
                         <span>Administración Turnos</span>
                     </a>
                 </li>
-                <li>
+
+                {% if currentPath == 'app_box_atencion_seleccion_box' %}
+                <li class="active treeview">
+                {% else %}
+                <li class="treeview">
+                {% endif %}
                     <a href="{{ path('app_box_atencion_seleccion_box') }}">
                         <i class="fa fa-th"></i> <span>Administrar Box</span>
                     </a>
                 </li>
-                <li>
+
+                {% if currentPath == 'cancelacionmasiva_index' %}
+                <li class="active treeview">
+                {% else %}
+                <li class="treeview">
+                {% endif %}
                     <a href="{{ path('cancelacionmasiva_index') }}">
                         <i class="fa fa-user-times"></i> <span>Cancelacion Masiva</span>
                     </a>
                 </li>
 
+                {% if (currentPath == 'exportar_turnos_show' or  currentPath == 'exportar_sesion_show' ) %}
+                <li class="active treeview">
+                {% else %}
                 <li class="treeview">
+                {% endif %}
                     <a href="#">
                         <i class="fa fa-download"></i>
                         <span>Exportacion</span>
@@ -125,12 +149,35 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{ path('exportar_turnos_show') }}"><i class="fa fa-file-pdf-o"></i> Turnos</a></li>
-                        <li><a href="{{ path('exportar_sesion_show') }}"><i class="fa  fa-building-o"></i> Inicio de Session</a></li>
+                        {% if (currentPath == 'exportar_turnos_show' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('exportar_turnos_show') }}"><i class="fa fa-file-pdf-o"></i> Turnos</a>
+                        </li>
+
+                        {% if (currentPath == 'exportar_sesion_show' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('exportar_sesion_show') }}"><i class="fa  fa-building-o"></i> Inicio de Session</a>
+                        </li>
                     </ul>
                 </li>
 
+                {% if ( currentPath == 'sede_index' or
+                        currentPath == 'box_index'  or
+                        currentPath == 'opciongeneral_index'  or
+                        currentPath == 'tipotramite_index'  or
+                        currentPath == 'feriado_index'  or
+                        currentPath == 'texto_mail_index'
+                ) %}
+                <li class="active treeview">
+                {% else %}
                 <li class="treeview">
+                {% endif %}
                     <a href="#">
                         <i class="fa fa-pencil-square"></i>
                         <span>Parametrización</span>
@@ -139,16 +186,65 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{ path('sede_index') }}"><i class="fa  fa-building-o"></i> Sede</a></li>
-                        <li><a href="{{ path('box_index') }}"><i class="fa  fa-inbox"></i> Box</a></li>
-                        <li><a href="{{ path('opciongeneral_index') }}"><i class="fa fa-files-o"></i> Opciones de Tipo Tramite</a></li>
-                        <li><a href="{{ path('tipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Tipo Tramite</a></li>
-                        <li><a href="{{ path('feriado_index') }}"><i class="fa fa-sign-out"></i> Feriado</a></li>
-                        <li><a href="{{ path('texto_mail_index') }}"><i class="fa fa-envelope-o"></i> Parametrización Mail</a></li>
+                        {% if (currentPath == 'sede_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('sede_index') }}"><i class="fa  fa-building-o"></i> Sede</a>
+                        </li>
+
+                        {% if (currentPath == 'box_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('box_index') }}"><i class="fa  fa-inbox"></i> Box</a>
+                        </li>
+
+                        {% if (currentPath == 'opciongeneral_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('opciongeneral_index') }}"><i class="fa fa-files-o"></i> Opciones de Tipo Tramite</a>
+                        </li>
+
+                        {% if (currentPath == 'tipotramite_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('tipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Tipo Tramite</a>
+                        </li>
+
+                        {% if (currentPath == 'feriado_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('feriado_index') }}"><i class="fa fa-sign-out"></i> Feriado</a>
+                        </li>
+
+                        {% if (currentPath == 'texto_mail_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('texto_mail_index') }}"><i class="fa fa-envelope-o"></i> Parametrización Mail</a>
+                        </li>
 
                     </ul>
                 </li>
+
+                {% if ( currentPath == 'turnosede_index' or
+                        currentPath == 'turnotipotramite_index'  or
+                        currentPath == 'turnosedeusuariotipotramite_index'
+                ) %}
+                <li class="active treeview">
+                {% else %}
                 <li class="treeview">
+                {% endif %}
                     <a href="#">
                         <i class="fa fa-calendar-check-o"></i>
                         <span>Parametrización Turnos</span>
@@ -157,13 +253,42 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{ path('turnosede_index') }}"><i class="fa fa-building-o"></i> Por Sede</a></li>
-                        <li><a href="{{ path('turnotipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Por Tramite por Sede </a></li>
-                        <li><a href="{{ path('turnosedeusuariotipotramite_index') }}"><i class="fa fa-users"></i> Usuario y Tipo Tramite </a></li>
+
+                        {% if (currentPath == 'turnosede_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('turnosede_index') }}"><i class="fa fa-building-o"></i> Por Sede</a>
+                        </li>
+
+                        {% if (currentPath == 'turnotipotramite_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('turnotipotramite_index') }}"><i class="fa fa-file-pdf-o"></i> Por Tramite por Sede </a>
+                        </li>
+
+                        {% if (currentPath == 'turnosedeusuariotipotramite_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('turnosedeusuariotipotramite_index') }}"><i class="fa fa-users"></i> Usuario y Tipo Tramite </a>
+                        </li>
 
                     </ul>
                 </li>
+
+                {% if ( currentPath == 'usuario_index' or
+                        currentPath == 'usuariosede_index'  or
+                        currentPath == 'usuarioturnosede_index'
+                ) %}
+                <li class="active treeview">
+                {% else %}
                 <li class="treeview">
+                {% endif %}
                     <a href="#">
                         <i class="fa fa-user"></i>
                         <span>Usuarios</span>
@@ -172,15 +297,33 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{ path('usuario_index') }}"><i class="fa  fa-users"></i> Usuarios</a></li>
-                        <li><a href="{{ path('usuariosede_index') }}"><i class="fa  fa-building-o"></i> Sede Usuario</a></li>
-                        <li><a href="{{ path('usuarioturnosede_index') }}"><i class="fa  fa-user-plus"></i> Usuarios por Turnos</a></li>
+                        {% if (currentPath == 'usuario_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('usuario_index') }}"><i class="fa  fa-users"></i> Usuarios</a>
+                        </li>
+
+                        {% if (currentPath == 'usuariosede_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('usuariosede_index') }}"><i class="fa  fa-building-o"></i> Sede Usuario</a>
+                        </li>
+
+                        {% if (currentPath == 'usuarioturnosede_index' ) %}
+                        <li class="active">
+                        {% else %}
+                        <li>
+                        {% endif %}
+                            <a href="{{ path('usuarioturnosede_index') }}"><i class="fa  fa-user-plus"></i> Usuarios por Turnos</a>
+                        </li>
                     </ul>
                 </li>
 
             </ul>
-
-
 
             <!-- /.sidebar-menu -->
         </section>

@@ -38,4 +38,13 @@ class TipoTramiteRepository extends EntityRepository
             ->getQuery();
         return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
     }
+
+    public function getTramitesPorSede($sede) {
+        $qb = $this->createQueryBuilder('tr')
+            ->innerJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')
+            ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'ts.id = tt.turnoSede')
+            ->where('ts.sede = :sede AND tr.activo = true')
+            ->setParameter("sede", $sede);
+        return $qb;
+    }
 }

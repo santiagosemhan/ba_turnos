@@ -18,32 +18,61 @@ class DisponibilidadManager
         $this->util = $util;
     }
 
+    /**
+     * Obtiene el servicio Manager.util
+     * @return UtilManager
+     */
     public function getUtil(){
         return $this->util;
     }
 
+    /**
+     * Setea la cantidad de Meses que se puede sacar los turnos
+     * @param $mesAtincipacionTurnos
+     */
     public function setMesAtincipacionTurnos($mesAtincipacionTurnos)
     {
         $this->mesAtincipacionTurnos=$mesAtincipacionTurnos;
     }
 
+    /**
+     * Retorna la cantidad de meses que se puede sacar los turnos
+     * @return $mesAtincipacionTurnos
+     */
     public function getMesAtincipacionTurnos()
     {
         return $this->mesAtincipacionTurnos;
     }
 
+    /**
+     * obtiene las opciones Generales guardadas, devuelve en array si se al parametro es = true
+     * @param bool $hydrate_array
+     * @return array|Collection
+     */
     public function getOpcionesGenerales($hydrate_array = false)
     {
         $opcionesGenerales= $this->em->getRepository('AdminBundle:OpcionGeneral');
         return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hydrate_array);
     }
 
+    /**
+     * Se obtiene los tipos de tramite en base a la opcion general pasada, devuelve en array si el parametro $hydrate_array = true
+     * @param $opcionGeneralId
+     * @param bool $hydrate_array
+     * @return array|Collection
+     */
     public function obtenerTipoTramite($opcionGeneralId, $hydrate_array=false)
     {
         $tiposTramites= $this->em->getRepository('AdminBundle:TipoTramite');
         return $opcionGeneral = $tiposTramites->getTipoTramiteByOpcionesGenerales($opcionGeneralId, $hydrate_array);
     }
 
+    /**
+     * Obtiene las sedes que utilizan un tipo de tramite, devuelve en array si el parametro $hydrate_array = true
+     * @param $tipoTramiteId
+     * @param bool $hydrate_array
+     * @return array|Collection
+     */
     public function obtenerSedePorTipoTramte($tipoTramiteId, $hydrate_array = false)
     {
         $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findOneById($tipoTramiteId);
@@ -368,6 +397,7 @@ class DisponibilidadManager
         }
         return $cantidadPorTurno;
     }
+
     private function perteneceVigencia($turnoSede, $diaRecorrido, $ultimoDiaMes, $mes, $anio)
     {
         $pertenece = true;
@@ -390,7 +420,19 @@ class DisponibilidadManager
         return $pertenece;
     }
 
-    public function getHorasDisponibles($dia, $mes, $anio, $tipoTurnoId, $sedeId, $conTurnoSede = false)
+    /**
+     * Procedmiento que permite obtener los horarios diponible de una sede/tipo de tramite para un dia en particular
+     *
+     * @param $dia
+     * @param $mes
+     * @param $anio
+     * @param $tipoTurnoId
+     * @param $sedeId
+     * @param bool $conTurnoSede
+     * @param bool $contabilizarSoloSinTurno
+     * @return array
+     */
+    public function getHorasDisponibles($dia, $mes, $anio, $tipoTurnoId, $sedeId, $conTurnoSede = false,$contabilizarSoloSinTurno=false)
     {
         $busca =false;
         $horasHabiles = array();
@@ -439,7 +481,7 @@ class DisponibilidadManager
                         }
                     }
                     if ($turnoSedeDefineTramite) {
-                        $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual);
+                        $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,false,$contabilizarSoloSinTurno);
                         if ($conTurnoSede) {
                             $turnosSedeUtilizados[] = array('turnoSede' => $turnoSede, 'tipoTramite'=> $tipoTurnoId, 'turnosDeldia' => $turnosDeldia);
                         } else {
@@ -447,7 +489,7 @@ class DisponibilidadManager
                         }
                     }
                 } else {
-                    $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual);
+                    $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,false,$contabilizarSoloSinTurno);
                     if ($conTurnoSede) {
                         $turnosSedeUtilizados[] = array('turnoSede' => $turnoSede,  'tipoTramite'=> false, 'turnosDeldia' => $turnosDeldia);
                     } else {
@@ -457,16 +499,25 @@ class DisponibilidadManager
 
             }
 
-            //Busca los turnos reservados
+            //Busca los turnos reservados que no sean sacados en la recepcion
             $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
                 ->where('p.sede = :sedeId')->setParameter('sedeId', $sedeId)
                 ->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
                 ->andWhere('p.fechaCancelado IS NULL')
                 ->setParameter('fecha_turno_desde', $diaDesde)->setParameter('fecha_turno_hasta', $diaHasta);
 
+            //Para determinar que turnos entregados (turnos entregados sin turnos previo) debo contabilizar
+            if($contabilizarSoloSinTurno == true){
+                $repositoryT->andWhere('p.viaMostrador = true');
+            }else{
+                $repositoryT->andWhere('p.viaMostrador = false');
+            }
+
+            //Si corresponde a un tipo de tramite  seleccionando
             if ($existe) {
                 $repositoryT->andWhere('p.tipoTramite = :tipo_tramite')->setParameter('tipo_tramite', $tipoTurnoId);
             }
+            //Obtengo los turnos para contabilizar
             $turnos = $repositoryT->getQuery()->getResult();
             foreach ($turnos as $turno) {
 
@@ -571,7 +622,22 @@ class DisponibilidadManager
         return $turnosDeldia;
     }
 
-    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false)
+    /**
+     * Procedimiento que permite obtener todos los horarios de un turnoSede
+     *
+     * @param $tipoTurnoId
+     * @param $turnoSede
+     * @param $cantidadDiaTurno
+     * @param $dia
+     * @param $mes
+     * @param $anio
+     * @param $diaActual
+     * @param bool $conSinTurno
+     * @param bool $cobtabilizarSoloSinTurno
+     *
+     * @return array
+     */
+    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false,$cobtabilizarSoloSinTurno = false)
     {
         //Obtengo la cantidad de horas que atienden en la sede
         $cantidadTurnosSegudo = 1;
@@ -600,10 +666,19 @@ class DisponibilidadManager
                     }
                 }
                 if ($sinTurnoTipoTramite) {
-                    if($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())){
-                        $cantidad = $turnoSede->getCantidadTurnos()+$turnoSede->getCantidadSinTurnos();
-                    }else{
-                        $cantidad = $turnoSede->getCantidadTurnos();
+                    if($cobtabilizarSoloSinTurno == true){
+                        if(!is_null($turnoSede->getCantidadSinTurnos())){
+                            $cantidad = $turnoSede->getCantidadSinTurnos();
+                        }else{
+                            $cantidad = 0;
+                        }
+
+                    }else {
+                        if ($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())) {
+                            $cantidad = $turnoSede->getCantidadTurnos() + $turnoSede->getCantidadSinTurnos();
+                        } else {
+                            $cantidad = $turnoSede->getCantidadTurnos();
+                        }
                     }
                 }
 
@@ -640,6 +715,7 @@ class DisponibilidadManager
                 $cantidad = 0;
                 if (count($turnoSede->getTurnoTipoTramite()) > 0) {
                     foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
+
                         if (!is_null($tipoTramiteTurno->getCantidadTurno())) {
                             $cantidad = $tipoTramiteTurno->getCantidadTurno();
                             $sinTurnoTipoTramite = false;
@@ -647,10 +723,19 @@ class DisponibilidadManager
                     }
                 }
                 if ($sinTurnoTipoTramite) {
-                    if($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())){
-                        $cantidad = $turnoSede->getCantidadTurnos()+$turnoSede->getCantidadSinTurnos();
-                    }else{
-                        $cantidad = $turnoSede->getCantidadTurnos();
+                    if($cobtabilizarSoloSinTurno == true){
+                        if(!is_null($turnoSede->getCantidadSinTurnos())){
+                            $cantidad = $turnoSede->getCantidadSinTurnos();
+                        }else{
+                            $cantidad = 0;
+                        }
+
+                    }else {
+                        if ($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())) {
+                            $cantidad = $turnoSede->getCantidadTurnos() + $turnoSede->getCantidadSinTurnos();
+                        } else {
+                            $cantidad = $turnoSede->getCantidadTurnos();
+                        }
                     }
                 }
                 $difHoras = $difHoras + ($difMinutos / 60);
@@ -740,7 +825,6 @@ class DisponibilidadManager
 
         //Obtengo los horarios disponibles para el tipo de tramite
         $array = $this->getHorasDisponibles(intval($fechaTurno->format('d')), intval($fechaTurno->format('m')), intval($fechaTurno->format('Y')), $tipoTurnoId, $sedeId, true);
-
         $arrayHoras = $array['horasHabiles'];
         $arrayTurno = $array['turnosSedeUtilizados'];
 
