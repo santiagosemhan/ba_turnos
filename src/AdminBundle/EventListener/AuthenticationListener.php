@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AuthenticationListener
 {
-
     protected $container;
 
 
@@ -32,7 +31,7 @@ class AuthenticationListener
      * @author 	Joe Sexton <joe@webtipblog.com>
      * @param 	AuthenticationFailureEvent $event
      */
-    public function onAuthenticationFailure( AuthenticationFailureEvent $event )
+    public function onAuthenticationFailure(AuthenticationFailureEvent $event)
     {
         // executes on failed login
     }
@@ -43,15 +42,13 @@ class AuthenticationListener
      * @author 	Joe Sexton <joe@webtipblog.com>
      * @param 	InteractiveLoginEvent $event
      */
-    public function onAuthenticationSuccess( InteractiveLoginEvent $event )
+    public function onAuthenticationSuccess(InteractiveLoginEvent $event)
     {
-
-        try{
-
+        try {
             $em =  $this->container->get('doctrine')->getManager();
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-            $login = New Login();
+            $login = new Login();
             $login->setUsuario($user);
             $login->setFecha(new \DateTime("now"));
             $login->setSede($user->getUsuarioSede()->getSede());
@@ -60,11 +57,9 @@ class AuthenticationListener
 
             $em->persist($login);
             $em->flush();
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             // set flash messages
             $this->container->get('session')->getFlashBag()->add('error', 'Hubo un error al intentar ingresar.');
         }
-
     }
 }
