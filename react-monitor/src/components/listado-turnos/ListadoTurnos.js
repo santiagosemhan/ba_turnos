@@ -49,7 +49,7 @@ class ListadoTurnos extends Component {
       //et listadoHorarios = ;
 
       return (
-        <div className="turnos-container">
+
             <ul className="turnos-list">
               <CSSTransitionGroup
                 transitionName="pulse"
@@ -59,7 +59,7 @@ class ListadoTurnos extends Component {
                 { this.listar() }
               </CSSTransitionGroup>
             </ul>
-        </div>
+
       );
   };
 }
