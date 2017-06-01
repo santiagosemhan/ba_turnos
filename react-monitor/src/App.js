@@ -13,26 +13,25 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    // this.state = { turnos:['C99J','C99J','C99J','C99J']};
-    this.state = { turnos:['C99J']};
+    // this.state = { turnos:[{ turno: 'C99J',box:4 }]};
+    this.state = { turnos:[]};
 
     this.agregarTurno = this.agregarTurno.bind(this);
 
-    socket.on('sede', (payload) => {
+    socket.on('sede_central', (payload) => {
+      console.log(payload);
       this.agregarTurno(payload);
     });
 
   }
 
-  agregarTurno(message){
+  agregarTurno(payload){
 
     this.setState((prevState, props) => {
 
       let turnos = prevState.turnos;
 
-      console.log(message)
-
-      turnos.push(message.turno);
+      turnos.push(payload);
 
       return {
         turnos: turnos
@@ -43,6 +42,19 @@ class App extends Component {
   }
 
   render() {
+
+    let encabezado = '';
+
+    if(this.state.turnos.length !== 0) {
+      encabezado = (
+        <div>
+          <div className="col-xs-6 encabezadoTexto"> Turno </div>
+          <div className="col-xs-6 encabezadoTexto"> Box  </div>
+        </div>
+      );
+    }
+
+
     return (
       <div className="App">
         <div className="App-header">
@@ -57,9 +69,8 @@ class App extends Component {
         */}
 
         <div className="col-xs-6">
-            <div className="col-xs-6 encabezadoTexto"> Turno </div>
-            <div className="col-xs-6 encabezadoTexto"> Box  </div>
-            <div class="row">
+            {encabezado}
+            <div className="row">
               <div className="col-xs-12">
                 <ListadoTurnos turnos={this.state.turnos}/>
               </div>
@@ -68,7 +79,6 @@ class App extends Component {
 
         <div className="col-xs-6">
 
-          
         </div>
 
         <div className="App-footer">

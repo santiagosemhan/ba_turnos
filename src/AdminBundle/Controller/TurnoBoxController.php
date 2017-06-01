@@ -18,9 +18,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class TurnoBoxController extends Controller
 {
-
     public function seleccionBoxAction(Request $request)
     {
+
         try {
             $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
             if (is_null($sede)) {
@@ -58,29 +58,25 @@ class TurnoBoxController extends Controller
 
     public function atencionBoxAction(Request $request)
     {
-        try {
-            $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
-            if (is_null($sede)) {
-                // set flash messages
-                $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
-                return $this->redirectToRoute('admin_homepage');
-            }
+        $sede= $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        if (is_null($sede)) {
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+            return $this->redirectToRoute('admin_homepage');
+        }
 
-            $session = new Session();
-            $box = $session->get('box');
-            if (is_null($box)) {
-                // set flash messages
-                $this->get('session')->getFlashBag()->add('error', 'Para acceder se debe seleccionar un box.');
-                return $this->redirectToRoute('app_box_atencion_seleccion_box');
-            }
+        $session = new Session();
+        $box = $session->get('box');
+        if (is_null($box)) {
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder se debe seleccionar un box.');
+            return $this->redirectToRoute('app_box_atencion_seleccion_box');
+        }
 
-            $turno = $session->get('turno');
-            $conTurno = true;
-            if (is_null($turno)) {
-                $conTurno = false;
-            }
-        } catch (\Exception $ex) {
-            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+        $turno = $session->get('turno');
+        $conTurno = true;
+        if (is_null($turno)) {
+            $conTurno = false;
         }
 
         return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
@@ -93,6 +89,7 @@ class TurnoBoxController extends Controller
 
     public function obtenerProximoAction(Request $request)
     {
+
         try {
             $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
             if (is_null($sede)) {
@@ -123,6 +120,7 @@ class TurnoBoxController extends Controller
                 $turno = null;
             }
 
+
         } catch (\Exception $ex) {
             $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
         }
@@ -137,6 +135,7 @@ class TurnoBoxController extends Controller
 
     public function volverLLamarAction(Request $request)
     {
+
         try {
             $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
             if (is_null($sede)) {
@@ -176,6 +175,7 @@ class TurnoBoxController extends Controller
 
     private function sacarTurnoLista($box)
     {
+
         try {
             //obtengo clase de session
             $session = new Session();
@@ -215,6 +215,7 @@ class TurnoBoxController extends Controller
                     //determino de cual cola debe buscar para sacar el turno
                     foreach ($turnoSede as $turnoS) {
                         $nombreLista = $turnoS->getSede()->getLetra() . '/' . $turnoS->getId() . '/Prioritario';
+
                         $result = $redis->lRange($nombreLista, '0', '0');
                         if (count($result) > 0) {
                             //obtengo los datos guardos de la lista
@@ -243,6 +244,7 @@ class TurnoBoxController extends Controller
 
                                 //controlo si es el primero que saco
                                 if (is_null($fechaTurnoSacar)) {
+
                                     $nombreColaSacar = $nombreLista;
                                     $fechaTurnoSacar = intval($id[1]);
                                     $urnoSedeItem = $turnoS;
@@ -263,8 +265,10 @@ class TurnoBoxController extends Controller
                         //obtengo el ultimo elemento de la cola
                         $item = $redis->lpop($nombreColaSacar);
                     }
+
                 }
             }
+
 
             if (!is_null($item)) {
                 //Busco el turno
@@ -313,12 +317,10 @@ class TurnoBoxController extends Controller
         }
 
         try {
-            $redis->publish('message', json_encode($payload));
+            $redis->publish('nuevo_turno', json_encode($payload));
         } catch (\Exception $e) {
             throw new \Exception('Error 1000.TBC.ICM No se puede avisar al monitor la llamada del nuevo turno');
         }
 
-
     }
-
 }

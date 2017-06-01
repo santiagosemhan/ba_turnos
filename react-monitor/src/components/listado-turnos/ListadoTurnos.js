@@ -23,8 +23,6 @@ class ListadoTurnos extends Component {
   listar() {
       let turnos = this.props.turnos;
 
-      //let horarioSeleccionado = this.props.horarioSeleccionado;
-
       let listTurnos = <li><p>Sin turnos</p></li>;
 
       if(turnos.length !== 0){
@@ -33,7 +31,7 @@ class ListadoTurnos extends Component {
 
           return (
             <li key={i}>
-              <Turno turno={turno} box="4" />
+              <Turno turno={turno.turno} box={turno.box} />
             </li>
           );
 
