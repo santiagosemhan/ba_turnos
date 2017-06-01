@@ -25,17 +25,21 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        try {
+            $em = $this->getDoctrine()->getManager();
 
-        $turnoSedes = $em->getRepository('AdminBundle:TurnoSede')->findAll();
+            $turnoSedes = $em->getRepository('AdminBundle:TurnoSede')->findAll();
 
-        $paginator = $this->get('knp_paginator');
+            $paginator = $this->get('knp_paginator');
 
-        $turnoSedes = $paginator->paginate(
-            $turnoSedes,
-            $request->query->get('page', 1)/* page number */,
-            10/* limit per page */
-        );
+            $turnoSedes = $paginator->paginate(
+                $turnoSedes,
+                $request->query->get('page', 1)/* page number */,
+                10/* limit per page */
+            );
+        }catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+        }
 
         return $this->render('AdminBundle:turnosedeusuariotipotramite:index.html.twig', array(
             'turnosSedes' => $turnoSedes
@@ -48,36 +52,41 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
      */
     public function newAction(Request $request)
     {
-        $turnoSede = new TurnoSede();
-        $form = $this->createForm(TurnoSedeType::class, $turnoSede);
-        $form->handleRequest($request);
+        try {
+            $turnoSede = new TurnoSede();
+            $form = $this->createForm(TurnoSedeType::class, $turnoSede);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            if($turnoSede->getVigenciaDesde()) {
-                $turnoSede->setVigenciaDesde($this->get('manager.util')->getFechaDateTime($turnoSede->getVigenciaDesde(),'00:00:00'));
-            }else{
-                $turnoSede->setVigenciaDesde(null);
+                if ($turnoSede->getVigenciaDesde()) {
+                    $turnoSede->setVigenciaDesde($this->get('manager.util')->getFechaDateTime($turnoSede->getVigenciaDesde(), '00:00:00'));
+                } else {
+                    $turnoSede->setVigenciaDesde(null);
+                }
+
+                if ($turnoSede->getVigenciaHasta()) {
+                    $turnoSede->setVigenciaHasta($this->get('manager.util')->getFechaDateTime($turnoSede->getVigenciaHasta(), '23:59:59'));
+                } else {
+                    $turnoSede->setVigenciaHasta(null);
+                }
+
+                $turnoSede->setHoraTurnosDesde($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosDesde()));
+                $turnoSede->setHoraTurnosHasta($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosHasta()));
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($turnoSede);
+                $em->flush();
+
+                // set flash messages
+                $this->get('session')->getFlashBag()->add('success', 'El registro se ha guardado satisfactoriamente.');
+
+                return $this->redirectToRoute('turnosedeusuariotipotramite_index');
+
             }
 
-            if($turnoSede->getVigenciaHasta()) {
-                $turnoSede->setVigenciaHasta($this->get('manager.util')->getFechaDateTime($turnoSede->getVigenciaHasta(),'23:59:59'));
-            }else{
-                $turnoSede->setVigenciaHasta(null);
-            }
-
-            $turnoSede->setHoraTurnosDesde($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosDesde()));
-            $turnoSede->setHoraTurnosHasta($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosHasta()));
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($turnoSede);
-            $em->flush();
-
-            // set flash messages
-            $this->get('session')->getFlashBag()->add('success', 'El registro se ha guardado satisfactoriamente.');
-
-            return $this->redirectToRoute('turnosedeusuariotipotramite_index');
-
+        }catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
         }
 
         return $this->render('AdminBundle:turnosedeusuariotipotramite:new.html.twig', array(
@@ -104,16 +113,16 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
      */
     public function editAction(Request $request, TurnoSede $turnoSede)
     {
+        try {
+            $customOptions = array();
+            $array = array();
+            $em = $this->getDoctrine()->getManager();
+            $array['em'] = $em;
+            $customOptions['compound'] = $array;
+            $editForm = $this->createForm(TurnoSedeUsuarioTipoTramiteType::class, $turnoSede, $customOptions);
+            $editForm->handleRequest($request);
 
-        $customOptions = array();
-        $array = array();
-        $em = $this->getDoctrine()->getManager();
-        $array['em'] = $em;
-        $customOptions['compound'] = $array;
-        $editForm = $this->createForm(TurnoSedeUsuarioTipoTramiteType::class, $turnoSede,$customOptions);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
                 try {
                     /*
                      *  Valida los TurnoTipoTramite que se sacaron
@@ -162,10 +171,13 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
                     $em->flush();
                     // set flash messages
                     $this->get('session')->getFlashBag()->add('success', 'El registro se ha actualizado satisfactoriamente.');
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     $this->get('session')->getFlashBag()->add('error', 'Hubo un error al intentar modificar el registro.');
                 }
-            return $this->redirectToRoute('turnosedeusuariotipotramite_edit', array('id' => $turnoSede->getId()));
+                return $this->redirectToRoute('turnosedeusuariotipotramite_edit', array('id' => $turnoSede->getId()));
+            }
+        }catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
         }
 
         return $this->render('AdminBundle:turnosedeusuariotipotramite:edit.html.twig', array(
@@ -175,28 +187,29 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
         ));
     }
 
-    private function getChoiseUsuarioTurnoSede($turnoSede){
-        $em  = $this->get('doctrine')->getManager();
+    private function getChoiseUsuarioTurnoSede($turnoSede)
+    {
+        $em = $this->get('doctrine')->getManager();
         $array = array();
         $repositoryTT = $em->getRepository('UserBundle:User')->createQueryBuilder('t')
-            ->innerJoin('AdminBundle:UsuarioSede','us','WITH','us.usuario = t.id')
+            ->innerJoin('AdminBundle:UsuarioSede', 'us', 'WITH', 'us.usuario = t.id')
             ->where('us.activo = true')
             ->andWhere('us.sede = :sedeId')->setParameter('sedeId', $turnoSede->getSede()->getId());
 
-        $usuariosPorSede= $repositoryTT->getQuery()->getResult();
+        $usuariosPorSede = $repositoryTT->getQuery()->getResult();
 
         $usuariosTurnoPorTurno = $turnoSede->getUsuarioTurnoSede();
 
-        foreach($usuariosPorSede as $usuarioPorSede){
+        foreach ($usuariosPorSede as $usuarioPorSede) {
             $noExite = true;
             $tipo = null;
-            foreach($usuariosTurnoPorTurno as $usuarioTurnoPorTurno ){
-                if($usuarioTurnoPorTurno->getUsuario()->getId() == $usuarioPorSede->getId() ){
+            foreach ($usuariosTurnoPorTurno as $usuarioTurnoPorTurno) {
+                if ($usuarioTurnoPorTurno->getUsuario()->getId() == $usuarioPorSede->getId()) {
                     $tipo = $usuarioTurnoPorTurno;
                     $noExite = false;
                 }
             }
-            if($noExite){
+            if ($noExite) {
                 $tipo = new UsuarioTurnoSede();
                 $tipo->setUsuario($usuarioPorSede);
                 $tipo->setTurnoSede($turnoSede);
@@ -207,25 +220,26 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
         return $array;
     }
 
-    private function getChoiseTurnoTipoTramite($turnoSede){
-        $em  = $this->get('doctrine')->getManager();
+    private function getChoiseTurnoTipoTramite($turnoSede)
+    {
+        $em = $this->get('doctrine')->getManager();
         $array = array();
         $repositoryTT = $em->getRepository('AdminBundle:TipoTramite')->createQueryBuilder('t')
             ->where('t.activo = true');
-        $tiposTramites= $repositoryTT->getQuery()->getResult();
+        $tiposTramites = $repositoryTT->getQuery()->getResult();
         $turnoSedeGuardado = $em->getRepository('AdminBundle:TurnoSede')->findOneById($turnoSede->getId());
         $tipostramitesPorTurno = $turnoSedeGuardado->getTurnoTipoTramite();
 
-        foreach($tiposTramites as $tipoTramite){
+        foreach ($tiposTramites as $tipoTramite) {
             $noExite = true;
             $tipo = null;
-            foreach($tipostramitesPorTurno as $tipoTramitePorTurno ){
-                if($tipoTramitePorTurno->getTipoTramite()->getId() == $tipoTramite->getId() ){
+            foreach ($tipostramitesPorTurno as $tipoTramitePorTurno) {
+                if ($tipoTramitePorTurno->getTipoTramite()->getId() == $tipoTramite->getId()) {
                     $tipo = $tipoTramitePorTurno;
                     $noExite = false;
                 }
             }
-            if($noExite){
+            if ($noExite) {
                 $tipo = new TurnoTipoTramite();
                 $tipo->setTipoTramite($tipoTramite);
                 $tipo->setTurnoSede($turnoSede);
