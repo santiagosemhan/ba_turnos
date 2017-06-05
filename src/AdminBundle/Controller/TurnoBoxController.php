@@ -96,7 +96,9 @@ class TurnoBoxController extends Controller
 
     public function obtenerProximoAction(Request $request)
     {
-
+        $conTurno = false;
+        $turno = new Turno();
+        $sede = new Sede();
         try {
             $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
             if (is_null($sede)) {
