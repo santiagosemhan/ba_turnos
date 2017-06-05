@@ -135,23 +135,38 @@ class TurnoController extends Controller
                 $optionsPaginate3
             );
 
+            return $this->render('AdminBundle:turno:administrar.html.twig', array(
+                'form' => $form->createView(),
+                'sede' => $sede,
+                'paginationTurnos' => $turno,
+                'turnosDia' => $this->get('manager.turnos')->getCantidad($sede->getId(), $fechaHoy),
+                'turnosConfirmados' => $this->get('manager.turnos')->getCantidadConfirmados($sede->getId(), $fechaHoy),
+                'parametriaTurnos' => '15 turnos por hora',
+                'sinTurno' => $this->get('manager.turnos')->getCantidadSinTurnos($sede->getId(), $fechaHoy),
+                'fechaHoy' => $fechaHoy,
+                'turnosConfirmadosList' => $turnosConfirmadosList,
+                'turnosAtendidosList' => $turnosAtendidosList
+            ));
+
 
         } catch (\Exception $ex) {
             $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+
+            return $this->render('AdminBundle:turno:administrar.html.twig', array(
+                'form' => $form->createView(),
+                'sede' => $sede,
+                'paginationTurnos' => null,
+                'turnosDia' => $this->get('manager.turnos')->getCantidad($sede->getId(), $fechaHoy),
+                'turnosConfirmados' => $this->get('manager.turnos')->getCantidadConfirmados($sede->getId(), $fechaHoy),
+                'parametriaTurnos' => '15 turnos por hora',
+                'sinTurno' => $this->get('manager.turnos')->getCantidadSinTurnos($sede->getId(), $fechaHoy),
+                'fechaHoy' => $fechaHoy,
+                'turnosConfirmadosList' => $turnosConfirmadosList,
+                'turnosAtendidosList' => $turnosAtendidosList
+            ));
         }
 
-        return $this->render('AdminBundle:turno:administrar.html.twig', array(
-            'form' => $form->createView(),
-            'sede' => $sede,
-            'paginationTurnos' => $turno,
-            'turnosDia' => $this->get('manager.turnos')->getCantidad($sede->getId(), $fechaHoy),
-            'turnosConfirmados' => $this->get('manager.turnos')->getCantidadConfirmados($sede->getId(), $fechaHoy),
-            'parametriaTurnos' => '15 turnos por hora',
-            'sinTurno' => $this->get('manager.turnos')->getCantidadSinTurnos($sede->getId(), $fechaHoy),
-            'fechaHoy' => $fechaHoy,
-            'turnosConfirmadosList' => $turnosConfirmadosList,
-            'turnosAtendidosList' => $turnosAtendidosList
-        ));
+
     }
 
     public function procesarCancelarAction(Request $request, Turno $turno)
