@@ -72,15 +72,14 @@ class TurnoBoxController extends Controller
             return $this->redirectToRoute('admin_homepage');
         }
 
-        $session = new Session();
-        $box = $session->get('box');
+        $box = $this->get('session')->get('box');
         if (is_null($box)) {
             // set flash messages
             $this->get('session')->getFlashBag()->add('error', 'Para acceder se debe seleccionar un box.');
             return $this->redirectToRoute('app_box_atencion_seleccion_box');
         }
 
-        $turno = $session->get('turno');
+        $turno = $this->get('session')->get('turno');
         $conTurno = true;
         if (is_null($turno)) {
             $conTurno = false;
@@ -107,8 +106,7 @@ class TurnoBoxController extends Controller
                 return $this->redirectToRoute('admin_homepage');
             }
 
-            $session = new Session();
-            $box = $session->get('box');
+            $box = $this->get('session')->get('box');
             if (is_null($box)) {
                 // set flash messages
                 $this->get('session')->getFlashBag()->add('error', 'Para acceder se debe seleccionar un box.');
@@ -120,8 +118,7 @@ class TurnoBoxController extends Controller
             if ($turno[0]) {
                 $conTurno = true;
                 $turno = $turno[1];
-                $session = new Session();
-                $session->set('turno', $turno);
+                $this->get('session')->set('turno', $turno);
                 $this->get('session')->getFlashBag()->add('success', 'Se llamo por monitor al próximo número');
             } else {
                 $conTurno = false;
@@ -153,15 +150,14 @@ class TurnoBoxController extends Controller
                 return $this->redirectToRoute('admin_homepage');
             }
 
-            $session = new Session();
-            $box = $session->get('box');
+            $box = $this->get('session')->get('box');
             if (is_null($box)) {
                 // set flash messages
                 $this->get('session')->getFlashBag()->add('error', 'Para acceder se debe seleccionar un box.');
                 return $this->redirectToRoute('app_box_atencion_seleccion_box');
             }
 
-            $turno = $session->get('turno');
+            $turno = $this->get('session')->get('turno');
             $conTurno = true;
             if (is_null($turno)) {
                 $conTurno = false;
@@ -186,8 +182,6 @@ class TurnoBoxController extends Controller
     {
 
         try {
-            //obtengo clase de session
-            $session = new Session();
 
             //obtengo el redis
             try {
@@ -337,12 +331,11 @@ class TurnoBoxController extends Controller
     }
 
     public function cambiarBoxAction(Request $request){
-        $session = new Session();
-        $box = $session->get('box');
+        $box = $this->get('session')->get('box');
         if (!is_null($box)) {
             // remove flash
-            $session->remove('box');
-            $session->remove('turno');
+            $this->get('session')->remove('box');
+            $this->get('session')->remove('turno');
             return $this->redirectToRoute('app_box_atencion_seleccion_box');
         }
     }
