@@ -95,9 +95,6 @@ class TurnoBoxController extends Controller
 
     public function obtenerProximoAction(Request $request)
     {
-        $conTurno = false;
-        $turno = new Turno();
-        $sede = new Sede();
         try {
             $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
             if (is_null($sede)) {
@@ -126,17 +123,20 @@ class TurnoBoxController extends Controller
                 $turno = null;
             }
 
+            return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
+                'box' => 'Administrar ' . $box,
+                'sede' => $sede,
+                'conTurno' => $conTurno,
+                'turno' => $turno
+            ));
 
         } catch (\Exception $ex) {
             $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+
+            return $this->redirectToRoute('admin_homepage');
         }
 
-        return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
-            'box' => 'Administrar ' . $box,
-            'sede' => $sede,
-            'conTurno' => $conTurno,
-            'turno' => $turno
-        ));
+
     }
 
     public function volverLLamarAction(Request $request)
