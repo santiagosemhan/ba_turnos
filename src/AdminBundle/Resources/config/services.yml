@@ -23,7 +23,7 @@ services:
           - [ setMesAtincipacionTurnos, ['%mes_anticipacion_turnos%']]
 
 
-    manager.turnos::
+    manager.turnos:
         alias:  AdminBundle\Services\TurnosManager
         public: true
 
