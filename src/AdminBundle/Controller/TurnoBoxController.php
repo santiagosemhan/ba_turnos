@@ -315,8 +315,8 @@ class TurnoBoxController extends Controller
             $payload = [
                 'channel' => $sede,
                 'data' => [
-                    'turno' => $turno->getTurno(),
-                    'box' => $box
+                    'turno' => $turno->getTurnoBox(),
+                    'box' => $box->getDescripcion(),
                 ]
             ];
         } catch (\Exception $e) {

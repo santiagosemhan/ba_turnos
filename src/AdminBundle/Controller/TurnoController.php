@@ -261,6 +261,7 @@ class TurnoController extends Controller
                     $em->flush();
 
                     $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), false);
+                    $this->agregarTurnoLista($turno, false);
 
                     return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
 
@@ -342,6 +343,7 @@ class TurnoController extends Controller
                         $em->flush();
 
                         $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), true);
+                        $this->agregarTurnoLista($turno, true);
 
                         return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
 
