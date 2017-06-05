@@ -9,6 +9,7 @@
 namespace AdminBundle\Controller;
 
 use AdminBundle\Entity\Comprobante;
+use AdminBundle\Repository\ColaTurnoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AdminBundle\Entity\Turno;
@@ -607,7 +608,9 @@ class TurnoController extends Controller
                 $nombreLista = $turno->getTurnoSede()->getSede()->getLetra() . '/' . $turno->getTurnoSede()->getId();
             }
             //creo el formato del texto a guardar
-            $cola = $turno->getColaTurno()->first();
+            $colaTurno= $this->getDoctrine()->getManager()->getRepository('AdminBundle:ColaTurno');
+            $cola = $colaTurno->getTurno($turno);
+            $cola = $cola[0];
             $formatoLiso = $cola->getNumero() . '/' . $turno->getHoraTurno()->getTimestamp() . '/' . $turno->getId();
 
             //obtengo la clase redis

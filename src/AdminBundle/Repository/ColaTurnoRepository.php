@@ -17,4 +17,14 @@ namespace AdminBundle\Repository;
 class ColaTurnoRepository extends \Doctrine\ORM\EntityRepository
 {
 
+    public function getTurno($turno)
+    {
+        $qb = $this->createQueryBuilder('ct')
+            ->where('ct.turno = :turno')
+            ->setParameter("turno", $turno)
+            ->getQuery();
+
+        return  $qb->getResult();
+    }
+
 }
