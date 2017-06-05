@@ -191,7 +191,7 @@ class TurnoBoxController extends Controller
             try {
                 $redis = $this->container->get('snc_redis.default');
             } catch (\Exception $e) {
-                throw new \Exception('Error 1000.1 No se encuentra el servicio para manejar las filas');
+                throw new \Exception('Error 1000.TBC.STL No se encuentra el servicio para manejar las filas');
             }
 
             // Si el usuario controla mas de un turnoSede.
@@ -199,7 +199,8 @@ class TurnoBoxController extends Controller
 
             //Se coloca el elemento a enviar al monitor
             $item = null;
-            $urnoSedeItem = null;
+            $turnoSedeItem = null;
+
             if (count($turnoSede) == 1) {
                 $turnoSede = $turnoSede->first();
                 // controlar si existen elementos en la cola prioritarios
@@ -210,7 +211,7 @@ class TurnoBoxController extends Controller
                     $nombreLista = $turnoSede->getSede()->getLetra() . '/' . $turnoSede->getId();
                     //obtengo el ultimo elemento de la cola
                     $item = $redis->lpop($nombreLista);
-                    $urnoSedeItem = $turnoSede;
+                    $turnoSedeItem = $turnoSede;
                 }
 
             } else {
@@ -232,13 +233,13 @@ class TurnoBoxController extends Controller
                             if (is_null($fechaTurnoSacar)) {
                                 $nombreColaSacar = $nombreLista;
                                 $fechaTurnoSacar = intval($id[1]);
-                                $urnoSedeItem = $turnoS;
+                                $turnoSedeItem = $turnoS;
                             } else {
                                 //Determino si el que ya saque corresponde de un horario posterior al que tengo
                                 if ($fechaTurnoSacar > intval($id[1])) {
                                     $nombreColaSacar = $nombreLista;
                                     $fechaTurnoSacar = intval($id[1]);
-                                    $urnoSedeItem = $turnoS;
+                                    $turnoSedeItem = $turnoS;
                                 }
                             }
 
@@ -254,13 +255,13 @@ class TurnoBoxController extends Controller
 
                                     $nombreColaSacar = $nombreLista;
                                     $fechaTurnoSacar = intval($id[1]);
-                                    $urnoSedeItem = $turnoS;
+                                    $turnoSedeItem = $turnoS;
                                 } else {
                                     //Determino si el que ya saque corresponde de un horario posterior al que tengo
                                     if ($fechaTurnoSacar > intval($id[1])) {
                                         $nombreColaSacar = $nombreLista;
                                         $fechaTurnoSacar = intval($id[1]);
-                                        $urnoSedeItem = $turnoS;
+                                        $turnoSedeItem = $turnoS;
                                     }
                                 }
                             }
@@ -273,6 +274,8 @@ class TurnoBoxController extends Controller
                         $item = $redis->lpop($nombreColaSacar);
                     }
 
+                }else{
+                    throw new \Exception('Error 1.TBC.STL La Sede no se encuentra asociado a un Tipo de Tramite');
                 }
             }
 
@@ -283,7 +286,7 @@ class TurnoBoxController extends Controller
                 $numeroCola = intval($explodeItem[0]);
                 $idTurno = intval($explodeItem[2]);
 
-                $turnos = $this->get('manager.turnos')->buscarTurnoPorNumeroYTurnoSede($numeroCola, $urnoSedeItem, $idTurno);
+                $turnos = $this->get('manager.turnos')->buscarTurnoPorNumeroYTurnoSede($numeroCola, $turnoSedeItem, $idTurno);
                 if (count($turnos) > 0) {
                     //genero los datos para enviar al monitor
                     $turno = $turnos[0];
