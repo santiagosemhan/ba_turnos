@@ -424,7 +424,7 @@ class TurnosManager
                 $cola->setLetra($this->obtenerLetra($turnoSedeIndiceLetra, $prioritario));
                 $cola->setNumero($numeroTurno);
             }else{
-                throw new \Exception('Error 1.TM.CF No se ha encontrado Turnos disponibles. Verifique que la Hora del Turno no haya pasado. Disculpe las molestias');
+                throw new \Exception('Error 1.TM.CF No se ha encontrado Turnos disponibles. Verifique que la Hora del Turno no se encuentre vencido.');
             }
 
             $this->em->persist($cola);

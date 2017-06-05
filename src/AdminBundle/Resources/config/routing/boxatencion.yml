@@ -17,3 +17,8 @@ app_box_volver_llamar_turno:
     path:     /volver-llamar
     defaults: { _controller: "AdminBundle:TurnoBox:volverLLamar" }
     methods:  [GET, POST]
+
+app_box_cambiar_box:
+    path:     /cambiar-box
+    defaults: { _controller: "AdminBundle:TurnoBox:cambiarBox" }
+    methods:  GET

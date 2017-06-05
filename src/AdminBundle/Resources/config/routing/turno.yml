@@ -53,7 +53,12 @@ turno_horarios_por_tipo_tramite:
     defaults: { _controller: "AdminBundle:Turno:horariosPorTipoTramito" }
     methods:  [GET, POST]
 
-turno_confirmar:
+turno_procesar_cambio:
     path:     /{turno}/procesar-cambio-turno
+    defaults: { _controller: "AdminBundle:Turno:procesarCambioTurno" }
+    methods:  [GET, POST]
+
+turno_procesar_cambio_prioritario:
+    path:     /{turno}/procesar-cambio-turno-trioritario
     defaults: { _controller: "AdminBundle:Turno:procesarCambioTurno" }
     methods:  [GET, POST]

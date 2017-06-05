@@ -17,7 +17,12 @@ use AdminBundle\EventListener\AddHoraTurnoFieldSubscriber;
 class TurnoType extends AbstractType
 {
     private $sede = null;
+    private $selectedEntities;
 
+    public function __construct($selectedEntities = null)
+    {
+        $this->selectedEntities = $selectedEntities;
+    }
 
     /**
      * {@inheritdoc}
@@ -43,7 +48,10 @@ class TurnoType extends AbstractType
                             return $er->getTramitesPorSede($this->getSede());
                         },
                         'choice_label' => 'descripcion',
-                        'attr'  => array('class'=>"select2")));
+                        'attr'  => array('class'=>"select2"),
+                        'data' => $options['tipoTramite'])
+
+                );
     }
 
     private function setSede($sede){
@@ -77,7 +85,8 @@ class TurnoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AdminBundle\Entity\Turno'
+            'data_class' => 'AdminBundle\Entity\Turno',
+            'tipoTramite' => null,
         ));
     }
 

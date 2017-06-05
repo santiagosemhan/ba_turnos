@@ -204,9 +204,18 @@ class TurnoController extends Controller
             }
 
             $turno = new Turno();
+            $turnos = $this->get('session')->getFlashBag()->get('turno');
+            $tipoTramite = null;
+            if(count($turnos) > 0 ){
+                $turno = $turnos[0];
+                $tipoTramite = $turno->getTipoTramite()->getId();
+                $turno->setTipoTramite(null);
+            }
             $turno->setSede($sede);
             $turno->setViaMostrador(true);
-            $form = $this->createForm('AdminBundle\Form\TurnoType', $turno);
+
+            $form = $this->createForm('AdminBundle\Form\TurnoType', $turno, array('tipoTramite' => $tipoTramite));
+
             $form->handleRequest($request);
 
 
@@ -274,9 +283,18 @@ class TurnoController extends Controller
             }
 
             $turno = new Turno();
-            $turno->setViaMostrador(true);
+            $turnos = $this->get('session')->getFlashBag()->get('turno');
+            $tipoTramite = null;
+            if(count($turnos) > 0 ){
+                $turno = $turnos[0];
+                $tipoTramite = $turno->getTipoTramite();
+                $turno->setTipoTramite(null);
+            }
             $turno->setSede($sede);
-            $form = $this->createForm('AdminBundle\Form\TurnoType', $turno);
+            $turno->setViaMostrador(true);
+
+            $form = $this->createForm('AdminBundle\Form\TurnoType', $turno, array('tipoTramite' => $tipoTramite));
+
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -381,12 +399,18 @@ class TurnoController extends Controller
             return $this->redirectToRoute('admin_homepage');
         }
         try {
+            if(!is_null($turno->getFechaCancelado())){
+                throw new \Exception('Error 2.TC.CTA. El turno se encuentra cancelado');
+            }
             $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), false);
             $this->agregarTurnoLista($turno, false);
 
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         } catch (\Exception $e) {
             $this->get('session')->getFlashBag()->add('error', $e->getMessage());
+            if($e->getMessage()== 'Error 1.TM.CF No se ha encontrado Turnos disponibles. Verifique que la Hora del Turno no se encuentre vencido.'){
+                $this->get('session')->getFlashBag()->add('newAction','cambioTurno');
+            }
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         }
 
@@ -405,6 +429,13 @@ class TurnoController extends Controller
             return $this->redirectToRoute('admin_homepage');
         }
 
+        $newAction = $this->get('session')->getFlashBag()->get('newAction');
+        if($newAction){
+            if($newAction == 'cambioTurno'){
+                $newAction = true;
+            }
+        }
+
         $titulo = "Confirmar Turno";
         $prioritario = false;
 
@@ -412,6 +443,7 @@ class TurnoController extends Controller
             'turno' => $turno,
             'titulo' => $titulo,
             'priotitario' => $prioritario,
+            'cambio' => $newAction,
         ));
     }
 
@@ -427,10 +459,18 @@ class TurnoController extends Controller
         $titulo = "Confirmar Turno Prioritario";
         $prioritario = true;
 
+        $newAction = $this->get('session')->getFlashBag()->get('newAction');
+        if($newAction){
+            if($newAction == 'cambioTurno'){
+                $newAction = true;
+            }
+        }
+
         return $this->render('AdminBundle:turno:show.html.twig', array(
             'turno' => $turno,
             'titulo' => $titulo,
             'priotitario' => $prioritario,
+            'cambio' => $newAction,
         ));
     }
 
@@ -449,14 +489,77 @@ class TurnoController extends Controller
             return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
         } catch (\Exception $e) {
             $this->get('session')->getFlashBag()->add('error', $e->getMessage());
-            return $this->redirectToRoute('admin_homepage');
+            if($e->getMessage()== 'Error 1.TM.CF No se ha encontrado Turnos disponibles. Verifique que la Hora del Turno no se encuentre vencido.'){
+                $this->get('session')->getFlashBag()->add('newAction','cambioTurno');
+            }
+            return $this->redirectToRoute('turno_show_prioritario', array('id' => $turno->getId()));
         }
-
 
     }
 
     public function procesarCambioTurnoAction(Turno $turno)
     {
+        try {
+            $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
+            if (is_null($sede)) {
+                // set flash messages
+                $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+                return $this->redirectToRoute('admin_homepage');
+            }
+
+            $newTurno = new Turno();
+            $newTurno->setSede($turno->getSede());
+            $newTurno->setNombreApellido($turno->getNombreApellido());
+            $newTurno->setCuit($turno->getCuit());
+            $newTurno->setMail1($turno->getMail1());
+            $newTurno->setMail2($turno->getMail2());
+            $newTurno->setTelefono($turno->getTelefono());
+            $newTurno->setTipoTramite($turno->getTipoTramite());
+
+
+            $this->get('manager.turnos')->cancelarTurno($turno->getCuit(), $sede->getLetra() . $turno->getNumero(), true);
+
+
+            $this->get('session')->getFlashBag()->add('turno', $newTurno);
+
+            return $this->redirectToRoute('turno_new');
+        }catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }
+
+    }
+
+    public function procesarCambioTurnoPrioritarioAction(Turno $turno)
+    {
+        try {
+            $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
+            if (is_null($sede)) {
+                // set flash messages
+                $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+                return $this->redirectToRoute('admin_homepage');
+            }
+
+            $newTurno = new Turno();
+            $newTurno->setSede($turno->getSede());
+            $newTurno->setNombreApellido($turno->getNombreApellido());
+            $newTurno->setCuit($turno->getCuit());
+            $newTurno->setMail1($turno->getMail1());
+            $newTurno->setMail2($turno->getMail2());
+            $newTurno->setTelefono($turno->getTelefono());
+            $newTurno->setTipoTramite($turno->getTipoTramite());
+
+
+            $this->get('manager.turnos')->cancelarTurno($turno->getCuit(), $sede->getLetra() . $turno->getNumero(), true);
+
+
+            $this->get('session')->getFlashBag()->add('turno', $newTurno);
+
+            return $this->redirectToRoute('turno_new_prioritario');
+        }catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+            return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+        }
 
     }
 

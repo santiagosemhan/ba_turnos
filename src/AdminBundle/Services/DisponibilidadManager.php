@@ -637,7 +637,7 @@ class DisponibilidadManager
      *
      * @return array
      */
-    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false,$cobtabilizarSoloSinTurno = false)
+    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false,$contabilizarSoloSinTurno = false)
     {
         //Obtengo la cantidad de horas que atienden en la sede
         $cantidadTurnosSegudo = 1;
@@ -651,6 +651,7 @@ class DisponibilidadManager
         $turnosHora = array();
         $fechaActual = new \DateTime();
         $fechaActual = new \DateTime('1970-01-01'.' '.$fechaActual->format('H:i').':00');
+
         if ($this->verificaTipoTurnoTipoDia($turnoSede, $dia, $mes, $anio)) {
             if ($turnoSede->getFrecunciaTurnoControl() == 'minutos') {
                 $cantidad = 0;
@@ -665,8 +666,9 @@ class DisponibilidadManager
                         }
                     }
                 }
+
                 if ($sinTurnoTipoTramite) {
-                    if($cobtabilizarSoloSinTurno == true){
+                    if($contabilizarSoloSinTurno == true){
                         if(!is_null($turnoSede->getCantidadSinTurnos())){
                             $cantidad = $turnoSede->getCantidadSinTurnos();
                         }else{
@@ -686,8 +688,6 @@ class DisponibilidadManager
                 $cantidadTurnos = ($difMinutos / $turnoSede->getCantidadFrecuencia());
                 $intervalo = new \DateInterval('PT' . $turnoSede->getCantidadFrecuencia() . 'M');
 
-
-
                 if ($cantidadTurnos > 0) {
                     if ($diaActual) {
                         if (($horaDesde > $fechaActual)) {
@@ -698,6 +698,7 @@ class DisponibilidadManager
                     }
                     $cantidadTurnos--;
                 }
+
 
                 while ($cantidadTurnos > 0) {
                     $horaDesde->add($intervalo);
@@ -723,7 +724,7 @@ class DisponibilidadManager
                     }
                 }
                 if ($sinTurnoTipoTramite) {
-                    if($cobtabilizarSoloSinTurno == true){
+                    if($contabilizarSoloSinTurno == true){
                         if(!is_null($turnoSede->getCantidadSinTurnos())){
                             $cantidad = $turnoSede->getCantidadSinTurnos();
                         }else{

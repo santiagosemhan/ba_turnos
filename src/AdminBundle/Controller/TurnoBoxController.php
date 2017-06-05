@@ -29,6 +29,13 @@ class TurnoBoxController extends Controller
                 return $this->redirectToRoute('admin_homepage');
             }
 
+            $session = new Session();
+            $box = $session->get('box');
+            if (!is_null($box)) {
+                // set flash messages
+                return $this->redirectToRoute('app_box_atencion_box');
+            }
+
             $boxs = $sede->getBox();
             $boxArray = array();
             foreach ($boxs as $box) {
@@ -322,5 +329,16 @@ class TurnoBoxController extends Controller
             throw new \Exception('Error 1000.TBC.ICM No se puede avisar al monitor la llamada del nuevo turno');
         }
 
+    }
+
+    public function cambiarBoxAction(Request $request){
+        $session = new Session();
+        $box = $session->get('box');
+        if (!is_null($box)) {
+            // remove flash
+            $session->remove('box');
+            $session->remove('turno');
+            return $this->redirectToRoute('app_box_atencion_seleccion_box');
+        }
     }
 }
