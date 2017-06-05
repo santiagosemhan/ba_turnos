@@ -241,12 +241,20 @@ class TurnosManager
      */
     public function actualizaNumeroTurnoSede($sedeId, $numeroTurno)
     {
-        $repository = $this->em->getRepository('AdminBundle:Sede');
-        $sede = $repository->findOneById($sedeId);
-        $sede->setUltimoTurno($numeroTurno);
-        $this->em->persist($sede);
-        $this->em->flush();
-        return true;
+        try {
+            $repository = $this->em->getRepository('AdminBundle:Sede');
+            $sede = $repository->findOneById($sedeId);
+            if($sede) {
+                $sede->setUltimoTurno($numeroTurno);
+                $this->em->persist($sede);
+                $this->em->flush();
+                return true;
+            }else{
+                throw new \Exception('Error 1.TM.ANTS No se encuentra la sede buscada');
+            }
+        }catch (\Exception $ex){
+            throw $ex;
+        }
     }
 
     /**
@@ -258,13 +266,21 @@ class TurnosManager
      */
     public function obtenerProximoTurnoSede($sedeId)
     {
-        $repository = $this->em->getRepository('AdminBundle:Sede');
-        $sede = $repository->findOneById($sedeId);
-        $proximoNumero = $sede->getUltimoTurno()+1;
-        $sede->setUltimoTurno($proximoNumero);
-        $this->em->persist($sede);
-        $this->em->flush();
-        return $proximoNumero;
+        try {
+            $repository = $this->em->getRepository('AdminBundle:Sede');
+            $sede = $repository->findOneById($sedeId);
+            if($sede) {
+                $proximoNumero = $sede->getUltimoTurno() + 1;
+                $sede->setUltimoTurno($proximoNumero);
+                $this->em->persist($sede);
+                $this->em->flush();
+                return $proximoNumero;
+            }else{
+                throw new \Exception('Error 1.TM.OPTS No se encuentra la sede buscada');
+            }
+        }catch (\Exception $ex){
+            throw $ex;
+        }
     }
 
     /**
@@ -408,7 +424,7 @@ class TurnosManager
                 $cola->setLetra($this->obtenerLetra($turnoSedeIndiceLetra, $prioritario));
                 $cola->setNumero($numeroTurno);
             }else{
-                throw new \Exception('No se ha encontrado Turnos disponibles. Verifique que la Hora del Turno no haya pasado. Disculpe las molestias');
+                throw new \Exception('Error 1.TM.CF No se ha encontrado Turnos disponibles. Verifique que la Hora del Turno no se encuentre vencido.');
             }
 
             $this->em->persist($cola);
@@ -423,560 +439,576 @@ class TurnosManager
         return true;
     }
 
+    /**
+     * Busca la letra correspondiente a la cantidad de turnos que se esta dando
+     * @param $cantidad
+     * @param $reservado
+     * @return string
+     * @throws \Exception
+     */
     private function obtenerLetra($cantidad, $reservado)
     {
-        $letra = '';
-        if ($reservado) {
-            switch ($cantidad) {
-                /*
-                 * Letra M
-                 */
-                case 0:
-                    $letra = "MA";
-                    break;
-                case 1:
-                    $letra = "MB";
-                    break;
-                case 2:
-                    $letra = "MC";
-                    break;
-                case 3:
-                    $letra = "MD";
-                    break;
-                case 4:
-                    $letra = "ME";
-                    break;
-                case 5:
-                    $letra = "MF";
-                    break;
-                case 6:
-                    $letra = "MG";
-                    break;
-                case 7:
-                    $letra = "MH";
-                    break;
-                case 8:
-                    $letra = "MI";
-                    break;
-                case 9:
-                    $letra = "MJ";
-                    break;
-                case 10:
-                    $letra = "MK";
-                    break;
-                /*
-                 * Letra N
-                 */
-                case 11:
-                    $letra = "NA";
-                    break;
-                case 12:
-                    $letra = "NB";
-                    break;
-                case 13:
-                    $letra = "NC";
-                    break;
-                case 14:
-                    $letra = "ND";
-                    break;
-                case 15:
-                    $letra = "NE";
-                    break;
-                case 16:
-                    $letra = "NF";
-                    break;
-                case 17:
-                    $letra = "NG";
-                    break;
-                case 18:
-                    $letra = "NH";
-                    break;
-                case 19:
-                    $letra = "NI";
-                    break;
-                case 20:
-                    $letra = "NJ";
-                    break;
-                case 21:
-                    $letra = "NK";
-                    break;
-                /*
-                 * Letra O
-                 */
-                case 22:
-                    $letra = "OA";
-                    break;
-                case 23:
-                    $letra = "OB";
-                    break;
-                case 24:
-                    $letra = "OC";
-                    break;
-                case 25:
-                    $letra = "OD";
-                    break;
-                case 26:
-                    $letra = "OE";
-                    break;
-                case 27:
-                    $letra = "OF";
-                    break;
-                case 28:
-                    $letra = "OG";
-                    break;
-                case 29:
-                    $letra = "OH";
-                    break;
-                case 30:
-                    $letra = "OI";
-                    break;
-                case 31:
-                    $letra = "OJ";
-                    break;
-                case 32:
-                    $letra = "OK";
-                    break;
-            }
-        } else {
-            switch ($cantidad) {
-                /*
-                 * Letra A
-                 */
-                case 0:
-                    $letra = "AA";
-                    break;
-                case 1:
-                    $letra = "AB";
-                    break;
-                case 2:
-                    $letra = "AC";
-                    break;
-                case 3:
-                    $letra = "AD";
-                    break;
-                case 4:
-                    $letra = "AE";
-                    break;
-                case 5:
-                    $letra = "AF";
-                    break;
-                case 6:
-                    $letra = "AG";
-                    break;
-                case 7:
-                    $letra = "AH";
-                    break;
-                case 8:
-                    $letra = "AI";
-                    break;
-                case 9:
-                    $letra = "AJ";
-                    break;
-                case 10:
-                    $letra = "AK";
-                    break;
-                /*
-                 * Letra B
-                 */
-                case 11:
-                    $letra = "BA";
-                    break;
-                case 12:
-                    $letra = "BB";
-                    break;
-                case 13:
-                    $letra = "BC";
-                    break;
-                case 14:
-                    $letra = "BD";
-                    break;
-                case 15:
-                    $letra = "BE";
-                    break;
-                case 16:
-                    $letra = "BF";
-                    break;
-                case 17:
-                    $letra = "BG";
-                    break;
-                case 18:
-                    $letra = "BH";
-                    break;
-                case 19:
-                    $letra = "BI";
-                    break;
-                case 20:
-                    $letra = "BJ";
-                    break;
-                case 21:
-                    $letra = "BK";
-                    break;
-                /*
-                 * Lertra C
-                 */
-                case 22:
-                    $letra = "CA";
-                    break;
-                case 23:
-                    $letra = "CB";
-                    break;
-                case 24:
-                    $letra = "CC";
-                    break;
-                case 25:
-                    $letra = "CD";
-                    break;
-                case 26:
-                    $letra = "CE";
-                    break;
-                case 27:
-                    $letra = "CF";
-                    break;
-                case 28:
-                    $letra = "CG";
-                    break;
-                case 29:
-                    $letra = "CH";
-                    break;
-                case 30:
-                    $letra = "CI";
-                    break;
-                case 31:
-                    $letra = "CJ";
-                    break;
-                case 32:
-                    $letra = "CK";
-                    break;
-                /*
-                 * Lertra D
-                 */
-                case 33:
-                    $letra = "DA";
-                    break;
-                case 34:
-                    $letra = "DB";
-                    break;
-                case 35:
-                    $letra = "DC";
-                    break;
-                case 36:
-                    $letra = "DD";
-                    break;
-                case 37:
-                    $letra = "DE";
-                    break;
-                case 38:
-                    $letra = "DF";
-                    break;
-                case 39:
-                    $letra = "DG";
-                    break;
-                case 40:
-                    $letra = "DH";
-                    break;
-                case 41:
-                    $letra = "DI";
-                    break;
-                case 42:
-                    $letra = "DJ";
-                    break;
-                case 43:
-                    $letra = "DK";
-                    break;
-                /*
-                * Lertra F
-                */
-                case 44:
-                    $letra = "FA";
-                    break;
-                case 45:
-                    $letra = "FB";
-                    break;
-                case 46:
-                    $letra = "FC";
-                    break;
-                case 47:
-                    $letra = "FD";
-                    break;
-                case 48:
-                    $letra = "FE";
-                    break;
-                case 49:
-                    $letra = "FF";
-                    break;
-                case 50:
-                    $letra = "FG";
-                    break;
-                case 51:
-                    $letra = "FH";
-                    break;
-                case 52:
-                    $letra = "FI";
-                    break;
-                case 53:
-                    $letra = "FJ";
-                    break;
-                case 54:
-                    $letra = "CK";
-                    break;
+        try {
+            $letra = '';
+            if ($reservado) {
+                switch ($cantidad) {
+                    /*
+                     * Letra M
+                     */
+                    case 0:
+                        $letra = "MA";
+                        break;
+                    case 1:
+                        $letra = "MB";
+                        break;
+                    case 2:
+                        $letra = "MC";
+                        break;
+                    case 3:
+                        $letra = "MD";
+                        break;
+                    case 4:
+                        $letra = "ME";
+                        break;
+                    case 5:
+                        $letra = "MF";
+                        break;
+                    case 6:
+                        $letra = "MG";
+                        break;
+                    case 7:
+                        $letra = "MH";
+                        break;
+                    case 8:
+                        $letra = "MI";
+                        break;
+                    case 9:
+                        $letra = "MJ";
+                        break;
+                    case 10:
+                        $letra = "MK";
+                        break;
+                    /*
+                     * Letra N
+                     */
+                    case 11:
+                        $letra = "NA";
+                        break;
+                    case 12:
+                        $letra = "NB";
+                        break;
+                    case 13:
+                        $letra = "NC";
+                        break;
+                    case 14:
+                        $letra = "ND";
+                        break;
+                    case 15:
+                        $letra = "NE";
+                        break;
+                    case 16:
+                        $letra = "NF";
+                        break;
+                    case 17:
+                        $letra = "NG";
+                        break;
+                    case 18:
+                        $letra = "NH";
+                        break;
+                    case 19:
+                        $letra = "NI";
+                        break;
+                    case 20:
+                        $letra = "NJ";
+                        break;
+                    case 21:
+                        $letra = "NK";
+                        break;
+                    /*
+                     * Letra O
+                     */
+                    case 22:
+                        $letra = "OA";
+                        break;
+                    case 23:
+                        $letra = "OB";
+                        break;
+                    case 24:
+                        $letra = "OC";
+                        break;
+                    case 25:
+                        $letra = "OD";
+                        break;
+                    case 26:
+                        $letra = "OE";
+                        break;
+                    case 27:
+                        $letra = "OF";
+                        break;
+                    case 28:
+                        $letra = "OG";
+                        break;
+                    case 29:
+                        $letra = "OH";
+                        break;
+                    case 30:
+                        $letra = "OI";
+                        break;
+                    case 31:
+                        $letra = "OJ";
+                        break;
+                    case 32:
+                        $letra = "OK";
+                        break;
+                }
+            } else {
+                switch ($cantidad) {
+                    /*
+                     * Letra A
+                     */
+                    case 0:
+                        $letra = "AA";
+                        break;
+                    case 1:
+                        $letra = "AB";
+                        break;
+                    case 2:
+                        $letra = "AC";
+                        break;
+                    case 3:
+                        $letra = "AD";
+                        break;
+                    case 4:
+                        $letra = "AE";
+                        break;
+                    case 5:
+                        $letra = "AF";
+                        break;
+                    case 6:
+                        $letra = "AG";
+                        break;
+                    case 7:
+                        $letra = "AH";
+                        break;
+                    case 8:
+                        $letra = "AI";
+                        break;
+                    case 9:
+                        $letra = "AJ";
+                        break;
+                    case 10:
+                        $letra = "AK";
+                        break;
+                    /*
+                     * Letra B
+                     */
+                    case 11:
+                        $letra = "BA";
+                        break;
+                    case 12:
+                        $letra = "BB";
+                        break;
+                    case 13:
+                        $letra = "BC";
+                        break;
+                    case 14:
+                        $letra = "BD";
+                        break;
+                    case 15:
+                        $letra = "BE";
+                        break;
+                    case 16:
+                        $letra = "BF";
+                        break;
+                    case 17:
+                        $letra = "BG";
+                        break;
+                    case 18:
+                        $letra = "BH";
+                        break;
+                    case 19:
+                        $letra = "BI";
+                        break;
+                    case 20:
+                        $letra = "BJ";
+                        break;
+                    case 21:
+                        $letra = "BK";
+                        break;
+                    /*
+                     * Lertra C
+                     */
+                    case 22:
+                        $letra = "CA";
+                        break;
+                    case 23:
+                        $letra = "CB";
+                        break;
+                    case 24:
+                        $letra = "CC";
+                        break;
+                    case 25:
+                        $letra = "CD";
+                        break;
+                    case 26:
+                        $letra = "CE";
+                        break;
+                    case 27:
+                        $letra = "CF";
+                        break;
+                    case 28:
+                        $letra = "CG";
+                        break;
+                    case 29:
+                        $letra = "CH";
+                        break;
+                    case 30:
+                        $letra = "CI";
+                        break;
+                    case 31:
+                        $letra = "CJ";
+                        break;
+                    case 32:
+                        $letra = "CK";
+                        break;
+                    /*
+                     * Lertra D
+                     */
+                    case 33:
+                        $letra = "DA";
+                        break;
+                    case 34:
+                        $letra = "DB";
+                        break;
+                    case 35:
+                        $letra = "DC";
+                        break;
+                    case 36:
+                        $letra = "DD";
+                        break;
+                    case 37:
+                        $letra = "DE";
+                        break;
+                    case 38:
+                        $letra = "DF";
+                        break;
+                    case 39:
+                        $letra = "DG";
+                        break;
+                    case 40:
+                        $letra = "DH";
+                        break;
+                    case 41:
+                        $letra = "DI";
+                        break;
+                    case 42:
+                        $letra = "DJ";
+                        break;
+                    case 43:
+                        $letra = "DK";
+                        break;
+                    /*
+                    * Lertra F
+                    */
+                    case 44:
+                        $letra = "FA";
+                        break;
+                    case 45:
+                        $letra = "FB";
+                        break;
+                    case 46:
+                        $letra = "FC";
+                        break;
+                    case 47:
+                        $letra = "FD";
+                        break;
+                    case 48:
+                        $letra = "FE";
+                        break;
+                    case 49:
+                        $letra = "FF";
+                        break;
+                    case 50:
+                        $letra = "FG";
+                        break;
+                    case 51:
+                        $letra = "FH";
+                        break;
+                    case 52:
+                        $letra = "FI";
+                        break;
+                    case 53:
+                        $letra = "FJ";
+                        break;
+                    case 54:
+                        $letra = "CK";
+                        break;
 
-                /*
-                * Lertra G
-                */
-                case 55:
-                    $letra = "GA";
-                    break;
-                case 56:
-                    $letra = "GB";
-                    break;
-                case 57:
-                    $letra = "GC";
-                    break;
-                case 58:
-                    $letra = "GD";
-                    break;
-                case 59:
-                    $letra = "GE";
-                    break;
-                case 60:
-                    $letra = "GF";
-                    break;
-                case 61:
-                    $letra = "GG";
-                    break;
-                case 62:
-                    $letra = "GH";
-                    break;
-                case 63:
-                    $letra = "GI";
-                    break;
-                case 64:
-                    $letra = "GJ";
-                    break;
-                case 65:
-                    $letra = "GK";
-                    break;
-                /*
-                * Lertra H
-                */
-                case 66:
-                    $letra = "HA";
-                    break;
-                case 67:
-                    $letra = "HB";
-                    break;
-                case 68:
-                    $letra = "HC";
-                    break;
-                case 69:
-                    $letra = "HD";
-                    break;
-                case 70:
-                    $letra = "HE";
-                    break;
-                case 71:
-                    $letra = "HF";
-                    break;
-                case 72:
-                    $letra = "HG";
-                    break;
-                case 73:
-                    $letra = "HH";
-                    break;
-                case 74:
-                    $letra = "HI";
-                    break;
-                case 75:
-                    $letra = "HJ";
-                    break;
-                case 76:
-                    $letra = "HK";
-                    break;
-                /*
-                * Lertra I
-                */
-                case 77:
-                    $letra = "IA";
-                    break;
-                case 78:
-                    $letra = "IB";
-                    break;
-                case 79:
-                    $letra = "IC";
-                    break;
-                case 80:
-                    $letra = "ID";
-                    break;
-                case 81:
-                    $letra = "IE";
-                    break;
-                case 82:
-                    $letra = "IF";
-                    break;
-                case 83:
-                    $letra = "IG";
-                    break;
-                case 84:
-                    $letra = "IH";
-                    break;
-                case 85:
-                    $letra = "II";
-                    break;
-                case 86:
-                    $letra = "IJ";
-                    break;
-                case 87:
-                    $letra = "IK";
-                    break;
-                /*
-                * Lertra J
-                */
-                case 88:
-                    $letra = "JA";
-                    break;
-                case 89:
-                    $letra = "JB";
-                    break;
-                case 90:
-                    $letra = "JC";
-                    break;
-                case 91:
-                    $letra = "JD";
-                    break;
-                case 92:
-                    $letra = "JE";
-                    break;
-                case 93:
-                    $letra = "JF";
-                    break;
-                case 94:
-                    $letra = "JG";
-                    break;
-                case 95:
-                    $letra = "JH";
-                    break;
-                case 96:
-                    $letra = "JI";
-                    break;
-                case 97:
-                    $letra = "JJ";
-                    break;
-                case 98:
-                    $letra = "JK";
-                    break;
-                /*
-                * Lertra K
-                */
-                case 99:
-                    $letra = "KA";
-                    break;
-                case 100:
-                    $letra = "KB";
-                    break;
-                case 101:
-                    $letra = "KC";
-                    break;
-                case 102:
-                    $letra = "KD";
-                    break;
-                case 103:
-                    $letra = "KE";
-                    break;
-                case 104:
-                    $letra = "KF";
-                    break;
-                case 105:
-                    $letra = "KG";
-                    break;
-                case 106:
-                    $letra = "KH";
-                    break;
-                case 107:
-                    $letra = "KI";
-                    break;
-                case 108:
-                    $letra = "KJ";
-                    break;
-                case 109:
-                    $letra = "KK";
-                    break;
+                    /*
+                    * Lertra G
+                    */
+                    case 55:
+                        $letra = "GA";
+                        break;
+                    case 56:
+                        $letra = "GB";
+                        break;
+                    case 57:
+                        $letra = "GC";
+                        break;
+                    case 58:
+                        $letra = "GD";
+                        break;
+                    case 59:
+                        $letra = "GE";
+                        break;
+                    case 60:
+                        $letra = "GF";
+                        break;
+                    case 61:
+                        $letra = "GG";
+                        break;
+                    case 62:
+                        $letra = "GH";
+                        break;
+                    case 63:
+                        $letra = "GI";
+                        break;
+                    case 64:
+                        $letra = "GJ";
+                        break;
+                    case 65:
+                        $letra = "GK";
+                        break;
+                    /*
+                    * Lertra H
+                    */
+                    case 66:
+                        $letra = "HA";
+                        break;
+                    case 67:
+                        $letra = "HB";
+                        break;
+                    case 68:
+                        $letra = "HC";
+                        break;
+                    case 69:
+                        $letra = "HD";
+                        break;
+                    case 70:
+                        $letra = "HE";
+                        break;
+                    case 71:
+                        $letra = "HF";
+                        break;
+                    case 72:
+                        $letra = "HG";
+                        break;
+                    case 73:
+                        $letra = "HH";
+                        break;
+                    case 74:
+                        $letra = "HI";
+                        break;
+                    case 75:
+                        $letra = "HJ";
+                        break;
+                    case 76:
+                        $letra = "HK";
+                        break;
+                    /*
+                    * Lertra I
+                    */
+                    case 77:
+                        $letra = "IA";
+                        break;
+                    case 78:
+                        $letra = "IB";
+                        break;
+                    case 79:
+                        $letra = "IC";
+                        break;
+                    case 80:
+                        $letra = "ID";
+                        break;
+                    case 81:
+                        $letra = "IE";
+                        break;
+                    case 82:
+                        $letra = "IF";
+                        break;
+                    case 83:
+                        $letra = "IG";
+                        break;
+                    case 84:
+                        $letra = "IH";
+                        break;
+                    case 85:
+                        $letra = "II";
+                        break;
+                    case 86:
+                        $letra = "IJ";
+                        break;
+                    case 87:
+                        $letra = "IK";
+                        break;
+                    /*
+                    * Lertra J
+                    */
+                    case 88:
+                        $letra = "JA";
+                        break;
+                    case 89:
+                        $letra = "JB";
+                        break;
+                    case 90:
+                        $letra = "JC";
+                        break;
+                    case 91:
+                        $letra = "JD";
+                        break;
+                    case 92:
+                        $letra = "JE";
+                        break;
+                    case 93:
+                        $letra = "JF";
+                        break;
+                    case 94:
+                        $letra = "JG";
+                        break;
+                    case 95:
+                        $letra = "JH";
+                        break;
+                    case 96:
+                        $letra = "JI";
+                        break;
+                    case 97:
+                        $letra = "JJ";
+                        break;
+                    case 98:
+                        $letra = "JK";
+                        break;
+                    /*
+                    * Lertra K
+                    */
+                    case 99:
+                        $letra = "KA";
+                        break;
+                    case 100:
+                        $letra = "KB";
+                        break;
+                    case 101:
+                        $letra = "KC";
+                        break;
+                    case 102:
+                        $letra = "KD";
+                        break;
+                    case 103:
+                        $letra = "KE";
+                        break;
+                    case 104:
+                        $letra = "KF";
+                        break;
+                    case 105:
+                        $letra = "KG";
+                        break;
+                    case 106:
+                        $letra = "KH";
+                        break;
+                    case 107:
+                        $letra = "KI";
+                        break;
+                    case 108:
+                        $letra = "KJ";
+                        break;
+                    case 109:
+                        $letra = "KK";
+                        break;
+                }
             }
+            return $letra;
+        }catch (\Exception $ex){
+            throw $ex;
         }
-        return $letra;
     }
 
     public function guardarTurno($turno)
     {
-        //Controlo que existan los datos del Turno
-        if ($this->checkDatos($turno)) {
-            //Controlo Disponibilidad sobre la Persona
-            if ($this->disponibilidad->verificaTurnoSinConfirmarByPersona($turno->getCuit())) {
-                //Controlo Disponibilidad del Turno
-                $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
-                //Controlo como retorno la disponiblidad
-                if ($status['status']) {
-                    $this->em->getConnection()->beginTransaction(); // suspend auto-commit
-                    try {
-                        //Seteo los valores del turno
-                        $turno->setViaMostrador(false);
-                        $turno->setTurnoSede($status['data']);
-                        $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
+        try {
+            //Controlo que existan los datos del Turno
+            if ($this->checkDatos($turno)) {
+                //Controlo Disponibilidad sobre la Persona
+                if ($this->disponibilidad->verificaTurnoSinConfirmarByPersona($turno->getCuit())) {
+                    //Controlo Disponibilidad del Turno
+                    $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
+                    //Controlo como retorno la disponiblidad
+                    if ($status['status']) {
+                        $this->em->getConnection()->beginTransaction(); // suspend auto-commit
+                        try {
+                            //Seteo los valores del turno
+                            $turno->setViaMostrador(false);
+                            $turno->setTurnoSede($status['data']);
+                            $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 
-                        //creo el asociado al turno comprobante y lo guardo
-                        $comprobante = new Comprobante();
-                        $comprobante->setTurno($turno);
-                        $comprobante->setSede($turno->getSede()->getSede());
-                        $comprobante->setLetra($turno->getSede()->getLetra());
-                        $comprobante->setNumero($turno->getNumero());
-                        $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
-                        $comprobante->setFecha($turno->getFechaTurno()->format('d/m/Y'));
-                        $comprobante->setHora($turno->getHoraTurno()->format('h:i'));
-                        $comprobante->setSecretKey($this->secret);
-                        $this->em->persist($comprobante);
+                            //creo el asociado al turno comprobante y lo guardo
+                            $comprobante = new Comprobante();
+                            $comprobante->setTurno($turno);
+                            $comprobante->setSede($turno->getSede()->getSede());
+                            $comprobante->setLetra($turno->getSede()->getLetra());
+                            $comprobante->setNumero($turno->getNumero());
+                            $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                            $comprobante->setFecha($turno->getFechaTurno()->format('d/m/Y'));
+                            $comprobante->setHora($turno->getHoraTurno()->format('h:i'));
+                            $comprobante->setSecretKey($this->secret);
+                            $this->em->persist($comprobante);
 
-                        //relaciono el turno con el comprobante y guardo el turno
-                        $turno->setComprobante($comprobante);
-                        $this->em->persist($turno);
+                            //relaciono el turno con el comprobante y guardo el turno
+                            $turno->setComprobante($comprobante);
+                            $this->em->persist($turno);
 
 
-                        //confirmo los cambios
-                        $this->em->flush();
-                        $this->em->getConnection()->commit();
+                            //confirmo los cambios
+                            $this->em->flush();
+                            $this->em->getConnection()->commit();
 
-                        //Luego de confirmar los datos, envio el mail y guardo los cambios
-                        //Creo el mail con los datos del turno y comprobante para guardarlo
-                        $mail = new Mail();
-                        $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
-                        $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
-                        $mail->setTurno($turno);
-                        $mail->setEmail($turno->getMail1());
-                        $mail->setNombre($turno->getNombreApellido());
-                        $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
-                        $mail->setEnviado($this->sendEmail($mail));
-                        if ($mail->getEnviado()) {
-                            $mail->setFechaEnviado(new \DateTime("now"));
+                            //Luego de confirmar los datos, envio el mail y guardo los cambios
+                            //Creo el mail con los datos del turno y comprobante para guardarlo
+                            $mail = new Mail();
+                            $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
+                            $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
+                            $mail->setTurno($turno);
+                            $mail->setEmail($turno->getMail1());
+                            $mail->setNombre($turno->getNombreApellido());
+                            $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
+                            $mail->setEnviado($this->sendEmail($mail));
+                            if ($mail->getEnviado()) {
+                                $mail->setFechaEnviado(new \DateTime("now"));
+                            }
+                            $this->em->persist($mail);
+                            $this->em->flush();
+
+                        } catch (Exception $e) {
+                            $this->em->getConnection()->rollBack();
+                            throw $e;
                         }
-                        $this->em->persist($mail);
-                        $this->em->flush();
-
-                    } catch (Exception $e) {
-                        $this->em->getConnection()->rollBack();
-                        throw $e;
+                    } else {
+                        $exp = new \Exception('Error 1.TM.GT No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
+                        throw $exp;
                     }
                 } else {
-                    $exp = new Exception('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
+                    $exp = new \Exception('Error 1.TM.GT La persona tiene un turno sin confirmar o no cancelado');
                     throw $exp;
                 }
             } else {
-                $exp = new Exception('La persona tiene un turno sin confirmar o no cancelado');
+                $exp = new \Exception('Error 1.TM.GT datos enviados no concuerdan');
                 throw $exp;
             }
-        } else {
-            $exp = new Exception('Los datos enviados no concuerdan');
-            throw $exp;
+            //OK
+            return $turno;
+        }catch (\Exception $ex){
+            throw new \Exception('Error 1.TM.GT No se encuentra la sede buscada');
+            throw $ex;
         }
-        //OK
-        return $turno;
     }
 
     /**
@@ -991,13 +1023,13 @@ class TurnosManager
         //Controlo la sede
         $sede = $this->em->getRepository('AdminBundle:Sede')->findById($turno->getSede()->getId());
         if (is_null($sede)) {
-            $exp = new Exception('No se encuentra la sede');
+            $exp = new \Exception('Error 1.TM.CD No se encuentra la sede');
             throw $exp;
         }
         //Controlo el tipo de tramite
         $tipoTramite = $this->em->getRepository('AdminBundle:TipoTramite')->findById($turno->getTipoTramite()->getId());
         if (is_null($tipoTramite)) {
-            $exp = new Exception('No se encuentra el tipo de tramite');
+            $exp = new \Exception('Error 1.TM.CD No se encuentra el tipo de tramite');
             throw $exp;
         }
         return true;
@@ -1013,7 +1045,8 @@ class TurnosManager
             }
             return $comprobante;
         }catch (\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $ex){
-            return null;
+            $exp = new \Exception('Error 1.TM.GCBH No se encuentra el comprobante');
+            throw $exp;
         }
     }
 
@@ -1096,29 +1129,39 @@ class TurnosManager
 
     public function getCuerpoMail($tipoEnvio)
     {
-        $textoMail = null;
-        if ($tipoEnvio == 1) {
-            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('nuevo');
-        } elseif ($tipoEnvio == 2) {
-            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado');
-        } else {
-            $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado_masivo');
+        try {
+            $textoMail = null;
+            if ($tipoEnvio == 1) {
+                $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('nuevo');
+            } elseif ($tipoEnvio == 2) {
+                $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado');
+            } else {
+                $textoMail = $this->em->getRepository('AdminBundle:TextoMail')->findOneByAccion('cancelado_masivo');
+            }
+            return $textoMail;
+        }catch (\Exception $e){
+            $exp = new \Exception('Error 1.TM.GCM No se encuentra el TextoMail solicitado');
+            throw $exp;
         }
-        return $textoMail;
     }
 
     public function sendEmail($mail)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($mail->getAsunto())
-            ->setFrom($this->emailFrom)
-            ->setTo($mail->getEmail())
-            ->setBody(html_entity_decode($mail->getTexto()), 'text/html');
+        try {
+            $message = \Swift_Message::newInstance()
+                ->setSubject($mail->getAsunto())
+                ->setFrom($this->emailFrom)
+                ->setTo($mail->getEmail())
+                ->setBody(html_entity_decode($mail->getTexto()), 'text/html');
 
-        if ($this->mailer->send($message) == 1) {
-            return true;
-        } else {
-            return false;
+            if ($this->mailer->send($message) == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $exp = new \Exception('Error 2.TM.SE No se pudo enviar el mail');
+            throw $exp;
         }
     }
 
@@ -1177,208 +1220,212 @@ class TurnosManager
      */
     public function obtenerExportacion($sedeId, $horaDesde, $horaHasta, $estados, $tipoTramite, $fechaDesde, $fechaHasta, $cuit=null, $nroTurno=null)
     {
-        $fechaDesde = date("Y/m/d", mktime(0, 0, 0, substr($fechaDesde, 3, 2), substr($fechaDesde, 0, 2), substr($fechaDesde, 6, 4)));
-        $fechaHasta = date("Y/m/d", mktime(0, 0, 0, substr($fechaHasta, 3, 2), substr($fechaHasta, 0, 2), substr($fechaHasta, 6, 4)));
+        try {
+            $fechaDesde = date("Y/m/d", mktime(0, 0, 0, substr($fechaDesde, 3, 2), substr($fechaDesde, 0, 2), substr($fechaDesde, 6, 4)));
+            $fechaHasta = date("Y/m/d", mktime(0, 0, 0, substr($fechaHasta, 3, 2), substr($fechaHasta, 0, 2), substr($fechaHasta, 6, 4)));
 
-        $repository = $this->em->getRepository('AdminBundle:Turno', 'p');
-        $repository = $repository->createQueryBuilder('p');
+            $repository = $this->em->getRepository('AdminBundle:Turno', 'p');
+            $repository = $repository->createQueryBuilder('p');
 
-        //Obtengo las horas y minutos
-        $hora=0;
-        $min=0;
-        $min=0;
-        if (strlen($horaDesde) == 7) {
-            $hora = (substr($horaDesde, 0, 1));
-            $min = (substr($horaDesde, 2, 2));
-            if (substr($horaDesde, 5, 2) == 'PM') {
-                if ($hora != 12) {
-                    $hora = $hora + 12;
+            //Obtengo las horas y minutos
+            $hora = 0;
+            $min = 0;
+            $min = 0;
+            if (strlen($horaDesde) == 7) {
+                $hora = (substr($horaDesde, 0, 1));
+                $min = (substr($horaDesde, 2, 2));
+                if (substr($horaDesde, 5, 2) == 'PM') {
+                    if ($hora != 12) {
+                        $hora = $hora + 12;
+                    }
+                }
+            } else {
+                $hora = (substr($horaDesde, 0, 2));
+                $min = (substr($horaDesde, 3, 2));
+                if (substr($horaDesde, 6, 2) == 'PM') {
+                    if ($hora != 12) {
+                        $hora = $hora + 12;
+                    }
                 }
             }
-        } else {
-            $hora = (substr($horaDesde, 0, 2));
-            $min = (substr($horaDesde, 3, 2));
-            if (substr($horaDesde, 6, 2) == 'PM') {
-                if ($hora != 12) {
-                    $hora = $hora + 12;
+            $hora2 = 0;
+            $min2 = 0;
+            if (strlen($horaHasta) == 7) {
+                $hora2 = (substr($horaHasta, 0, 1));
+                $min2 = (substr($horaHasta, 2, 2));
+                if (substr($horaHasta, 5, 2) == 'PM') {
+                    if ($hora2 != 12) {
+                        $hora = $hora2 + 12;
+                    }
+                }
+            } else {
+                $hora2 = (substr($horaHasta, 0, 2));
+                $min2 = (substr($horaHasta, 3, 2));
+                if (substr($horaHasta, 6, 2) == 'PM') {
+                    if ($hora2 != 12) {
+                        $hora2 = $hora2 + 12;
+                    }
                 }
             }
+
+            $repository->where('p.horaTurno >= :horaDesde AND p.horaTurno  <=  :horaHasta')
+                ->setParameter('horaDesde', ($hora . ':' . $min . ':00'))
+                ->setParameter('horaHasta', ($hora2 . ':' . $min2) . ':00');
+
+
+            $arraySede = array();
+            foreach ($sedeId as $sede) {
+                $arraySede[] = $sede->getId();
+            }
+            $repository->andWhere('p.sede IN (:sedeId)')->setParameter('sedeId', $arraySede);
+
+            $repository->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fechaDesde . ' 00:00:00')->setParameter('fecha_turno_hasta', $fechaHasta . ' 23:59:59');
+
+            $arrayTipoTramite = array();
+            $noTodosLosTramites = true;
+            foreach ($tipoTramite as $tipoTramiteId) {
+                if ($tipoTramiteId == 0) {
+                    $noTodosLosTramites = false;
+                } else {
+                    $arrayTipoTramite[] = $tipoTramiteId;
+                }
+            }
+            if ($noTodosLosTramites) {
+                $repository->andWhere('p.tipoTramite IN (:tipoTramite)')->setParameter('tipoTramite', $arrayTipoTramite);
+            }
+
+            if ($cuit) {
+                $repository->andWhere('p.cuit = :cuit')->setParameter('cuit', $cuit);
+            }
+
+            if ($nroTurno) {
+                $repository->andWhere('p.numero = :numero')->setParameter('numero', $nroTurno);
+            }
+
+            $indistinto = false;
+            $str = '';
+            $primero = true;
+            $conDqlBusquedaAtendido = false;
+            $conDqlBusquedaNoAtendido = false;
+            foreach ($estados as $estado) {
+                if ($estado < 0) {
+                    $indistinto = true;
+                }
+                //Estado Sin Corfirmar
+                if ($estado == 0 OR $indistinto == true) {
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Confirmados
+                if ($estado == 1 OR $indistinto == true) {
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Confirmados Sin Turnos
+                if ($estado == 2 OR $indistinto == true) {
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Confirmados Con Turnos
+                if ($estado == 3 OR $indistinto == true) {
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Atendidos
+                if ($estado == 4 OR $indistinto == true) {
+                    $conDqlBusquedaAtendido = true;
+                    if ($primero) {
+                        $str = '(p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Atendidos Sin Turnos
+                if ($estado == 5 OR $indistinto == true) {
+                    $conDqlBusquedaAtendido = true;
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Atendidos Con Turnos
+                if ($estado == 6 OR $indistinto == true) {
+                    $conDqlBusquedaAtendido = true;
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
+                    }
+                }
+                //Estado Confirmados y no Atendido
+                if ($estado == 7 OR $indistinto == true) {
+                    if ($primero) {
+                        $str = '(p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
+                    }
+                    $conDqlBusquedaNoAtendido = true;
+                }
+                //Estado Cancelados
+                if ($estado == 8 OR $indistinto == true) {
+                    if ($primero) {
+                        $str = '(p.fechaCancelado IS NOT NULL)';
+                        $primero = false;
+                    } else {
+                        $str = $str . ' OR (p.fechaCancelado IS NOT NULL)';
+                    }
+                }
+            }
+            $repository->andWhere($str);
+
+            if ($indistinto == false) {
+                if ($conDqlBusquedaAtendido == true OR $conDqlBusquedaNoAtendido == true) {
+                    $sub = $this->em->createQueryBuilder();
+                    $sub->select("t");
+                    $sub->from("AdminBundle:ColaTurno", "t");
+                    if ($conDqlBusquedaAtendido == true AND $conDqlBusquedaNoAtendido == false) {
+                        $sub->andWhere('t.turno = p.id AND t.atendido = true');
+                    } else if ($conDqlBusquedaAtendido == false AND $conDqlBusquedaNoAtendido == true) {
+                        $sub->andWhere('t.turno = p.id AND t.atendido = false');
+                    } else {
+                        $sub->andWhere('t.turno = p.id');
+                    }
+
+                    $repository->andWhere($repository->expr()->exists($sub->getDQL()));
+
+
+                }
+            }
+
+            $repository->orderBy('p.fechaTurno', 'ASC');
+            $repository->orderBy('p.horaTurno', 'ASC');
+
+
+            return $repository->getQuery()->getResult();
+        }catch (\Exception $e){
+            throw $e;
         }
-        $hora2=0;
-        $min2=0;
-        if (strlen($horaHasta) == 7) {
-            $hora2 = (substr($horaHasta, 0, 1));
-            $min2 = (substr($horaHasta, 2, 2));
-            if (substr($horaHasta, 5, 2) == 'PM') {
-                if ($hora2 != 12) {
-                    $hora = $hora2 + 12;
-                }
-            }
-        } else {
-            $hora2 = (substr($horaHasta, 0, 2));
-            $min2 = (substr($horaHasta, 3, 2));
-            if (substr($horaHasta, 6, 2) == 'PM') {
-                if ($hora2 != 12) {
-                    $hora2 = $hora2 + 12;
-                }
-            }
-        }
-
-        $repository->where('p.horaTurno >= :horaDesde AND p.horaTurno  <=  :horaHasta')
-            ->setParameter('horaDesde', ($hora.':'.$min.':00'))
-            ->setParameter('horaHasta', ($hora2.':'.$min2).':00');
-
-
-        $arraySede = array();
-        foreach($sedeId as $sede){
-            $arraySede[] = $sede->getId();
-        }
-        $repository->andWhere('p.sede IN (:sedeId)')->setParameter('sedeId', $arraySede);
-
-        $repository->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')->setParameter('fecha_turno_desde', $fechaDesde.' 00:00:00')->setParameter('fecha_turno_hasta', $fechaHasta.' 23:59:59');
-
-        $arrayTipoTramite = array();
-        $noTodosLosTramites = true;
-        foreach ($tipoTramite as $tipoTramiteId){
-            if( $tipoTramiteId == 0 ){
-                $noTodosLosTramites = false;
-            }else{
-                $arrayTipoTramite[]=$tipoTramiteId;
-            }
-        }
-        if ($noTodosLosTramites) {
-            $repository->andWhere('p.tipoTramite IN (:tipoTramite)')->setParameter('tipoTramite', $arrayTipoTramite);
-        }
-
-        if ($cuit) {
-            $repository->andWhere('p.cuit = :cuit')->setParameter('cuit', $cuit);
-        }
-
-        if ($nroTurno) {
-            $repository->andWhere('p.numero = :numero')->setParameter('numero', $nroTurno);
-        }
-
-        $indistinto = false;
-        $str  ='';
-        $primero = true;
-        $conDqlBusquedaAtendido = false;
-        $conDqlBusquedaNoAtendido = false;
-        foreach($estados as $estado){
-            if($estado < 0){
-                $indistinto  = true;
-            }
-            //Estado Sin Corfirmar
-            if($estado == 0 OR $indistinto == true){
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Confirmados
-            if($estado == 1 OR $indistinto == true){
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Confirmados Sin Turnos
-            if($estado == 2 OR $indistinto == true){
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Confirmados Con Turnos
-            if($estado == 3  OR $indistinto == true){
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Atendidos
-            if($estado == 4 OR $indistinto == true){
-                $conDqlBusquedaAtendido = true;
-                if($primero){
-                    $str ='(p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Atendidos Sin Turnos
-            if($estado == 5 OR $indistinto == true){
-                $conDqlBusquedaAtendido = true;
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = true AND p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Atendidos Con Turnos
-            if($estado == 6 OR $indistinto == true){
-                $conDqlBusquedaAtendido = true;
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.viaMostrador = false AND p.fechaCancelado IS NULL)';
-                }
-            }
-            //Estado Confirmados y no Atendido
-            if($estado == 7 OR $indistinto == true){
-                if($primero){
-                    $str ='(p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaConfirmacion IS NOT NULL AND p.fechaCancelado IS NULL)';
-                }
-                $conDqlBusquedaNoAtendido = true;
-            }
-            //Estado Cancelados
-            if($estado == 8  OR $indistinto == true){
-                if($primero){
-                    $str ='(p.fechaCancelado IS NOT NULL)';
-                    $primero = false;
-                }else{
-                    $str = $str.' OR (p.fechaCancelado IS NOT NULL)';
-                }
-            }
-        }
-        $repository->andWhere($str);
-
-        if($indistinto == false){
-            if($conDqlBusquedaAtendido == true OR $conDqlBusquedaNoAtendido == true){
-                $sub =  $this->em->createQueryBuilder();
-                $sub->select("t");
-                $sub->from("AdminBundle:ColaTurno", "t");
-                if($conDqlBusquedaAtendido == true AND $conDqlBusquedaNoAtendido == false){
-                    $sub->andWhere('t.turno = p.id AND t.atendido = true');
-                }else if($conDqlBusquedaAtendido == false AND $conDqlBusquedaNoAtendido == true){
-                    $sub->andWhere('t.turno = p.id AND t.atendido = false');
-                }else{
-                    $sub->andWhere('t.turno = p.id');
-                }
-
-                $repository->andWhere($repository->expr()->exists($sub->getDQL()));
-
-
-            }
-        }
-
-        $repository->orderBy('p.fechaTurno', 'ASC');
-        $repository->orderBy('p.horaTurno', 'ASC');
-
-
-        return  $repository->getQuery()->getResult();
     }
 
     public function primerTurno($turno){

@@ -1,4 +1,4 @@
-.turno{
+.ultimo-turno{
     /* Add shadows to create the "card" effect */
     box-shadow: 0 10px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
@@ -10,6 +10,22 @@
     text-align: center;
     background-color: #9ACA3C;
     color: #414042;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.turno{
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 10px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin: 10px;
+    padding: 5px;
+    font-size: 85px;
+    height: 90px;
+    line-height: 100px;
+    text-align: center;
+    background-color: #57595b;
+    color: white;
     font-weight: bold;
     border: 1px solid black;
 }

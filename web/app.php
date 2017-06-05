@@ -1,5 +1,5 @@
 <?php
-
+ini_set('date.timezone', 'America/Argentina/Buenos_Aires');
 use Symfony\Component\HttpFoundation\Request;
 
 /** @var \Composer\Autoload\ClassLoader $loader */

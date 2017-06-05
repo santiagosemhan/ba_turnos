@@ -29,6 +29,12 @@
                                 <th>Tramite</th>
                                 <td>{{ turno.tipoTramite }}</td>
                             </tr>
+                            {% if turno.fechaCancelado %}
+                                <tr>
+                                    <th>Fecha Cancelación</th>
+                                    <td><span class="label label-danger">{{ turno.fechaCancelado|date('d-m-Y H:i:s') }}</span></td>
+                                </tr>
+                            {% else %}
                             <tr>
                                 <th>Fecha Confirmación</th>
                                     <td>{% if turno.fechaConfirmacion %}{{ turno.fechaConfirmacion|date('d-m-Y H:i:s') }}
@@ -36,23 +42,27 @@
                                         {% endif %}
                                     </td>
                             </tr>
+                            {% endif %}
                             {% if turno.fechaConfirmacion %}
                             <tr>
                                 <th>Turno Box</th>
                                 <td><span class="label label-success">{{ turno.turnoBox }}</span></td>
                             </tr>
                             {% endif %}
+
                         </tbody>
                     </table>
 
                     <div class="box-footer">
                         {% if priotitario %}
                             {% if turno.fechaConfirmacion %}<a class="btn btn-success" href="{{ path('turno_imprimir', { 'id': turno.id }) }}" target="_blank"> Imprimir</a>
-                            {% else %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar_prioritario', { 'id': turno.id }) }}"> Confirmar Prioritario</a>
+                            {% elseif cambio %}    <a class="btn btn-warning" href="{{ path('turno_procesar_cambio_prioritario', { 'turno': turno.id }) }}" > Generar Nuevo Turno</a>
+                            {% elseif turno.fechaCancelado is null %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar_prioritario', { 'id': turno.id }) }}"> Confirmar Prioritario</a>
                             {% endif %}
                         {% else %}
                             {% if turno.fechaConfirmacion %}<a class="btn btn-success" href="{{ path('turno_imprimir', { 'id': turno.id }) }}" target="_blank"> Imprimir</a>
-                            {% else %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar', { 'id': turno.id }) }}"> Confirmar</a>
+                            {% elseif cambio %}    <a class="btn btn-warning" href="{{ path('turno_procesar_cambio', { 'turno': turno.id }) }}"> Generar Nuevo Turno</a>
+                            {% elseif turno.fechaCancelado is null %}<a class="btn btn-primary pull-left" href="{{ path('turno_confirmar', { 'id': turno.id }) }}"> Confirmar</a>
                             {% endif %}
                         {% endif %}
                         <a class="btn btn-default" href="{{ path('turno_administrar') }}"> Volver al Listado</a>

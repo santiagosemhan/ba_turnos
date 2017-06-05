@@ -17,7 +17,7 @@ umask(0000);
 //     header('HTTP/1.0 403 Forbidden');
 //     exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 // }
-
+ini_set('date.timezone', 'America/Argentina/Buenos_Aires');
 /** @var \Composer\Autoload\ClassLoader $loader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 Debug::enable();
