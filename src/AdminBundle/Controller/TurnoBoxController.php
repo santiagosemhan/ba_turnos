@@ -198,7 +198,7 @@ class TurnoBoxController extends Controller
             $turnoSedeItem = null;
 
             if (count($turnoSede) == 1) {
-                $turnoSede = $turnoSede->first();
+                $turnoSede = $turnoSede[0];
                 // controlar si existen elementos en la cola prioritarios
                 $nombreLista = $turnoSede->getSede()->getLetra() . '/' . $turnoSede->getId() . '/Prioritario';
                 $item = $redis->lpop($nombreLista);
@@ -271,7 +271,7 @@ class TurnoBoxController extends Controller
                     }
 
                 }else{
-                    throw new \Exception('Error 1.TBC.STL La Sede no se encuentra asociado a un Tipo de Tramite');
+                    throw new \Exception('Error 1.TBC.STL El usuario no se encuentra asociado a un turno sede');
                 }
             }
 
