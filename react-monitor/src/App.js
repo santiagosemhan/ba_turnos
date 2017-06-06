@@ -18,7 +18,7 @@ class App extends Component {
 
     this.agregarTurno = this.agregarTurno.bind(this);
 
-    socket.on('sede_central', (payload) => {
+    socket.on(window.LISTEN_CHANNEL, (payload) => {
       console.log(payload);
       this.agregarTurno(payload);
     });

@@ -1,0 +1,4 @@
+monitor_index:
+    path:     /
+    defaults: { _controller: AdminBundle:Monitor:index }
+    methods:  GET

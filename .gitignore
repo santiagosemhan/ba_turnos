@@ -74,5 +74,6 @@
 /redis-client/node_modules/
 /redis-client/.env
 
-
+/web/dist/monitor/*
+!web/dist/monitor/.gitkeep
 .idea/

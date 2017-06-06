@@ -62,3 +62,7 @@ app_exportar:
 app_box_atencion:
         resource: "@AdminBundle/Resources/config/routing/boxatencion.yml"
         prefix:   /administrar-box
+
+app_monitor:
+        resource: "@AdminBundle/Resources/config/routing/monitor.yml"
+        prefix:   /monitor
