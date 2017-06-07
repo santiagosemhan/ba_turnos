@@ -15,6 +15,7 @@ acl:
       pre_reserva: true
       cancelar_turno: true
       procesar_cancelacion_turno: true
+      monitor_index: true
 
   ROLE_SEDE:
       turno_administrar: true
