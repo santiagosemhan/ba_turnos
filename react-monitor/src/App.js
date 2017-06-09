@@ -19,7 +19,9 @@ class App extends Component {
     this.agregarTurno = this.agregarTurno.bind(this);
 
     socket.on(window.LISTEN_CHANNEL, (payload) => {
-      console.log(payload);
+
+      payload.key = Math.floor(Math.random()*100000);
+      
       this.agregarTurno(payload);
     });
 
@@ -31,7 +33,7 @@ class App extends Component {
 
       let turnos = prevState.turnos;
 
-      turnos.push(payload);
+      turnos.unshift(payload);
 
       return {
         turnos: turnos

@@ -29,8 +29,10 @@ class ListadoTurnos extends Component {
 
         listTurnos = turnos.map((turno,i) =>{
 
+          console.log(turno.key);
+
           return (
-            <li key={i}>
+            <li key={turno.key}>
               <Turno turno={turno.turno} box={turno.box} />
             </li>
           );
@@ -52,8 +54,9 @@ class ListadoTurnos extends Component {
               <CSSTransitionGroup
                 transitionName="pulse"
                 transitionEnter={true}
+                transitionLeave={false}
                 transitionEnterTimeout={20500}
-                transitionLeave={false}>
+                >
                 { this.listar() }
               </CSSTransitionGroup>
             </ul>
