@@ -67,3 +67,51 @@ body {
   margin-right:  2px;
   margin-bottom: 2px;
 }
+
+/*
+   brand customization
+ */
+
+body{
+  color: #555556 !important;
+}
+
+.form-control{
+  color: #555556 !important;
+
+}
+
+.navbar-inverse{
+  background-color: #81C836 !important;
+}
+
+.btn-success{
+  background-color: #81C836!important;
+  border-color: #81C836!important;
+}
+
+.btn-success:hover{
+  background-color: #909093!important;
+  border-color: #ecf0f1!important;
+}
+
+.panel-primary {
+    border-color: #ecf0f1;
+}
+
+.panel-primary>.panel-heading {
+    color: #ffffff;
+    background-color: #909093;
+    border-color: #ecf0f1;
+}
+
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    z-index: 2;
+    color: #ffffff;
+    background-color: #909093;
+    border-color: #ecf0f1;
+}
+
+.form-control:focus {
+    border-color: #81C836;
+  }
