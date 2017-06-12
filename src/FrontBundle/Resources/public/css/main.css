@@ -114,4 +114,14 @@ body{
 
 .form-control:focus {
     border-color: #81C836;
-  }
+}
+
+.brand-logo{
+    height: 60px;
+    display:inline-block;
+}
+
+.brand-logo img{
+  margin: 3px;
+  height: 89%;
+}
