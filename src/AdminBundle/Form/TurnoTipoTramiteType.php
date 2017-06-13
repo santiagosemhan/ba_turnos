@@ -17,7 +17,7 @@ class TurnoTipoTramiteType extends AbstractType
     {
         $builder
                 ->add('tipoTramite',EntityType::class,array('class' => 'AdminBundle:TipoTramite','required'=>true,'attr'  => array('class'=>"select2")))
-                ->add('turnoSede',EntityType::class,array('class' => 'AdminBundle:TurnoSede','required'=>true,'attr'  => array('class'=>"select2")))
+                ->add('turnoSede',EntityType::class,array('class' => 'AdminBundle:TurnoSede','required'=>true,'label'=>'Agenda','attr'  => array('class'=>"select2")))
                 ->add('activo');
     }
     

@@ -52,7 +52,8 @@
 .encabezadoTexto{
   font-family: 'din';
   font-weight: bolder;
-  font-size: xx-large;
+  font-size: 60px;
+  margin-bottom: -16px;
 }
 
 .App-header {
@@ -84,4 +85,7 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+.col-xs-12 {
+  padding-right: 47px;
 }

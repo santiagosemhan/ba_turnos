@@ -604,12 +604,12 @@ class TurnoSede extends BaseClass
         if($this->vigenciaDesde){
             $string = $string.' Vig.Desde:'.$this->vigenciaDesde->format('d/m/Y');
         }else{
-            $string = $string.' Vig.Desde:-';
+            //$string = $string.' Vig.Desde:-';
         }
         if($this->vigenciaHasta){
             $string = $string.' Vig.Hasta:'.$this->vigenciaHasta->format('d/m/Y');
         }else{
-            $string = $string.' Vig.Hasta:-';
+            //$string = $string.' Vig.Hasta:-';
         }
 
         return $string;

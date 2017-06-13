@@ -56,7 +56,7 @@ class TurnosManager
     {
         $fecha = date("Y/m/d", mktime(0, 0, 0, substr($fecha, 3, 2), substr($fecha, 0, 2), substr($fecha, 6, 4)));
         $repository = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p');
-        $repository->where('(p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta) AND p.fechaCancelado IS NULL ')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
+        $repository->where('(p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta) AND p.fechaConfirmacion IS NULL AND p.fechaCancelado IS NULL ')->setParameter('fecha_turno_desde', $fecha.' 00:00:00')->setParameter('fecha_turno_hasta', $fecha.' 23:59:59');
         $repository->andWhere('p.sede = :sedeId')->setParameter('sedeId', $sedeId);
         $repository->orderBy('p.horaTurno', 'ASC');
         return  $repository->getQuery()->getResult();
@@ -1454,6 +1454,14 @@ class TurnosManager
         $consulta->andWhere('t.id = :id')->setParameter('id',$idTurno);
         return $consulta->getQuery()->getResult();
 
+    }
+
+    public function marcarAtendidoTurno($turno){
+        $cola = $turno->getColaTurno();
+        $cola = $cola[0];
+        $cola->setAtendido(true);
+        $this->em->persist($cola);
+        $this->em->flush();
     }
 
 }

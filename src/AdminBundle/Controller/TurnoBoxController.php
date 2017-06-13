@@ -89,6 +89,7 @@ class TurnoBoxController extends Controller
             'box' => 'Administrar ' . $box,
             'sede' => $sede,
             'conTurno' => $conTurno,
+            'antendido' => false,
             'turno' => $turno
         ));
     }
@@ -127,6 +128,7 @@ class TurnoBoxController extends Controller
                 'box' => 'Administrar ' . $box,
                 'sede' => $sede,
                 'conTurno' => $conTurno,
+                'antendido' => false,
                 'turno' => $turno
             ));
 
@@ -174,6 +176,7 @@ class TurnoBoxController extends Controller
             'box' => 'Administrar ' . $box,
             'sede' => $sede,
             'conTurno' => $conTurno,
+            'antendido' => false,
             'turno' => $turno
         ));
     }
@@ -196,7 +199,6 @@ class TurnoBoxController extends Controller
             //Se coloca el elemento a enviar al monitor
             $item = null;
             $turnoSedeItem = null;
-
             if (count($turnoSede) == 1) {
                 $turnoSede = $turnoSede[0];
                 // controlar si existen elementos en la cola prioritarios
@@ -276,7 +278,7 @@ class TurnoBoxController extends Controller
             }
 
 
-            if (!is_null($item)) {
+            if (!is_null($item) and $item != false ) {
                 //Busco el turno
                 $explodeItem = explode('/', $item);
                 $numeroCola = intval($explodeItem[0]);
@@ -338,5 +340,32 @@ class TurnoBoxController extends Controller
             $this->get('session')->remove('turno');
             return $this->redirectToRoute('app_box_atencion_seleccion_box');
         }
+    }
+
+    public function turnoAtendidoAction(Turno $turno){
+
+        $sede = $this->get('manager.usuario')->getSede($this->getUser()->getId());
+        if (is_null($sede)) {
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder el usuario debe tener asignada alguna sede.');
+            return $this->redirectToRoute('admin_homepage');
+        }
+        $box = $this->get('session')->get('box');
+        if (is_null($box)) {
+            // set flash messages
+            $this->get('session')->getFlashBag()->add('error', 'Para acceder se debe seleccionar un box.');
+            return $this->redirectToRoute('app_box_atencion_seleccion_box');
+        }
+        $conTurno = true;
+
+        $this->get('manager.turnos')->marcarAtendidoTurno($turno);
+
+        return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
+            'box' => 'Administrar ' . $box,
+            'sede' => $sede,
+            'conTurno' => $conTurno,
+            'antendido' => true,
+            'turno' => $turno
+        ));
     }
 }

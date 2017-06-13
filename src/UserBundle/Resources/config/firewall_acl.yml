@@ -38,6 +38,7 @@ acl:
       app_box_nuevo_turno: true
       app_box_volver_llamar_turno: true
       app_box_cambiar_box: true
+      app_box_turno_atendido: true
 
   ROLE_PARAMETRIZAR:
       usuario_index: true

@@ -22,3 +22,8 @@ app_box_cambiar_box:
     path:     /cambiar-box
     defaults: { _controller: "AdminBundle:TurnoBox:cambiarBox" }
     methods:  GET
+
+app_box_turno_atendido:
+    path:       /turno-atendido/{id}
+    defaults:   { _controller: "AdminBundle:TurnoBox:turnoAtendido"}
+    methods:    GET

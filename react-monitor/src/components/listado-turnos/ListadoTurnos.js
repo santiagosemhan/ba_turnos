@@ -32,7 +32,7 @@ class ListadoTurnos extends Component {
           console.log(turno.key);
 
           return (
-            <li key={turno.key}>
+            <li className ="tuno-item" key={turno.key}>
               <Turno turno={turno.turno} box={turno.box} />
             </li>
           );

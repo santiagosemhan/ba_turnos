@@ -24,7 +24,10 @@
                             <p>Hora Turno: <b>{{ turno.HoraTurnoString}}</b></p>
                         </div>
                         <div class="modal-footer">
+                            {% if antendido == false %}
                             <a class="btn btn-warning pull-left" href="{{ path('app_box_volver_llamar_turno') }}"> Volver a Llamar</a>
+                            <a class="btn btn-success" href="{{ path('app_box_turno_atendido', { 'id': turno.id }) }}"> Marcar como Atendido</a>
+                            {% endif %}
                             <a class="btn btn-primary" href="{{ path('app_box_nuevo_turno') }}"> Llamar Proximo</a>
                         </div>
                     {% else %}
