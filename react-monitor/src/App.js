@@ -3,7 +3,12 @@ import ListadoTurnos from './components/listado-turnos/ListadoTurnos';
 import Clock from './components/clock/Clock';
 
 const io = require('socket.io-client');
-const socket = io('10.0.0.7:3380');
+
+const server_ip = process.env.REACT_APP_SERVER_IP;
+const server_port = process.env.REACT_APP_SERVER_PORT;
+
+const socket = io(`${server_ip}:${server_port}`);
+
 
 import logo from './logo.svg';
 import './App.css';
@@ -21,7 +26,7 @@ class App extends Component {
     socket.on(window.LISTEN_CHANNEL, (payload) => {
 
       payload.key = Math.floor(Math.random()*100000);
-      
+
       this.agregarTurno(payload);
     });
 
@@ -70,21 +75,21 @@ class App extends Component {
           </p>
         */}
 
-      {/*<div className="col-xs-6">*/}
+        <div className="col-xs-6">
             {encabezado}
             <div className="row">
               <div className="col-xs-12">
                 <ListadoTurnos turnos={this.state.turnos}/>
               </div>
             </div>
-      {/*</div>
+        </div>
 
         <div className="col-xs-6">
 
-        </div>*/}
+        </div>
 
         <div className="App-footer">
-          {/*<p>Mensaje</p>*/}
+              <p>Mensaje</p>
         </div>
 
       </div>

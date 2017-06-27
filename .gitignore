@@ -67,8 +67,13 @@
 #reactjs components
 /reactjs/node_modules/
 
+# Backup entities generated with doctrine:generate:entities command
+*/Entity/*~
+
 #react monitor
 /react-monitor/node_modules/
+/react-monitor/build/
+/react-monitor/.env
 
 #redis client
 /redis-client/node_modules/
