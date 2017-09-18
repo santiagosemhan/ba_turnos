@@ -939,15 +939,13 @@ class TurnosManager
             if ($this->checkDatos($turno)) {
                 //Controlo Disponibilidad sobre la Persona
                 if ($this->disponibilidad->verificaTurnoSinConfirmarByPersona($turno->getCuit())) {
-                    //Controlo Disponibilidad del Turno
-                    $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
-                    //Controlo como retorno la disponiblidad
-                    if ($status['status']) {
+
+                    //Verifico que si es un Tipo de Tramite sin Turno
+                    if($turno->getTipoTramite()->getSinTurno()){
                         $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                         try {
                             //Seteo los valores del turno
                             $turno->setViaMostrador(false);
-                            $turno->setTurnoSede($status['data']);
                             $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 
                             //creo el asociado al turno comprobante y lo guardo
@@ -957,15 +955,12 @@ class TurnosManager
                             $comprobante->setLetra($turno->getSede()->getLetra());
                             $comprobante->setNumero($turno->getNumero());
                             $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
-                            $comprobante->setFecha($turno->getFechaTurno()->format('d/m/Y'));
-                            $comprobante->setHora($turno->getHoraTurno()->format('h:i'));
                             $comprobante->setSecretKey($this->secret);
                             $this->em->persist($comprobante);
 
                             //relaciono el turno con el comprobante y guardo el turno
                             $turno->setComprobante($comprobante);
                             $this->em->persist($turno);
-
 
                             //confirmo los cambios
                             $this->em->flush();
@@ -979,7 +974,7 @@ class TurnosManager
                             $mail->setTurno($turno);
                             $mail->setEmail($turno->getMail1());
                             $mail->setNombre($turno->getNombreApellido());
-                            $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
+                            $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(),'',true));
                             $mail->setEnviado($this->sendEmail($mail));
                             if ($mail->getEnviado()) {
                                 $mail->setFechaEnviado(new \DateTime("now"));
@@ -991,12 +986,68 @@ class TurnosManager
                             $this->em->getConnection()->rollBack();
                             throw $e;
                         }
-                    } else {
-                        $exp = new \Exception('Error 1.TM.GT No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
-                        throw $exp;
+
+                    }else {
+                        //Controlo Disponibilidad del Turno
+                        $status = $this->disponibilidad->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $turno->getSede()->getId());
+                        //Controlo como retorno la disponiblidad
+                        if ($status['status']) {
+                            $this->em->getConnection()->beginTransaction(); // suspend auto-commit
+                            try {
+                                //Seteo los valores del turno
+                                $turno->setViaMostrador(false);
+                                $turno->setTurnoSede($status['data']);
+                                $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
+
+                                //creo el asociado al turno comprobante y lo guardo
+                                $comprobante = new Comprobante();
+                                $comprobante->setTurno($turno);
+                                $comprobante->setSede($turno->getSede()->getSede());
+                                $comprobante->setLetra($turno->getSede()->getLetra());
+                                $comprobante->setNumero($turno->getNumero());
+                                $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
+                                $comprobante->setFecha($turno->getFechaTurno()->format('d/m/Y'));
+                                $comprobante->setHora($turno->getHoraTurno()->format('h:i'));
+                                $comprobante->setSecretKey($this->secret);
+                                $this->em->persist($comprobante);
+
+                                //relaciono el turno con el comprobante y guardo el turno
+                                $turno->setComprobante($comprobante);
+                                $this->em->persist($turno);
+
+
+                                //confirmo los cambios
+                                $this->em->flush();
+                                $this->em->getConnection()->commit();
+
+                                //Luego de confirmar los datos, envio el mail y guardo los cambios
+                                //Creo el mail con los datos del turno y comprobante para guardarlo
+                                $mail = new Mail();
+                                $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
+                                $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
+                                $mail->setTurno($turno);
+                                $mail->setEmail($turno->getMail1());
+                                $mail->setNombre($turno->getNombreApellido());
+                                $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
+                                $mail->setEnviado($this->sendEmail($mail));
+                                if ($mail->getEnviado()) {
+                                    $mail->setFechaEnviado(new \DateTime("now"));
+                                }
+                                $this->em->persist($mail);
+                                $this->em->flush();
+
+                            } catch (Exception $e) {
+                                $this->em->getConnection()->rollBack();
+                                throw $e;
+                            }
+
+                        } else {
+                            $exp = new \Exception('Error 1.TM.GT No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
+                            throw $exp;
+                        }
                     }
                 } else {
-                    $exp = new \Exception('Error 1.TM.GT La persona tiene un turno sin confirmar o no cancelado');
+                    $exp = new \Exception('Error 1.TM.GT La persona tiene un turno sin confirmar o no cancelado. En el mail de la solicitud tiene la dirección para cancelar el turno');
                     throw $exp;
                 }
             } else {
@@ -1006,7 +1057,7 @@ class TurnosManager
             //OK
             return $turno;
         }catch (\Exception $ex){
-            throw new \Exception('Error 1.TM.GT No se encuentra la sede buscada');
+            //throw new \Exception('Error 1.TM.GT No se encuentra la sede buscada');
             throw $ex;
         }
     }
@@ -1165,9 +1216,17 @@ class TurnosManager
         }
     }
 
-    private function formateTexto($turno, $texto,$motivoCancelacionMasiva = '')
+    private function formateTexto($turno, $texto,$motivoCancelacionMasiva = '', $sinTurno = false)
     {
         $turno->setHashComprobante($this->secret);
+        $hora= '';
+        $fecha='';
+        if($sinTurno == false){
+            if($turno->getFechaTurno()){
+                $fecha = $turno->getFechaTurno()->format('d/m/Y');
+                $hora = $turno->getHoraTurno()->format('H:i');
+            }
+        }
         return  str_replace('%MOTIVO_CANCELACION_MASIVA%', $motivoCancelacionMasiva,
                     str_replace('%LINK_CANCELACION%',$_SERVER['SERVER_NAME'].$this->router->generate('cancelar_turno',array('hash'=>$turno->getComprobante()->getHash())),//,UrlGeneratorInterface::ABSOLUTE_URL),
                         str_replace('%LINK_COMPRBANTE%',
@@ -1175,8 +1234,8 @@ class TurnosManager
                             str_replace('%DIRECCION%', $turno->getSede()->getDireccion(),
                                 str_replace('%SEDE%', $turno->getSede()->getSede(),
                                     str_replace('%CUIT%', $turno->getCuit(),
-                                        str_replace('%HORA_TURNO%', $turno->getHoraTurno()->format('H:i'),
-                                            str_replace('%FECHA_TURNO%', $turno->getFechaTurno()->format('d/m/Y'),
+                                        str_replace('%HORA_TURNO%', $hora,
+                                            str_replace('%FECHA_TURNO%', $fecha,
                                                 str_replace('%NUMERO_TURNO%', $turno->getSede()->getLetra() . '-' . $turno->getNumero(),
                                                     str_replace('%NOMBRE_PERSONA%', $turno->getNombreApellido(), $texto)
                                                 )

@@ -65,6 +65,59 @@ class TipoTramiteType extends AbstractType
                 ])
             ->add('activo');
 
+        $builder->get('documento1File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
+            if(!empty($e->getData())){
+                /** @var Application $app */
+                $app = $e->getForm()->getParent()->getData();
+                $app->setUpdateAt(new \DateTime());
+            }
+        });
+
+
+        $builder->get('documento2File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
+            if(!empty($e->getData())){
+                /** @var Application $app */
+                $app = $e->getForm()->getParent()->getData();
+                $app->setUpdateAt(new \DateTime());
+            }
+        });
+
+
+        $builder->get('documento3File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
+            if(!empty($e->getData())){
+                /** @var Application $app */
+                $app = $e->getForm()->getParent()->getData();
+                $app->setUpdateAt(new \DateTime());
+            }
+        });
+
+
+        $builder->get('documento4File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
+            if(!empty($e->getData())){
+                /** @var Application $app */
+                $app = $e->getForm()->getParent()->getData();
+                $app->setUpdateAt(new \DateTime());
+            }
+        });
+
+
+        $builder->get('documento5File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
+            if(!empty($e->getData())){
+                /** @var Application $app */
+                $app = $e->getForm()->getParent()->getData();
+                $app->setUpdateAt(new \DateTime());
+            }
+        });
+
+
+        $builder->get('documento6File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
+            if(!empty($e->getData())){
+                /** @var Application $app */
+                $app = $e->getForm()->getParent()->getData();
+                $app->setUpdateAt(new \DateTime());
+            }
+        });
+
         /*$field = $builder->get('descripcion');   // get the field
         $options = $field->getOptions();            // get the options
         $type = $field->getType()->getName();       // get the name of the type

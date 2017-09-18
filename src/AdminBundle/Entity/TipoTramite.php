@@ -538,6 +538,9 @@ class TipoTramite extends BaseClass implements \JsonSerializable
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
         }
+        if ($file instanceof UploadedFile) {
+            $this->setUpdatedAt(new \DateTime());
+        }
 
         return $this;
     }

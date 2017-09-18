@@ -150,11 +150,11 @@ class DefaultController extends Controller
                 $session = $request->getSession();
 
                 $tipoTramiteId = $session->get('tipoTramite');
-                $sedeId        = $session->get('sede');
-                $dia           = $session->get('dia');
-                $mes           = $session->get('mes');
-                $anio          = $session->get('anio');
-                $horario       = $session->get('horario');
+                $sedeId = $session->get('sede');
+                $dia = $session->get('dia');
+                $mes = $session->get('mes');
+                $anio = $session->get('anio');
+                $horario = $session->get('horario');
 
                 $sede = $this->getDoctrine()->getRepository('AdminBundle:Sede')->find($sedeId);
 
@@ -166,11 +166,14 @@ class DefaultController extends Controller
 
                 $turno->setHoraTurno($horario);
 
-                $fechaString = "$anio-$mes-$dia";
+                if ($anio) {
+                    $fechaString = "$anio-$mes-$dia";
 
-                $fechaTurno = new \DateTime($fechaString);
+                    $fechaTurno = new \DateTime($fechaString);
 
-                $turno->setFechaTurno($fechaTurno);
+                    $turno->setFechaTurno($fechaTurno);
+
+                }
 
                 $turnoManager = $this->get('manager.turnos');
 
@@ -179,6 +182,7 @@ class DefaultController extends Controller
                 $hash = $turno->getComprobante()->getHash();
 
                 $session->invalidate();
+
 
                 // set flash messages
                 //$this->get('session')->getFlashBag()->add('success', 'El turno se ha reservado satisfactoriamente.');

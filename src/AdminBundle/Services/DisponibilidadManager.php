@@ -866,7 +866,7 @@ class DisponibilidadManager
                 ->andWhere('p.mail1 = :mail')->setParameter('mail', $mail);
         }
         $repositoryT
-            ->andWhere('p.fechaCancelado IS NULL AND p.fechaConfirmacion IS NULL');
+            ->andWhere('p.fechaCancelado IS NULL AND p.fechaConfirmacion IS NULL AND p.turnoSede IS NOT NULL');
         $turnos = $repositoryT->getQuery()->getResult();
 
         if (count($turnos)>0) {
