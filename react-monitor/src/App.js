@@ -84,10 +84,6 @@ class App extends Component {
             </div>
         </div>
 
-        /*<div className="col-xs-6">
-
-        </div>*/
-
         <div className="App-footer">
               <p>Mensaje</p>
         </div>
