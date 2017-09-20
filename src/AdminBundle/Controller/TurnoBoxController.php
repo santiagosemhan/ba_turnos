@@ -359,6 +359,7 @@ class TurnoBoxController extends Controller
         $conTurno = true;
 
         $this->get('manager.turnos')->marcarAtendidoTurno($turno);
+        $this->get('session')->remove('turno');
 
         return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
             'box' => 'Administrar ' . $box,
