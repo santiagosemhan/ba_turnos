@@ -75,7 +75,7 @@ class App extends Component {
           </p>
         */}
 
-        <div className="col-xs-6">
+        <div className="col-xs-12">
             {encabezado}
             <div className="row">
               <div className="col-xs-12">
@@ -84,9 +84,9 @@ class App extends Component {
             </div>
         </div>
 
-        <div className="col-xs-6">
+        /*<div className="col-xs-6">
 
-        </div>
+        </div>*/
 
         <div className="App-footer">
               <p>Mensaje</p>
