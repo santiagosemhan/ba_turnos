@@ -242,11 +242,13 @@ class TurnoController extends Controller
                 $turno->setNumero($this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()));
                 $turno->setHoraTurno(new \DateTime($turno->getHoraTurno()->format('H:i') . ':00'));
 
-                //determino el turnoSede
-                $status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
-                if ($status['status']) {
+                $turnoGuardado = $this->get('manager.turnos')->guardarTurno($turno,true);
 
-                    $turno->setTurnoSede($status['data']);
+                //determino el turnoSede
+                //$status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
+                if ($turnoGuardado) {
+
+                    /*$turno->setTurnoSede($status['data']);
 
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($turno);
@@ -259,12 +261,11 @@ class TurnoController extends Controller
                     $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
                     $em->persist($comprobante);
 
-                    $em->flush();
+                    $em->flush();*/
 
-                    $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), false);
-                    $this->agregarTurnoLista($turno, false);
-
-                    return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+                    //$this->get('manager.turnos')->confirmarTurno($turnoGuardado, $this->getUser(), false);
+                    //$this->agregarTurnoLista($turnoGuardado, false);
+                    return $this->redirectToRoute('turno_show', array('id' => $turnoGuardado->getId()));
 
                 } else {
                     $exp = ('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
@@ -315,8 +316,9 @@ class TurnoController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->getConnection()->beginTransaction(); // suspend auto-commit
+
+                //$em = $this->getDoctrine()->getManager();
+                //$em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
 
                     $turno->setSede($sede);
@@ -324,11 +326,13 @@ class TurnoController extends Controller
                     $turno->setNumero($this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()));
                     $turno->setHoraTurno(new \DateTime($turno->getHoraTurno()->format('H:i') . ':00'));
 
-                    //determino el turnoSede
-                    $status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
-                    if ($status['status']) {
+                    $turnoGuardado = $this->get('manager.turnos')->guardarTurno($turno,true);
 
-                        $turno->setTurnoSede($status['data']);
+                    //determino el turnoSede
+                    //$status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
+                    if ($turnoGuardado) {
+
+                        /*$turno->setTurnoSede($status['data']);
 
                         $em = $this->getDoctrine()->getManager();
                         $em->persist($turno);
@@ -341,21 +345,21 @@ class TurnoController extends Controller
                         $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
                         $em->persist($comprobante);
 
-                        $em->flush();
+                        $em->flush();*/
 
-                        $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), true);
-                        $this->agregarTurnoLista($turno, true);
+                        //$this->get('manager.turnos')->confirmarTurno($turnoGuardado, $this->getUser(), true);
+                        //$this->agregarTurnoLista($turnoGuardado, true);
 
-                        return $this->redirectToRoute('turno_show', array('id' => $turno->getId()));
+                        return $this->redirectToRoute('turno_show', array('id' => $turnoGuardado->getId()));
 
                     } else {
                         $exp = ('No se encuentra la disponiblidad para la fecha: ' . $turno->getFechaTurno()->format('d/m/Y') . ' hora Turno: ' . $turno->getHoraTurno()->format('H:i'));
                         $this->get('session')->getFlashBag()->add('error', $exp);
                     }
 
-                    $em->getConnection()->commit();
+                    //$em->getConnection()->commit();
                 } catch (Exception $e) {
-                    $em->getConnection()->rollBack();
+                    //$em->getConnection()->rollBack();
                     throw $e;
                 }
 

@@ -323,7 +323,8 @@ class TurnosManager
             $turnosSede = $repositoryTS->getQuery()->getResult();
             $turnoSedeIndiceLetra =0;
             $indice =0;
-            //determino cual cual turnoSede es para asegnarle la letra
+            //determino cual turnoSede es para asegnarle la letra
+
             foreach($turnosSede as $turnoSedeO){
                 if($turnoSede->getId() == $turnoSedeO->getId() ){
                     $turnoSedeIndiceLetra = $indice;
@@ -357,8 +358,9 @@ class TurnosManager
                     }
                 }
             }
+
             //obtendo la distribucion de horario del turnoSede
-            $turnosDeldia = $this->disponibilidad->getCantidadHoraTurno($tipoTramite, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,true);
+            $turnosDeldia = $this->disponibilidad->getCantidadHoraTurno($tipoTramite, $turnoSede, array(), $dia, $mes, $anio, $diaActual,true,false,true);
 
             if(count($turnosDeldia)>0){
                 //en base a la cantidad determino el numero del turno en base la distribucion de turnos que existe.
@@ -386,7 +388,6 @@ class TurnosManager
                     }else{
                         $cantidad = $cantidad + ($turnoDeldia);
                     }
-
                 }
 
                 //controla si los turnoSede  ocupan mas de una letra
@@ -410,6 +411,7 @@ class TurnosManager
                 //Determino la letra a asignarse en base a la cantidad de turnosSede y el numero de Turno
                 //Determino el desafase que genera el numero de turno y cuantos saltos de convisiones de las letras existe
                 $saltosLentras = intdiv ( $numeroTurno, 98);
+
                 //Determino si existen saltos
                 if($saltosLentras> 0){
                     //calculo el numero numero del turno por vuelve a comenzar el turno
@@ -932,7 +934,7 @@ class TurnosManager
         }
     }
 
-    public function guardarTurno($turno)
+    public function guardarTurno($turno, $viaMostrador = false)
     {
         try {
             //Controlo que existan los datos del Turno
@@ -945,7 +947,7 @@ class TurnosManager
                         $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                         try {
                             //Seteo los valores del turno
-                            $turno->setViaMostrador(false);
+                            $turno->setViaMostrador($viaMostrador);
                             $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 
                             //creo el asociado al turno comprobante y lo guardo
@@ -995,7 +997,7 @@ class TurnosManager
                             $this->em->getConnection()->beginTransaction(); // suspend auto-commit
                             try {
                                 //Seteo los valores del turno
-                                $turno->setViaMostrador(false);
+                                $turno->setViaMostrador($viaMostrador);
                                 $turno->setTurnoSede($status['data']);
                                 $turno->setNumero($this->obtenerProximoTurnoSede($turno->getSede()->getId()));
 

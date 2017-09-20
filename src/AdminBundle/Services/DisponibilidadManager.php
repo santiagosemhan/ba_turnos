@@ -633,11 +633,11 @@ class DisponibilidadManager
      * @param $anio
      * @param $diaActual
      * @param bool $conSinTurno
-     * @param bool $cobtabilizarSoloSinTurno
+     * @param bool $contabilizarSoloSinTurno
      *
      * @return array
      */
-    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false,$contabilizarSoloSinTurno = false)
+    public function getCantidadHoraTurno($tipoTurnoId, $turnoSede, $cantidadDiaTurno, $dia, $mes, $anio, $diaActual,$conSinTurno = false,$contabilizarSoloSinTurno = false,$informarTodosLosTurnos = false)
     {
         //Obtengo la cantidad de horas que atienden en la sede
         $cantidadTurnosSegudo = 1;
@@ -649,15 +649,26 @@ class DisponibilidadManager
 
         //Obtengo como esta repartido los turnos
         $turnosHora = array();
+
         $fechaActual = new \DateTime();
-        $fechaActual = new \DateTime('1970-01-01'.' '.$fechaActual->format('H:i').':00');
+        $fechaActual = new \DateTime('1970-01-01' . ' ' . $fechaActual->format('H:i') . ':00');
+        //verifico si debo obtener todos la lista.
+        if($informarTodosLosTurnos) {
+            //busco el horario  completo
+            $fechaActual = new \DateTime('1970-01-01' . ' ' . $turnoSede->getHoraTurnosDesde()->format('H:i') . ':00');
+        }
+
 
         if ($this->verificaTipoTurnoTipoDia($turnoSede, $dia, $mes, $anio)) {
+            //Verifico si la frecuencia del turno es en minuto
             if ($turnoSede->getFrecunciaTurnoControl() == 'minutos') {
                 $cantidad = 0;
                 $sinTurnoTipoTramite = true;
+
+                //Busco si el turnoSede tiene asignado el Tipo de Tramite
                 if (count($turnoSede->getTurnoTipoTramite()) > 0) {
                     foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
+                        //Si el Tipo de Turno es igual al que busco, obtenga la cantidad de turno que atiende
                         if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId) {
                             if (!is_null($tipoTramiteTurno->getCantidadTurno())) {
                                 $cantidad = $tipoTramiteTurno->getCantidadTurno();
@@ -667,7 +678,10 @@ class DisponibilidadManager
                     }
                 }
 
+                //Se determina como se cuenta la cantidad de turnos que se atiende
+                //Primero verifico si encuentro el turnoSede
                 if ($sinTurnoTipoTramite) {
+                    //Verifico como quiero contar, si solo por sin Turno
                     if($contabilizarSoloSinTurno == true){
                         if(!is_null($turnoSede->getCantidadSinTurnos())){
                             $cantidad = $turnoSede->getCantidadSinTurnos();
@@ -676,22 +690,33 @@ class DisponibilidadManager
                         }
 
                     }else {
+                        //Se necesita contar cuantos turnos se antienden en las dos opciones
                         if ($conSinTurno == true AND !is_null($turnoSede->getCantidadSinTurnos())) {
+                            //Se suma los das cantidades
                             $cantidad = $turnoSede->getCantidadTurnos() + $turnoSede->getCantidadSinTurnos();
                         } else {
+                            //suma solo la cantidad con turnos
                             $cantidad = $turnoSede->getCantidadTurnos();
                         }
                     }
                 }
 
+                //obtenidos la cantidad de turnos que se atiende, se pasa a calcular las frecuencia en la cual se atiene
                 $difMinutos = $difMinutos + ($difHoras * 60);
                 $cantidadTurnos = ($difMinutos / $turnoSede->getCantidadFrecuencia());
                 $intervalo = new \DateInterval('PT' . $turnoSede->getCantidadFrecuencia() . 'M');
 
+                //Agrego el primer slot del dia
                 if ($cantidadTurnos > 0) {
                     if ($diaActual) {
-                        if (($horaDesde > $fechaActual)) {
+                        //si debo informar todos los dias, no hago un control, simplemente lo agrego
+                        if($informarTodosLosTurnos){
                             $turnosHora[$horaDesde->format('H:i')] = $cantidad;
+                        }else {
+                            //controlo que la fecha no se haya vencido
+                            if (($horaDesde > $fechaActual)) {
+                                $turnosHora[$horaDesde->format('H:i')] = $cantidad;
+                            }
                         }
                     } else {
                         $turnosHora[$horaDesde->format('H:i')] = $cantidad;
@@ -699,7 +724,7 @@ class DisponibilidadManager
                     $cantidadTurnos--;
                 }
 
-
+                //agrego los slot en base a la frecuencia determinada
                 while ($cantidadTurnos > 0) {
                     $horaDesde->add($intervalo);
                     if ($diaActual) {
@@ -712,6 +737,7 @@ class DisponibilidadManager
                     $cantidadTurnos--;
                 }
             } else {
+                //La frecuencia del turnoSede esta en horas
                 $sinTurnoTipoTramite = true;
                 $cantidad = 0;
                 if (count($turnoSede->getTurnoTipoTramite()) > 0) {
@@ -776,6 +802,7 @@ class DisponibilidadManager
             //Si el array esta vacio lo completo con el array obtenido con los turnosSede
             $cantidadDiaTurno = $turnosHora;
         }
+
         return $cantidadDiaTurno;
     }
 
