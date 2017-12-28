@@ -592,6 +592,8 @@ class DisponibilidadManager
             } else {
                 $horasHabiles = array( 'horasHabiles' => $horasHabiles);
             }
+        }else{
+            $horasHabiles = array( 'horasHabiles' => []);
         }
 
         return $horasHabiles;
