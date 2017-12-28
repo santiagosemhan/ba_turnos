@@ -439,16 +439,23 @@ class DisponibilidadManager
         $diaDesde = $this->util->getFechaDateTime(sprintf("%02d", $dia) . '/' . sprintf("%02d", $mes) . '/' . $anio, '00:00:00');
         $diaHasta = $this->util->getFechaDateTime(sprintf("%02d", $dia) . '/' .sprintf("%02d", $mes) . '/' . $anio, '23:59:59');
 
-        if (intval(date('m'))==$mes) {
-            if (intval(date('d')) <= $dia) {
-                $busca =true;
+        //busca si la fecha actual no sea del pasado
+        if(intval(date('Y') == $anio)){
+            if (intval(date('m')) == $mes) {
+                if (intval(date('d')) <= $dia) {
+                    $busca = true;
+                } else {
+                    $busca = false;
+                }
+            } elseif ($mes > intval(date('m'))) {
+                $busca = true;
             } else {
-                $busca =false;
+                $busca = false;
             }
-        } elseif ($mes> intval(date('m'))) {
-            $busca =true;
-        } else {
-            $busca =false;
+        }elseif(intval( $anio > date('Y') )){
+            $busca = true;
+        }else {
+            $busca = false;
         }
 
         if ($busca) {
@@ -586,6 +593,7 @@ class DisponibilidadManager
                 $horasHabiles = array( 'horasHabiles' => $horasHabiles);
             }
         }
+
         return $horasHabiles;
     }
 
