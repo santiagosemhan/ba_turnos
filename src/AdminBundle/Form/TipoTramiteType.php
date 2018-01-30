@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormEvents;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -16,10 +17,9 @@ class TipoTramiteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $builder->add('opcionGeneral',EntityType::class,array('class' => 'AdminBundle:OpcionGeneral','choice_label' => 'descripcion','required'=>true,'attr'  => array('class'=>"select2")))
+        $builder->add('opcionGeneral', EntityType::class, array('class' => 'AdminBundle:OpcionGeneral','choice_label' => 'descripcion','required'=>true,'attr'  => array('class'=>"select2")))
             ->add('descripcion')
-            ->add('texto',TextareaType::class,array('attr'  => array('rows'=>"10", 'cols'=>"80")))
+            ->add('texto', TextareaType::class, array('attr'  => array('rows'=>"10", 'cols'=>"80")))
             ->add('sinTurno')
             ->add('documento1File',
                 VichFileType::class, [
@@ -65,8 +65,8 @@ class TipoTramiteType extends AbstractType
                 ])
             ->add('activo');
 
-        $builder->get('documento1File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
-            if(!empty($e->getData())){
+        $builder->get('documento1File')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $e) {
+            if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
                 $app->setUpdateAt(new \DateTime());
@@ -74,8 +74,8 @@ class TipoTramiteType extends AbstractType
         });
 
 
-        $builder->get('documento2File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
-            if(!empty($e->getData())){
+        $builder->get('documento2File')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $e) {
+            if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
                 $app->setUpdateAt(new \DateTime());
@@ -83,8 +83,8 @@ class TipoTramiteType extends AbstractType
         });
 
 
-        $builder->get('documento3File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
-            if(!empty($e->getData())){
+        $builder->get('documento3File')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $e) {
+            if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
                 $app->setUpdateAt(new \DateTime());
@@ -92,8 +92,8 @@ class TipoTramiteType extends AbstractType
         });
 
 
-        $builder->get('documento4File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
-            if(!empty($e->getData())){
+        $builder->get('documento4File')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $e) {
+            if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
                 $app->setUpdateAt(new \DateTime());
@@ -101,8 +101,8 @@ class TipoTramiteType extends AbstractType
         });
 
 
-        $builder->get('documento5File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
-            if(!empty($e->getData())){
+        $builder->get('documento5File')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $e) {
+            if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
                 $app->setUpdateAt(new \DateTime());
@@ -110,8 +110,8 @@ class TipoTramiteType extends AbstractType
         });
 
 
-        $builder->get('documento6File')->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $e){
-            if(!empty($e->getData())){
+        $builder->get('documento6File')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $e) {
+            if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
                 $app->setUpdateAt(new \DateTime());
@@ -124,9 +124,8 @@ class TipoTramiteType extends AbstractType
         $options['attr'] = array('class' => 'une_classe');          // change the label
         $builder->add('descripcion', $type, $options); // replace the field
         */
-
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -144,6 +143,4 @@ class TipoTramiteType extends AbstractType
     {
         return 'adminbundle_tipotramite';
     }
-
-
 }
