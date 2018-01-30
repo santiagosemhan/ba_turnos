@@ -70,7 +70,7 @@ class TipoTramiteType extends AbstractType
             if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
-                $app->setUpdateAt(new \DateTime());
+                $app->setFechaActualizacion(new \DateTime());
             }
         });
 
@@ -79,7 +79,7 @@ class TipoTramiteType extends AbstractType
             if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
-                $app->setUpdateAt(new \DateTime());
+                $app->setFechaActualizacion(new \DateTime());
             }
         });
 
@@ -88,7 +88,7 @@ class TipoTramiteType extends AbstractType
             if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
-                $app->setUpdateAt(new \DateTime());
+                $app->setFechaActualizacion(new \DateTime());
             }
         });
 
@@ -97,7 +97,7 @@ class TipoTramiteType extends AbstractType
             if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
-                $app->setUpdateAt(new \DateTime());
+                $app->setFechaActualizacion(new \DateTime());
             }
         });
 
@@ -106,7 +106,7 @@ class TipoTramiteType extends AbstractType
             if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
-                $app->setUpdateAt(new \DateTime());
+                $app->setFechaActualizacion(new \DateTime());
             }
         });
 
@@ -115,7 +115,7 @@ class TipoTramiteType extends AbstractType
             if (!empty($e->getData())) {
                 /** @var Application $app */
                 $app = $e->getForm()->getParent()->getData();
-                $app->setUpdateAt(new \DateTime());
+                $app->setFechaActualizacion(new \DateTime());
             }
         });
 
