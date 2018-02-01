@@ -140,6 +140,22 @@ class DisponibilidadManager
         $turnosDelMes = array();
         $busca =false;
 
+        //busca si la fecha actual no sea del pasado
+        if(intval(date('Y') == $anio)){
+            if (intval(date('m')) == $mes) {
+                $busca = true;
+            } elseif ($mes > intval(date('m'))) {
+                $busca = true;
+            } else {
+                $busca = false;
+            }
+        }elseif(intval( $anio > date('Y') )){
+            $busca = true;
+        }else {
+            $busca = false;
+        }
+
+        /*
         if (intval(date('m'))==$mes) {
             if (intval(date('d')) >= $diaRecorrido) {
                 $diaRecorrido = intval(date('d'));
@@ -150,6 +166,8 @@ class DisponibilidadManager
         } else {
             $busca =false;
         }
+        */
+
         if ($busca) {
             $primerDia = $this->util->getFechaDateTime(sprintf("%02d", $diaRecorrido) . '/' . sprintf("%02d", $mes) . '/' . $anio, '00:00:00');
             $ultimoDia = $this->util->getUltimaFechaMesDateTime($mes, $anio, '23:59:59');
@@ -180,6 +198,7 @@ class DisponibilidadManager
                     $turnosSedeUtilizados[] = $turnoSede;
                 }
             }
+
 
             //Busco y Resto por día los turnos  dados
             $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
@@ -221,6 +240,7 @@ class DisponibilidadManager
             //Armo el array con los dias
             $iterator = $diaRecorrido;
             while ($iterator <= $ultimoDiaMes) {
+
                 if (isset($turnosDelMes[$iterator])) {
                     if ($turnosDelMes[$iterator] == 0) {
                         $array[] = array('anio' => $anio,'mes'=>$mes,'dia'=> $iterator);
@@ -279,6 +299,7 @@ class DisponibilidadManager
                 }
             }
         }
+
         return $array;
     }
 
@@ -345,6 +366,7 @@ class DisponibilidadManager
             }
             $iterator++;
         }
+
         return $cantidadDiaTurno;
     }
 
@@ -403,15 +425,16 @@ class DisponibilidadManager
         $pertenece = true;
         if (is_null($turnoSede->getVigenciaDesdeDateTime())) {
             $pertenece = true;
-        } elseif ($turnoSede->getVigenciaDesdeDateTime() <=  $this->util->getFechaDateTime($diaRecorrido . '/' . $mes . '/' . $anio, '23:59:59')) {
+        } elseif ($turnoSede->getVigenciaDesdeDateTime() <=  $this->util->getFechaDateTimeFromVars($diaRecorrido, $mes, $anio, '00:00:00')) {
             $pertenece = true;
         } else {
             $pertenece = false;
         }
+
         if ($pertenece) {
             if (is_null($turnoSede->getVigenciaHastaDateTime())) {
                 $pertenece = true;
-            } elseif ($turnoSede->getVigenciaHastaDateTime() >= $this->util->getFechaDateTime($diaRecorrido . '/' . $mes . '/' . $anio, '23:59:59')) {
+            } elseif ($turnoSede->getVigenciaHastaDateTime() >= $this->util->getFechaDateTimeFromVars($diaRecorrido, $mes, $anio, '23:59:59')) {
                 $pertenece = true;
             } else {
                 $pertenece = false;

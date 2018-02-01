@@ -90,6 +90,76 @@ class UtilManager
         }
     }
 
+    public function getFechaDateTimeFromVars($dia,$mes,$anio,$hora=null){
+        $diaString='';
+        $mesString='';
+        switch ($dia) {
+            case 1:
+                $diaString = '01';
+                break;
+            case 2:
+                $diaString = '02';
+                break;
+            case 3:
+                $diaString = '03';
+                break;
+            case 4:
+                $diaString = '04';
+                break;
+            case 5:
+                $diaString = '05';
+                break;
+            case 6:
+                $diaString = '06';
+                break;
+            case 7:
+                $diaString = '07';
+                break;
+            case 8:
+                $diaString = '08';
+                break;
+            case 9:
+                $diaString = '09';
+                break;
+        }
+        switch ($mes) {
+            case 1:
+                $mesString = '01';
+                break;
+            case 2:
+                $mesString = '02';
+                break;
+            case 3:
+                $mesString = '03';
+                break;
+            case 4:
+                $mesString = '04';
+                break;
+            case 5:
+                $mesString = '05';
+                break;
+            case 6:
+                $mesString = '06';
+                break;
+            case 7:
+                $mesString = '07';
+                break;
+            case 8:
+                $mesString = '08';
+                break;
+            case 9:
+                $mesString = '09';
+                break;
+        }
+        if($mesString == ''){
+            $mesString = $mes;
+        }
+        if($diaString == ''){
+            $diaString = $dia;
+        }
+        return $this->getFechaDateTime($diaString . '/' . $mesString . '/' . $anio, $hora);
+    }
+
     /*
     * get Ultima Fecha del Mes
     *
