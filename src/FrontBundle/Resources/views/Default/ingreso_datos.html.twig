@@ -1,13 +1,5 @@
 {% extends "::base.html.twig" %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="//www.google.com/recaptcha/api.js?hl=es"></script>
-
-    <script type="text/javascript"></script>
-
-{% endblock %}
-
 {% block body %}
     <div class="container-fluid">
         {{ form_start(form,{'attr': {'class': 'form-horizontal'}}) }}
@@ -45,4 +37,71 @@
         </ul>
         {{ form_end(form) }}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="//www.google.com/recaptcha/api.js?hl=es"></script>
+
+    <script type="text/javascript"></script>
+
+    <script>
+        $('#frontbundle_turno_cuit').on('change', function(e) {
+            if(validaCuit(document.getElementById("frontbundle_turno_cuit").value)){
+                formularioSinError();
+            }else{
+                formularioConError();
+                alert("El numero de cuit es incorrecto. Por favor verifiquelo");
+            }
+
+        });
+
+        $('#frontbundle_turno_cuit').on('keypress', function(e) {
+            tecla = (document.all) ? e.keyCode : e.which;
+            //Tecla de retroceso para borrar, siempre la permite
+            if (tecla==8){
+                return true;
+            }
+            // Patron de entrada, en este caso solo acepta numeros
+            patron =/[0-9]/;
+            tecla_final = String.fromCharCode(tecla);
+            return patron.test(tecla_final);
+        });
+
+        function formularioConError(){
+            document.getElementsByClassName("btn btn-success")[0].disabled = true;
+            var theDropDown = document.querySelector("#frontbundle_turno_cuit");
+            theDropDown.classList.add("error_form");
+        }
+
+        function formularioSinError(){
+            document.getElementsByClassName("btn btn-success")[0].disabled = false;
+            var theDropDown = document.querySelector("#frontbundle_turno_cuit");
+            theDropDown.classList.remove("error_form");
+        }
+
+        function validaCuit(sCUIT) {
+            var aMult = '5432765432';
+            var aMult = aMult.split('');
+
+            if (sCUIT && sCUIT.length == 11) {
+                aCUIT = sCUIT.split('');
+                var iResult = 0;
+                for(i = 0; i <= 9; i++) {
+                    iResult += aCUIT[i] * aMult[i];
+                }
+                iResult = (iResult % 11);
+                iResult = 11 - iResult;
+
+                if (iResult == 11) iResult = 0;
+                if (iResult == 10) iResult = 9;
+
+                if (iResult == aCUIT[10]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    </script>
 {% endblock %}
