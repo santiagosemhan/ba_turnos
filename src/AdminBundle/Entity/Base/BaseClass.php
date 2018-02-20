@@ -87,6 +87,12 @@ abstract class BaseClass
         return $this->fechaActualizacion;
     }
 
+    public function setFechaActualizacion($date)
+    {
+        return $this->fechaActualizacion=$date;
+    }
+
+
     public function getCreadoPor()
     {
         return $this->creadoPor;

@@ -125,3 +125,8 @@ body{
   margin: 3px;
   height: 89%;
 }
+
+
+.error_form{
+    border-color: #dc3545;
+}
