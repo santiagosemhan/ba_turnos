@@ -22,9 +22,9 @@ class OpcionesGenerales extends Component {
 
     render() {
         return (
-          <div className="opciones-generales">
-           { this.opciones() }
-          </div>
+            <div className="opciones-generales">
+                { this.opciones() }
+            </div>
       );
     };
 }

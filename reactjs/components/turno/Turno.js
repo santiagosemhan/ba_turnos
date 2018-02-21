@@ -110,6 +110,7 @@ class Turno extends Component {
 
                 <ul className="list-inline pull-right">
                     <li>
+                        <a className="btn btn-danger btn-text" role="button" onClick={()=>history.back()} style={{marginRight: '10px'}}>Atrás</a>
                         <button disabled={!this.state.submitEnabled} type="submit" className="btn btn-success next-step">Continuar</button>
                     </li>
                 </ul>

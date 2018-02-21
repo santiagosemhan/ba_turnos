@@ -96,6 +96,7 @@ class Sede extends Component {
 
                 <ul className="list-inline pull-right">
                     <li>
+                        <a className="btn btn-danger btn-text" role="button" onClick={()=>history.back()} style={{marginRight: '10px'}}>Atrás</a>
                         <button type="submit" className="btn btn-success next-step" disabled={!this.state.submitEnabled}>Continuar</button>
                     </li>
                 </ul>
