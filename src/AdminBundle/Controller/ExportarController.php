@@ -142,7 +142,7 @@ class ExportarController extends Controller
                                 ->setCellValue('L' . $rowNumber, $cola->getFechaCreacion())
                                 ->setCellValue('M' . $rowNumber, $cola->getFechaAtendido())
                                 ->setCellValue('N' . $rowNumber, $cola->getUsuarioAtendido())
-                                ->setCellValue('O' . $rowNumber, $cola->getBbox());
+                                ->setCellValue('O' . $rowNumber, $cola->getBox());
                         }
 
                     } else {
