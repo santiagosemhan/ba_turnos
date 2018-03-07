@@ -492,6 +492,7 @@ class DisponibilidadManager
             $turnosDeldia = array();
             $turnosSedeUtilizados  = array();
             $existe = false;
+
             foreach ($turnosSede as $turnoSede) {
                 $diaActual = false;
                 if (intval(date('d')) == $dia) {
@@ -512,6 +513,7 @@ class DisponibilidadManager
                     }
                     if ($turnoSedeDefineTramite) {
                         $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,false,$contabilizarSoloSinTurno);
+
                         if ($conTurnoSede) {
                             $turnosSedeUtilizados[] = array('turnoSede' => $turnoSede, 'tipoTramite'=> $tipoTurnoId, 'turnosDeldia' => $turnosDeldia);
                         } else {
@@ -520,13 +522,13 @@ class DisponibilidadManager
                     }
                 } else {
                     $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,false,$contabilizarSoloSinTurno);
+
                     if ($conTurnoSede) {
                         $turnosSedeUtilizados[] = array('turnoSede' => $turnoSede,  'tipoTramite'=> false, 'turnosDeldia' => $turnosDeldia);
                     } else {
                         $turnosSedeUtilizados[] = $turnosDeldia;
                     }
                 }
-
             }
 
             //Busca los turnos reservados que no sean sacados en la recepcion
@@ -587,6 +589,7 @@ class DisponibilidadManager
                         ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')->setParameter('horaTurno', $this->util->getHoraString($turno->getHoraTurno()))
                     ;
                     $turnosTramites = $repositoryTT->getQuery()->getResult();
+
                     foreach ($turnosTramites as $turnoTramite) {
                         $slot = $turnoTramite->getCantidadSlot();
                         $intervalo = new \DateInterval('PT' . $turnoTramite->getTurnoSede()->getCantidadFrecuencia() . 'M');
@@ -604,6 +607,7 @@ class DisponibilidadManager
 
             //Controlo si tiene asociado un Tipo Tramite que ocupa varios slots
             $turnosDeldia = $this->controlaDisponibilidadTipoTramiteConSlot($dia, $mes, $anio, $sedeId, $tipoTurnoId, $turnosDeldia, $turnosSedeArray);
+
 
             foreach ($turnosDeldia as $clave => $valor) {
                 if ($valor > 0) {
@@ -821,7 +825,9 @@ class DisponibilidadManager
             }
         }
 
-        //Actualizo el array $cantidadDiaTurno con los nuevos datos del turnoSede
+
+
+        //Actualizo el array$cantidadDiaTurno con los nuevos datos del turnoSede
         if (count($cantidadDiaTurno)>0) {
             foreach ($turnosHora as $clave => $valor) {
                 //Controlo que si en el array existe la hora para sumar turnos o creo un nuevo registro
@@ -831,6 +837,10 @@ class DisponibilidadManager
                     $cantidadDiaTurno[$clave] = $valor;
                 }
             }
+
+            //Tambien lo ordeno
+            ksort($cantidadDiaTurno);
+
         } else {
             //Si el array esta vacio lo completo con el array obtenido con los turnosSede
             $cantidadDiaTurno = $turnosHora;
