@@ -48,7 +48,7 @@ class ColaTurno extends BaseClass
     private $llamado;
 
     /**
-     * @ORM\Column(name="fecha_llamado",type="date", nullable=true)
+     * @ORM\Column(name="fecha_llamado",type="datetime", nullable=true)
      */
     private $fechaLlamado;
 
@@ -58,7 +58,7 @@ class ColaTurno extends BaseClass
     private $atendido;
 
     /**
-     * @ORM\Column(name="fecha_atendido",type="date", nullable=true)
+     * @ORM\Column(name="fecha_atendido",type="datetime", nullable=true)
      */
     private $fechaAtendido;
 

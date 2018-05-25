@@ -935,8 +935,16 @@ class DisponibilidadManager
             $repositoryT
                 ->andWhere('p.mail1 = :mail')->setParameter('mail', $mail);
         }
+        $fechaActual = new \DateTime();
+
         $repositoryT
-            ->andWhere('p.fechaCancelado IS NULL AND p.fechaConfirmacion IS NULL AND p.turnoSede IS NOT NULL');
+            ->andWhere('p.fechaCancelado IS NULL 
+                            AND p.fechaConfirmacion IS NULL 
+                            AND p.turnoSede IS NOT NULL 
+                            AND p.fechaTurno > :fecha_actual')
+
+            ->setParameter('fecha_actual', $fechaActual );
+
         $turnos = $repositoryT->getQuery()->getResult();
 
         if (count($turnos)>0) {

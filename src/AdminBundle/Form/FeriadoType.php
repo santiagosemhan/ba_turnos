@@ -17,7 +17,7 @@ class FeriadoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('fecha',TextType::class, array('attr' => array('class'=>"datepicker"),'required'=>true))
-            ->add('repiteAnio',CheckboxType::class,array('label' => 'Repite todos los Años'))
+            ->add('repiteAnio',CheckboxType::class,array('label' => 'Repite todos los Años','required'=>true))
             ->add('activo')
             ->add('sede');
     }

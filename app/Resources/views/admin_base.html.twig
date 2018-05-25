@@ -34,6 +34,7 @@
 </head>
 
 {% set currentPath =  app.request.attributes.get('_route') %}
+{% set permisos = app.user.roles %}
 
 <body class="hold-transition skin-green sidebar-mini">
 <!-- Site wrapper -->
@@ -111,6 +112,10 @@
                 </li>
 
 
+                {% for permiso in permisos %}
+                {% if permiso == 'ROLE_SEDE' %}
+
+
                 {% if currentPath == 'turno_administrar' %}
                 <li class="active treeview">
                 {% else %}
@@ -121,6 +126,11 @@
                         <span>Administración Turnos</span>
                     </a>
                 </li>
+                {% endif %}
+                {% endfor %}
+
+                {% for permiso in permisos %}
+                {% if permiso == 'ROLE_BOX' %}
 
                 {% if currentPath == 'app_box_atencion_seleccion_box' %}
                 <li class="active treeview">
@@ -131,7 +141,13 @@
                         <i class="fa fa-th"></i> <span>Administrar Box</span>
                     </a>
                 </li>
+                {% endif %}
+                {% endfor %}
 
+
+
+                {% for permiso in permisos %}
+                {% if permiso == 'ROLE_PARAMETRIZAR' %}
                 {% if currentPath == 'cancelacionmasiva_index' %}
                 <li class="active treeview">
                 {% else %}
@@ -328,7 +344,8 @@
                         </li>
                     </ul>
                 </li>
-
+                {% endif %}
+                {% endfor %}
             </ul>
 
             <!-- /.sidebar-menu -->

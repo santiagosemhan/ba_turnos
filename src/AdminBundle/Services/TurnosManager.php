@@ -371,6 +371,31 @@ class TurnosManager
                     if(($indice == $turno->getHoraTurno()->format('H:i')  )){
                         //todo determinar si existe ya un turno con este valor (caso que se determine mas de un turno por hora)
                         $fecha = $turno->getFechaTurno()->format('Y/m/d');
+
+                        $sql = "    SELECT p
+                                FROM AdminBundle:ColaTurno p
+                                INNER JOIN AdminBundle:Turno t WITH p.turno = t.id
+                                INNER JOIN AdminBundle:TurnoSede ts WITH t.turnoSede = ts.id
+                                WHERE (p.fechaTurno between :fecha_turno_desde and :fecha_turno_hasta)
+                                  AND t.horaTurno = :horaTurno
+                                  AND p.sede = :sedeId
+                                  AND t.tipoTramite = :tipoTramiteId ";
+                        //'AND (:horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta) ";
+
+                        $query = $this->em->createQuery(
+                            $sql
+                        )->setParameter('fecha_turno_desde', $fecha . ' 00:00:00')
+                            ->setParameter('fecha_turno_hasta', $fecha . ' 23:59:59')
+                            ->setParameter('horaTurno',$turno->getHoraTurno())
+                            ->setParameter('sedeId', $cola->getSede()->getId())
+                            ->setParameter('tipoTramiteId', $turno->getTipoTramite()->getId());
+                        //->setParameter('horaTurno', $turno->getHoraTurno());
+
+                        $db =  $query->execute();
+                        $cantidadCola = count($db);
+
+
+                        /*
                         $repository = $this->em->getRepository('AdminBundle:ColaTurno', 'p')->createQueryBuilder('p');
                         $repository->innerJoin('AdminBundle:Turno', 't', 'WITH', 'p.turno = t.id');
                         $repository->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 't.turnoSede = ts.id');
@@ -383,6 +408,8 @@ class TurnosManager
                             ->setParameter('sedeId', $cola->getSede()->getId());
 
                         $cantidadCola = count($repository->getQuery()->getResult());
+                        */
+
                         //Calculo el proximo numero
                         $numeroTurno = $cantidad+$cantidadCola+1;
                     }else{
@@ -1490,12 +1517,22 @@ class TurnosManager
     }
 
     public function primerTurno($turno){
+        $fechaDesdeDate =  new \DateTime($turno->getFechaTurno()->format('Y-m-d').' 00:00:00');
+        $fechaHastaDate = new \DateTime($turno->getFechaTurno()->format('Y-m-d').' 23:59:59');
+
         $consulta =  $this->em->createQueryBuilder();
         $consulta->select("ct");
-        $consulta->from("AdminBundle:ColaTurno", "ct");
         $consulta->innerJoin('AdminBundle:Turno','t', 'WITH','ct.turno = t.id');
-        $consulta->where('t.turnoSede = :turnoSede')->setParameter('turnoSede',$turno->getTurnoSede());
-        $consulta->andWhere('t.fechaTurno = :fechaTurno')->setParameter('fechaTurno',$turno->getFechaTurno());
+
+
+//        $consulta->andWhere('t.fechaTurno > :fechaTurnoDesde')
+//            ->setParameter('fechaTurnoDesde',$fechaDesdeDate);
+//        $consulta->andWhere('t.fechaTurno < :fechaTurnoHasta')
+//            ->setParameter('fechaTurnoHasta',$fechaHastaDate);
+
+        $consulta->andWhere('t.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
+            ->setParameter('fecha_turno_desde', $fechaDesdeDate )
+            ->setParameter('fecha_turno_hasta', $fechaHastaDate );
 
         $resultado = $consulta->getQuery()->getResult();
         if(count($resultado) > 1){

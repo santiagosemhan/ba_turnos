@@ -30,7 +30,7 @@ class Box extends BaseClass
     private $colaTurno;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Sede", inversedBy="box")
+     * @ORM\ManyToOne(targetEntity="Sede", inversedBy="box",cascade={"persist"})
      * @ORM\JoinColumn(name="sede_id", referencedColumnName="id")
      */
     private $sede;

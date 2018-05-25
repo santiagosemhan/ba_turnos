@@ -165,6 +165,9 @@ class TurnoBoxController extends Controller
                 $conTurno = false;
                 $this->get('session')->getFlashBag()->add('error', 'No se encuentra el turno');
             } else {
+                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                $this->get('manager.turnos')->marcarLlamadoTurno($turno,$box,$user);
+
                 $this->informaCambioMonitor($turno, $box);
                 $this->get('session')->getFlashBag()->add('success', 'Se volvio a llamar al turno');
             }
@@ -195,6 +198,8 @@ class TurnoBoxController extends Controller
 
             // Si el usuario controla mas de un turnoSede.
             $turnoSede = $this->get('manager.usuario')->getTurnoSede($this->getUser());
+            //Obtiene los turnos sedes habilitados por el lugar de donde se llama
+            $turnosSedesBox = $this->get('manager.turnos')->getObtieneTurnoSedeFromBox($box);
 
             //Se coloca el elemento a enviar al monitor
             $item = null;
@@ -288,6 +293,10 @@ class TurnoBoxController extends Controller
                 if (count($turnos) > 0) {
                     //genero los datos para enviar al monitor
                     $turno = $turnos[0];
+
+                    $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                    $this->get('manager.turnos')->marcarLlamadoTurno($turno,$box,$user);
+
                     $this->informaCambioMonitor($turno, $box);
                     return array(true, $turno);
                 } else {
