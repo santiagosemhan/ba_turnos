@@ -23,8 +23,27 @@
     <script src="{{ asset('assets/vendor/AdminLTE/bootstrap/js/respond.min.js') }}"></script>
     <![endif]-->
     {% block stylesheets %}{% endblock %}
+
+    <style type="text/css">
+        @media print {
+            #bottom{
+                visibility: hidden;
+            }
+        }
+
+        @media screen {
+            #bottom{
+                visibility: visible;
+            }
+        }
+
+    </style>
+
 </head>
-<body onload=" window.setTimeout( window.print(), 5000 );">
+
+{% set currentPath =  app.request.attributes.get('_route') %}
+
+<body>
 <div class="wrapper">
     <!-- Main content -->
     <section class="invoice">
@@ -53,6 +72,22 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
+
+    <div style="width:98%;float:left;background-color: #f2f2f2;height: 32px;border-top: 1px #9a9da4 solid;margin-top: 20px;position:fixed;bottom: 0px;z-index: 100;" id="bottom">
+        <div style="width:158px;margin:0 auto 0 auto;">
+            <div style="float:left;margin-top: 5px;color: #7F7F7F;">
+                {% if (currentPath == 'generar_comprobante' ) %}
+                <input type="button" value="Inicio" onclick="window.location.href = '{{ path('front_homepage') }}'">
+                {% else %}
+                <input type="button" value="Inicio" onclick="window.location.href = 'javascript:window.history.back();'">
+                {% endif %}
+            </div>
+            <div style="float:right;margin-top:5px;">
+                <input type="button" value="Imprimir" id="PrintinPopup" onclick="window.print()">
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- ./wrapper -->
 </body>
