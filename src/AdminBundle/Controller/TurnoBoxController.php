@@ -199,7 +199,7 @@ class TurnoBoxController extends Controller
             // Si el usuario controla mas de un turnoSede.
             $turnoSede = $this->get('manager.usuario')->getTurnoSede($this->getUser());
             //Obtiene los turnos sedes habilitados por el lugar de donde se llama
-            $turnosSedesBox = $this->get('manager.turnos')->getObtieneTurnoSedeFromBox($box);
+            //$turnosSedesBox = $this->get('manager.turnos')->getObtieneTurnoSedeFromBox($box);
 
             //Se coloca el elemento a enviar al monitor
             $item = null;

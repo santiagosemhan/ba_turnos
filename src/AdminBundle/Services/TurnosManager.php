@@ -1522,6 +1522,7 @@ class TurnosManager
 
         $consulta =  $this->em->createQueryBuilder();
         $consulta->select("ct");
+        $consulta->from("AdminBundle:ColaTurno", "ct");
         $consulta->innerJoin('AdminBundle:Turno','t', 'WITH','ct.turno = t.id');
 
 
@@ -1559,6 +1560,29 @@ class TurnosManager
         $cola = $cola[0];
         $cola->setAtendido(true);
         $this->em->persist($cola);
+        $this->em->flush();
+    }
+
+    public function marcarLlamadoTurno($turno, $box, $usuario)
+    {
+        $cola = $turno->getColaTurno();
+        $colaS = $cola[0];
+
+        $colaSave = $this->em
+            ->getRepository('AdminBundle:ColaTurno')
+            ->findOneBy(array('letra' => $colaS->getLetra(), 'numero' => $colaS->getNumero()));
+
+        $boxs= $this->em
+            ->getRepository('AdminBundle:Box')
+            ->findOneBy(array('descripcion' => $box->getDescripcion()));
+
+        $colaSave->setLlamado(true);
+        $colaSave->setFechaLlamado(new \DateTime("now"));
+        $colaSave->setUsuarioAtendido($usuario);
+        $colaSave->setBox($boxs);
+
+
+        $this->em->persist($colaSave);
         $this->em->flush();
     }
 
