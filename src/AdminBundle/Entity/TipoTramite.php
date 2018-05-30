@@ -689,6 +689,12 @@ class TipoTramite extends BaseClass implements \JsonSerializable
         return $this->getOpcionGeneral() ? $this->getOpcionGeneral()->getDescripcion().' - '.$this->getDescripcion() : '';
     }
 
+    public function getTextoCompleto(){
+        return  $this->getOpcionGeneral()->getDescripcion().' - '.$this->getDescripcion();
+    }
+
+
+
     public function jsonSerialize()
     {
         return [

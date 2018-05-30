@@ -36,8 +36,8 @@ class TurnoType extends AbstractType
 
         $builder->add('nombreApellido',TextType::class,array('required'=>true,'label'=>'Nombre Apellido'))
             ->add('telefono',TextType::class,array('required'=>true, 'attr'=>array('data-inputmask'=>"'mask': '(999) 9999999999'",'data-mask'=>true)))
-            ->add('cuit',TextType::class,array('required'=>true,'attr'=>array('data-inputmask'=>"'mask': '99-99999999-9'",'data-mask'=>true)))
-            ->add('mail1',EmailType::class,array('required'=>true))
+            ->add('cuit',TextType::class,array('required'=>false,'attr'=>array('data-inputmask'=>"'mask': '99-99999999-9'",'data-mask'=>true)))
+            ->add('mail1',EmailType::class,array('required'=>false))
             ->add('mail2',EmailType::class,array('required'=>false))
             ->add('horaTurno',ChoiceType::class,array( 'attr' =>array('class'=>'select2'),
                 'choices'  => $this->getChoise(),
@@ -47,7 +47,7 @@ class TurnoType extends AbstractType
                         'query_builder' => function(TipoTramiteRepository $er) {
                             return $er->getTramitesPorSede($this->getSede());
                         },
-                        'choice_label' => 'descripcion',
+                        'choice_label' => 'textoCompleto',
                         'attr'  => array('class'=>"select2"),
                         'data' => $options['tipoTramite'])
 
