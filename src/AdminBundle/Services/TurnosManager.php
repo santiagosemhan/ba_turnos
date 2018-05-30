@@ -107,11 +107,11 @@ class TurnosManager
         }
 
         if ($cuit) {
-            $repository->andWhere('p.cuit > :cuit')->setParameter('cuit', $cuit);
+            $repository->andWhere('p.cuit = :cuit')->setParameter('cuit', $cuit);
         }
 
         if ($nroTurno) {
-            $repository->andWhere('p.numero > :numero')->setParameter('numero', $nroTurno);
+            $repository->andWhere('p.numero = :numero')->setParameter('numero', $nroTurno);
         }
 
         $sub =  $this->em->createQueryBuilder();
