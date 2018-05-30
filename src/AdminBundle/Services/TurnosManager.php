@@ -22,7 +22,7 @@ class TurnosManager
     private $secret;
     private $router;
 
-    private $emailFrom = 'mail@milentar.com';
+    private $emailFrom = 'turnos.abc@gmail.com';
 
     public function __construct(EntityManager $em, DisponibilidadManager $disponibilidad)
     {
