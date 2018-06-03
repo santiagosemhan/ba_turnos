@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AdminBundle\Entity\UsuarioTurnoSede;
 use AdminBundle\Form\UsuarioTurnoSedeType;
+use AdminBundle\Form\UsuarioTurnoSedeFilterType;
 
 /**
  * UsuarioTurnoSede controller.
@@ -20,26 +21,44 @@ class UsuarioTurnoSedeController extends Controller
      */
     public function indexAction(Request $request)
     {
-        try {
-            $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
+        $usuarioTurnoSede = new UsuarioTurnoSede();
 
-            $usuarioTurnoSedes = $em->getRepository('AdminBundle:UsuarioTurnoSede')->findAll();
-
-            $paginator = $this->get('knp_paginator');
-
-            $usuarioTurnoSedes = $paginator->paginate(
-                $usuarioTurnoSedes,
-                $request->query->get('page', 1)/* page number */,
-                10/* limit per page */
-            );
-
-            $deleteForm = $this->createDeleteForm();
-        }catch (\Exception $ex) {
-            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+        if ($request->getMethod() == 'POST' || $request->getMethod() == 'GET' ) {
+            $datos = $request->get('adminbundle_usuarioturnosede');
+            if (isset($datos['turnoSede'])) {
+                if($datos['turnoSede'] != ''){
+                    $usuarioTurnoSede->setTurnoSede( $em->getRepository('AdminBundle:TurnoSede')->findOneById($datos['turnoSede']));
+                }
+            }
+            if (isset($datos['usuario'])) {
+                if ($datos['usuario'] != '') {
+                    $usuarioTurnoSede->setUsuario($em->getRepository('UserBundle:User')->findOneById($datos['usuario']));
+                }
+            }
         }
 
+        $form = $this->createForm(UsuarioTurnoSedeFilterType::class, $usuarioTurnoSede);
+        try {
+            $form->handleRequest($request);
+            $usuarioTurnoSedes = $em->getRepository('AdminBundle:UsuarioTurnoSede')->getAllByUsuarioTurnoSede($usuarioTurnoSede);
+        } catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+            $usuarioTurnoSedes = $em->getRepository('AdminBundle:UsuarioTurnoSede')->findAll();
+        }
+
+
+        $paginator = $this->get('knp_paginator');
+        $usuarioTurnoSedes = $paginator->paginate(
+            $usuarioTurnoSedes,
+            $request->query->get('page', 1)/* page number */,
+            10/* limit per page */
+        );
+
+        $deleteForm = $this->createDeleteForm();
         return $this->render('AdminBundle:usuarioturnosede:index.html.twig', array(
             'usuarioTurnoSedes' => $usuarioTurnoSedes,
+            'form' => $form->createView(),
             'delete_form' => $deleteForm->createView()
         ));
     }

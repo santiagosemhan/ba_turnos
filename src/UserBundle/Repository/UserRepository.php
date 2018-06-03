@@ -19,4 +19,30 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->findBy($criteria);
     }
+
+    public function getAllByUser($user)
+    {
+
+        $primero = true;
+        $qb = $this->createQueryBuilder('ct');
+
+        if($user->getEmail()){
+            $qb = $qb->where('ct.email like :email')
+                ->setParameter("email",'%'.$user->getEmail().'%');
+            $primero = false;
+        }
+        if($user->getUsername()){
+            if($primero){
+                $qb = $qb->where('ct.username like :username')
+                    ->setParameter("username", '%'.$user->getUsername().'%');
+            }else{
+                $qb = $qb->andWhere('ct.username like :username')
+                    ->setParameter("username", '%'.$user->getUsername().'%');
+            }
+        }
+
+        $boxes = $qb->getQuery()->getResult();
+
+        return  $boxes;
+    }
 }

@@ -16,5 +16,27 @@ namespace AdminBundle\Repository;
  */
 class UsuarioSedeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllByUsuarioSede($usuarioSede)
+    {
 
+        $primero = true;
+        $qb = $this->createQueryBuilder('ct');
+
+        if($usuarioSede->getUsuario()){
+            $qb = $qb->where('ct.usuario = :usuario')
+                ->setParameter("usuario",$usuarioSede->getUsuario()->getId());
+            $primero = false;
+        }
+        if($usuarioSede->getSede()){
+            if($primero){
+                $qb = $qb->where('ct.sede = :sede')
+                    ->setParameter("sede", $usuarioSede->getSede()->getId());
+            }else{
+                $qb = $qb->andWhere('ct.sede = :sede')
+                    ->setParameter("sede", $usuarioSede->getSede()->getId());
+            }
+        }
+
+        return  $qb->getQuery()->getResult();
+    }
 }

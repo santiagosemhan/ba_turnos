@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AdminBundle\Entity\UsuarioSede;
 use AdminBundle\Form\UsuarioSedeType;
+use AdminBundle\Form\UsuarioSedeFilterType;
 
 /**
  * UsuarioSede controller.
@@ -22,11 +23,32 @@ class UsuarioSedeController extends Controller
     {
         try {
             $em = $this->getDoctrine()->getManager();
+            $usuarioSede = new UsuarioSede();
 
-            $usuarioSedes = $em->getRepository('AdminBundle:UsuarioSede')->findAll();
+            if ($request->getMethod() == 'POST' || $request->getMethod() == 'GET' ) {
+                $datos = $request->get('adminbundle_usuariosede');
+                if (isset($datos['sede'])) {
+                    if($datos['sede'] != ''){
+                        $usuarioSede->setSede( $em->getRepository('AdminBundle:Sede')->findOneById($datos['sede']));
+                    }
+                }
+                if (isset($datos['usuario'])) {
+                    if ($datos['usuario'] != '') {
+                        $usuarioSede->setUsuario($em->getRepository('UserBundle:User')->findOneById($datos['usuario']));
+                    }
+                }
+            }
+
+            $form = $this->createForm(UsuarioSedeFilterType::class, $usuarioSede);
+            try {
+                $form->handleRequest($request);
+                $usuarioSedes = $em->getRepository('AdminBundle:UsuarioSede')->getAllByUsuarioSede($usuarioSede);
+            } catch (\Exception $ex) {
+                $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+                $usuarioSedes = $em->getRepository('AdminBundle:UsuarioSede')->findAll();
+            }
 
             $paginator = $this->get('knp_paginator');
-
             $usuarioSedes = $paginator->paginate(
                 $usuarioSedes,
                 $request->query->get('page', 1)/* page number */,
@@ -40,6 +62,7 @@ class UsuarioSedeController extends Controller
 
         return $this->render('AdminBundle:usuariosede:index.html.twig', array(
             'usuarioSedes' => $usuarioSedes,
+            'form' => $form->createView(),
             'delete_form' => $deleteForm->createView()
         ));
     }

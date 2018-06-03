@@ -3,6 +3,37 @@
     {% set __title = 'Listado de Usuario por Turno Sedes' %}
 
     {% block content %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h5 >Filtros de Busqueda</h5>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- form start -->
+                            {{ form_start(form, {'method': 'GET'}) }}
+                            {{ form_widget(form) }}
+
+                            <div class="box-tools pull-right">
+                                <input class="btn btn-success" type="submit" value="Buscar"/>
+                                <a class="btn btn-default" href="{{ path('usuarioturnosede_index') }}"> Limpiar Busqueda</a>
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-success">

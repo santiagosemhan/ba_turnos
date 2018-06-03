@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use UserBundle\Entity\User;
 use UserBundle\Form\UserType;
 use UserBundle\Form\CambiarPasswordType;
+use UserBundle\Form\UserFilterType;
 
 /**
  * User controller.
@@ -20,26 +21,45 @@ class UserController extends Controller
 *
     */
     public function indexAction(Request $request)
-{
-    $em = $this->getDoctrine()->getManager();
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = new User();
 
-    $users = $em->getRepository('UserBundle:User')->findAll();
+        if ($request->getMethod() == 'POST' || $request->getMethod() == 'GET' ) {
+            $datos = $request->get('userbundle_user');
+            if (isset($datos['email'])) {
+                $user->setEmail($datos['email']);
+            }
+            if (isset($datos['username'])) {
+                $user->setUsername( $datos['username']);
+            }
 
-    $paginator = $this->get('knp_paginator');
+        }
 
-    $users = $paginator->paginate(
-    $users,
-    $request->query->get('page', 1)/* page number */,
-    10/* limit per page */
-    );
+        $form = $this->createForm(UserFilterType::class, $user);
+        try {
+            $form->handleRequest($request);
+            $users = $em->getRepository('UserBundle:User')->getAllByUser($user);
+        } catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+            $users = $em->getRepository('UserBundle:User')->findAll();
+        }
 
-    $deleteForm = $this->createDeleteForm();
+        $paginator = $this->get('knp_paginator');
+        $users = $paginator->paginate(
+            $users,
+            $request->query->get('page', 1)/* page number */,
+            10/* limit per page */
+        );
 
-    return $this->render('UserBundle:user:index.html.twig', array(
-        'users' => $users,
-        'delete_form' => $deleteForm->createView()
-    ));
-}
+        $deleteForm = $this->createDeleteForm();
+
+        return $this->render('UserBundle:user:index.html.twig', array(
+            'users' => $users,
+            'form' => $form->createView(),
+            'delete_form' => $deleteForm->createView()
+        ));
+    }
 
 /**
     * Creates a new User entity.

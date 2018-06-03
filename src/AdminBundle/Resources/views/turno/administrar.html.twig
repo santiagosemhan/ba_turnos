@@ -6,48 +6,36 @@
 
 {% block content %}
 
-    <!-- Small boxes (Stat box) -->
+    <!--
     <div class="row">
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <!-- small box -->
             <div class="info-box">
                 <span class="info-box-icon bg-aqua"><i class="glyphicon glyphicon-file"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Turnos del día</span>
                     <span class="info-box-number">{{ turnosDia }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
         </div>
-        <!-- ./col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <!-- small box -->
             <div class="info-box">
                 <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-ok"></i></span>
-
                 <div class="info-box-content">
                     <span class="info-box-text">Turnos Confirmados</span>
                     <span class="info-box-number">{{ turnosConfirmados }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-
         </div>
-        <!-- ./col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-light-blue "><i class="glyphicon glyphicon-info-sign"></i></span>
-
                 <div class="info-box-content">
                     <span class="info-box-text">Parametria:</span>
                     <p class="info-box-text">{{ parametriaTurnos }}</p>
                 </div>
-                <!-- /.info-box-content -->
             </div>
         </div>
-        <!-- ./col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <!-- small box -->
             <div class="info-box">
                 <span class="info-box-icon bg-yellow"><i class="glyphicon glyphicon-user"></i></span>
 
@@ -55,12 +43,10 @@
                     <span class="info-box-text">Sin Turno</span>
                     <span class="info-box-number">{{ sinTurno }}</span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
         </div>
-        <!-- ./col -->
     </div>
-    <!-- /.row -->
+     -->
 
     <!-- Filters-->
     <div class="box box-success">
@@ -264,6 +250,7 @@
                         <table class="table table-hover">
                             <tr>
                                 <th>Numero Turno</th>
+                                <th>Numero Atención</th>
                                 <th>Persona</th>
                                 <th>Hora de Turno</th>
                                 <th>Estado</th>
@@ -271,12 +258,13 @@
                             </tr>
                             {% if turnosConfirmadosList|length < 1 %}
                                 <tr>
-                                    <td colspan="5"><p class="text-center"> Sin Datos.</p></td>
+                                    <td colspan="6"><p class="text-center"> Sin Datos.</p></td>
                                 </tr>
                             {% endif %}
                             {% for turno in turnosConfirmadosList %}
                                 <tr>
                                     <td>{{ turno.numero }}</td>
+                                    <td>{{ turno.turnoBox }}</td>
                                     <td>{{ turno.nombreApellido }}</td>
                                     <td>{{ turno.HoraTurnoString }}</td>
                                     <td>
@@ -327,6 +315,7 @@
                         <table class="table table-hover">
                             <tr>
                                 <th>Numero Turno</th>
+                                <th>Numero Atención</th>
                                 <th>Persona</th>
                                 <th>Hora de Turno</th>
                                 <th>Estado</th>
@@ -334,12 +323,13 @@
                             </tr>
                             {% if turnosAtendidosList|length < 1 %}
                                 <tr>
-                                    <td colspan="5"><p class="text-center"> Sin Datos.</p></td>
+                                    <td colspan="6"><p class="text-center"> Sin Datos.</p></td>
                                 </tr>
                             {% endif %}
                             {% for turno in turnosAtendidosList %}
                                 <tr>
                                     <td>{{ turno.numero }}</td>
+                                    <td>{{ turno.turnoBox }}</td>
                                     <td>{{ turno.nombreApellido }}</td>
                                     <td>{{ turno.HoraTurnoString }}</td>
                                     <td>
