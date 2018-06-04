@@ -121,7 +121,11 @@
                             $horaTurnoSelector.html('<option value="null">Seleccione un horario</option>');
 
                             for (var i=0, total = data.length; i < total; i++) {
-                                $horaTurnoSelector.append('<option value="' + data[i] + '">' + data[i] + '</option>');
+                                if(i == 0) {
+                                    $horaTurnoSelector.append('<option value="' + data[i] + '" selected>' + data[i] + '</option>');
+                                }else{
+                                    $horaTurnoSelector.append('<option value="' + data[i] + '">' + data[i] + '</option>');
+                                }
                             }
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
