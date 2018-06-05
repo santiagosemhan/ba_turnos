@@ -1,0 +1,98 @@
+{% extends 'admin_base.html.twig' %}
+
+{% set __title =  'Visualiación de Filas de Espera' %}
+
+{% set __descripcion_opcional = sede %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+    {% for agenda in result %}
+        
+                <div class="box box-success collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ agenda.lista }} <br/> Cantidad: {{ agenda.cantidad }}</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+
+                        <div class="box box-default collapsed-box">
+                            <div class="box-header with-border">
+                                Cantidad de Tipo de tramite {{ agenda.tramites | length }}. Tipos de tramites asignado a la agenda :
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <!-- /.box-tools -->
+                            </div>
+                            <div class="box-body">
+                                <ul>
+                                {% for tipoTramite in agenda.tramites %}
+                                    <li>{{ tipoTramite }}</li>
+                                {% else %}
+                                    <li>Sin Tramites</li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="box box-default collapsed-box">
+                            <div class="box-header with-border">
+                                Cantidad de Usuarios asignados {{ agenda.user | length }}. Usuarios asignado a la agenda:
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <!-- /.box-tools -->
+                            </div>
+                            <div class="box-body">
+                                <ul>
+                                    {% for usuario in agenda.user %}
+                                        <li>{{ usuario }}</li>
+                                    {% else %}
+                                        <li>Sin Usuarios</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        Listado de turnos de la agenda:
+                        <ul>
+                        {% for turnos in agenda.items %}
+                            <li>{{ turnos }}</li>
+                        {% else %}
+                           <li>Vacío</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
+
+
+    {% else %}
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">No Existen agendas Cargadas para la Sede</h3>
+            </div>
+            <div class="box-body">
+                Debe ingresar a "Parametrizacion de Agenda". Ahí puede crear una "Agenda", esta asociarla a la "Sede" y un "Departamento"
+            </div>
+            <!-- /.box-body -->
+        </div>
+    {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

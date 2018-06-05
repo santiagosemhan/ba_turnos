@@ -1,0 +1,4 @@
+app_estado_fila_visualizar:
+    path:     /seleccionar
+    defaults: { _controller: "AdminBundle:EstadoFila:visualizar" }
+    methods:  [GET]

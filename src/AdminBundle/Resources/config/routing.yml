@@ -66,3 +66,7 @@ app_box_atencion:
 app_monitor:
         resource: "@AdminBundle/Resources/config/routing/monitor.yml"
         prefix:   /monitor
+
+app_estado_fila:
+        resource: "@AdminBundle/Resources/config/routing/estadofila.yml"
+        prefix:   /estado-fila

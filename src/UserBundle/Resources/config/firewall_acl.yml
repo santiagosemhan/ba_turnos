@@ -108,3 +108,4 @@ acl:
       opciongeneral_delete: true
       exportar_turnos_show: true
       exportar_sesion_show: true
+      app_estado_fila_visualizar: true
