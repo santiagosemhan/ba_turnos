@@ -615,7 +615,14 @@ class TurnoController extends Controller
             $colaTurno= $this->getDoctrine()->getManager()->getRepository('AdminBundle:ColaTurno');
             $cola = $colaTurno->getTurno($turno);
             $cola = $cola[0];
-            $formatoLiso = $cola->getNumero() . '/' . $turno->getHoraTurno()->getTimestamp() . '/' . $turno->getId();
+            //$formatoLiso = $cola->getNumero() . '/' . $turno->getHoraTurno()->getTimestamp() . '/' . $turno->getId();
+
+            $formatoLiso =
+                $cola->getNumero() . '/' .
+                $turno->getHoraTurno()->getTimestamp() . '/' .
+                $turno->getId().'/'.
+                $cola->getLetraNumero().'/'.
+                $turno->getTipoTramite()->getDescripcion().'/';
 
             //obtengo la clase redis
             try {

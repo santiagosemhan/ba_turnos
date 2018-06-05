@@ -439,4 +439,8 @@ class ColaTurno extends BaseClass
 
         return $this;
     }
+
+    public function getLetraNumero(){
+        return $this->getLetra().'-'.$this->getNumero();
+    }
 }
