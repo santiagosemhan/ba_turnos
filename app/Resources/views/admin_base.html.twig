@@ -149,15 +149,15 @@
                 {% for permiso in permisos %}
                 {% if permiso == 'ROLE_PARAMETRIZAR' %}
 
-                {% if currentPath == 'app_estado_fila_visualizar' %}
-                    <li class="active treeview">
-                {% else %}
-                    <li class="treeview">
-                {% endif %}
-                <a href="{{ path('app_estado_fila_visualizar') }}">
-                    <i class="fa fa-refresh"></i> <span>Estado de la Fila</span>
-                </a>
-                </li>
+                {#{% if currentPath == 'app_estado_fila_visualizar' %}#}
+                    {#<li class="active treeview">#}
+                {#{% else %}#}
+                    {#<li class="treeview">#}
+                {#{% endif %}#}
+                {#<a href="{{ path('app_estado_fila_visualizar') }}">#}
+                    {#<i class="fa fa-refresh"></i> <span>Estado de la Fila</span>#}
+                {#</a>#}
+                {#</li>#}
 
                 {% if currentPath == 'cancelacionmasiva_index' %}
                 <li class="active treeview">

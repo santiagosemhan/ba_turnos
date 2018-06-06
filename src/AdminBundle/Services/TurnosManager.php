@@ -519,6 +519,133 @@ class TurnosManager
         return $cola;
     }
 
+    public function obtenerLetraTurnoSede($turnoSede,$tipoTramiteId,$prioritarios){
+
+        //Controlo que el turno que se esta por confirmar sea del dia
+        $date = new \DateTime('now');
+        $diaDesde = $this->disponibilidad->getUtil()->getFechaDateTime($date->format('d/m/Y'), '00:00:00');
+        $diaHasta = $this->disponibilidad->getUtil()->getFechaDateTime($date->format('d/m/Y'), '23:59:59');
+
+        $this->em->refresh($turnoSede);
+
+        //array con la cantidad de turnos que se puede asignar a cada turnoSede
+        $turnoSedeCantidadTurnos = array();
+        //array con la frenciancia de turnos que se puede asignar a cada turnoSede
+        $turnoSedeFrecuenciaTurnos = array();
+
+
+        //determino la letra que corresponde en base a los turnoSede
+        $repositoryTS = $this->em->getRepository('AdminBundle:TurnoSede')->createQueryBuilder('ts')
+            ->where('ts.sede = :sedeId AND ts.activo = true ')
+            ->setParameter('sedeId', $turnoSede->getSede()->getid())
+            ->orderBy('ts.id');
+        $turnosSede = $repositoryTS->getQuery()->getResult();
+        $turnoSedeIndiceLetra =0;
+        $indice =0;
+
+        //determino cual turnoSede es para asegnarle la letra
+        foreach ($turnosSede as $turnoSedeO) {
+            if ($turnoSede->getId() == $turnoSedeO->getId()) {
+                $turnoSedeIndiceLetra = $indice;
+            }
+            //inicilizo la cantidad
+            $cantidadTurnosSegudo = 1;
+            $horaDesde = $turnoSedeO->getHoraTurnosDesde();
+            $horaHasta = $turnoSedeO->getHoraTurnosHasta();
+            //Obtengo la clase DateInterval en base a la diferencia desde el inicio y fin de la Agenda
+            $horasTurno = $horaHasta->diff($horaDesde);
+            $difHoras = intval($horasTurno->format('%H'));
+            $difMinutos = intval($horasTurno->format('%i'));
+            //cantidad Minutos dentro del horario de antención de la Agenda
+            $difMinutos = $difMinutos + ($difHoras * 60);
+            //Cantidad de Turnos disponibles por Agenda
+            $cantidadTurnos = ($difMinutos / $turnoSedeO->getCantidadFrecuencia());
+            //coloco la parte entera de la cantidad de turnos que se atiende por agenda
+            $turnoSedeCantidadTurnos[$turnoSedeO->getId()] = intval($cantidadTurnos);
+            //coloco la frencia de los turnos por agenda
+            $turnoSedeFrecuenciaTurnos[$turnoSedeO->getId()] = $turnoSedeO->getCantidadSinTurnos() + $turnoSedeO->getCantidadTurnos();
+            //Controlo si la cantidad de turno es decimal, asi determino si aumento en uno mas los turnos
+            $partes = explode(".", $cantidadTurnos);
+            if (isset($partes[1])) {
+                if ($partes[1] > 0) {
+                    $turnoSedeCantidadTurnos[$turnoSedeO->getId()] = $turnoSedeCantidadTurnos[$turnoSedeO->getId()] +1;
+                }
+            }
+            $indice++;
+        }
+
+        //determina cuantos turnos se dan por el TurnoSede y horarios
+        $dia = $date->format('d');
+        $mes = $date->format('m');
+        $anio = $date->format('Y');
+        $turnosDeldia = array();
+
+        $diaActual = false;
+        //determino si es el dia actual
+        $fechaActual = $fechaActual = new \DateTime();
+        if ($dia == $fechaActual->format('d')) {
+            if ($mes == $fechaActual->format('m')) {
+                if ($anio == $fechaActual->format('Y')) {
+                    $diaActual = true;
+                }
+            }
+        }
+
+        //obtendo la distribucion de horario del turnoSede
+        $turnosDeldia = $this->disponibilidad->getCantidadHoraTurno($tipoTramiteId, $turnoSede, array(), $dia, $mes, $anio, $diaActual, true, false, true);
+
+
+        //en base a la cantidad determino el numero del turno en base la distribucion de turnos que existe.
+        $cantidad = 0;
+        $numeroTurno = 1;
+        foreach ($turnosDeldia as $indice => $turnoDeldia) {
+
+                //Sumo el acumulado mas la cantidad de turnos que tengo para la hora
+                $cantidad = $cantidad + ($turnoDeldia);
+
+        }
+
+        //controla si los turnoSede  ocupan mas de una letra
+        $ultimo = false;
+        foreach ($turnoSedeCantidadTurnos as $indicesTurno => $turnoSedeCantidadTurno) {
+            if ($indicesTurno == $turnoSede->getId()) {
+                $ultimo = true;
+            }
+            if ($ultimo == false) {
+                //Controlo si un turnoSede da mas que las dos convinaciones de letras
+                // (Ej: BA entonces la siguiente letra para el turnoSede actual debe ser CA)
+                if (($turnoSedeCantidadTurno*$turnoSedeFrecuenciaTurnos[$indicesTurno]) > 1078) {
+                    $saltosLentras = intdiv(($turnoSedeCantidadTurno*$turnoSedeFrecuenciaTurnos[$indicesTurno]), 1078);
+                    $turnoSedeIndiceLetra = $turnoSedeIndiceLetra+$saltosLentras;
+                }
+            }
+        }
+
+        //salto a la siguiente primera letra
+        $turnoSedeIndiceLetra = $turnoSedeIndiceLetra *11;
+
+        //Determino la letra a asignarse en base a la cantidad de turnosSede y el numero de Turno
+        //Determino el desafase que genera el numero de turno y cuantos saltos de combinaciones de las letras existe
+        //Ej: Cantidad 4143, tengo que saltar 42 letras para obtener la del turno
+        $saltosLentras = intdiv($numeroTurno, 98);
+
+        //Para determina el nuermo de turno, debe calcular si existen saltos de Letras
+        if ($saltosLentras> 0) {
+            //calculo el numero numero del turno por vuelve a comenzar la numeracion para la siguiente letra
+            //para que tenga el formato AA-11
+            $numeroTurno = $numeroTurno % 98;
+            //si el numero de turno calculado es 0 le asigno el 1 para comenzar
+            if ($numeroTurno == 0) {
+                $numeroTurno =1;
+            }
+            //Actualizo al Indice de la letra en base al orden de los turnos anterior
+            //mas los saltos de letras del turno actual en base al numero de turno que se agenda
+            $turnoSedeIndiceLetra = $turnoSedeIndiceLetra +$saltosLentras;
+        }
+        $letra = $this->obtenerLetra($turnoSedeIndiceLetra, $prioritarios);
+        return $letra;
+    }
+
     /**
      * Busca la letra correspondiente a la cantidad de turnos que se esta dando
      * @param $cantidad

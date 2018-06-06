@@ -18,17 +18,23 @@ class EstadoFilaController extends Controller
             throw new \Exception('Error 1000.TBC.STL No se encuentra el servicio para manejar las filas');
         }
         $resultArray = array();
-        //try {
+        try {
 
             $turnoSede = $this->get('manager.usuario')->getTurnoSede($this->getUser()->getId());
             foreach ($turnoSede as $turnoS) {
 
+                $this->getDoctrine()->getManager()->refresh($turnoS);
+
                 $turnosTipoTramites = $turnoS->getTurnoTipoTramite();
 
                 $tramite = array();
+                $letra = null;
                 foreach ($turnosTipoTramites as $turnoTipoTramite) {
                     $tipoTramiteObj = $turnoTipoTramite->getTipoTramite();
-                    $tramite[] = $tipoTramiteObj->getOpcionGeneral()->getDescripcion().' - '.$tipoTramiteObj->getDescripcion();
+                    if (is_null($letra)) {
+                        $letra = $this->get('manager.turnos')->obtenerLetraTurnoSede($turnoS, $tipoTramiteObj->getId(), true);
+                    }
+                    $tramite[] = $tipoTramiteObj->getOpcionGeneral()->getDescripcion() . ' - ' . $tipoTramiteObj->getDescripcion();
                 }
 
                 $usuarios = array();
@@ -42,45 +48,58 @@ class EstadoFilaController extends Controller
                 $nombreLista = $turnoS->getSede()->getLetra() . '/' . $turnoS->getId() . '/Prioritario';
                 $result = $redis->lRange($nombreLista, '0', '-1');
                 $arrayA = array();
-                foreach($result as $item ){
+                foreach ($result as $item) {
                     $explodeItem = explode('/', $item);
-                    $string = ($explodeItem[3]).' - '. ($explodeItem[4]);
-                    $arrayA[]=$string;
+                    $string = ($explodeItem[3]) . ' - ' . ($explodeItem[4]);
+                    $arrayA[] = $string;
                 }
                 $resultArray[] = [
-                                    'lista' => 'Id: '.$turnoS->getId().' '.$turnoS->__toString().'| Prioritario',
-                                    'cantidad'=> count($result),
-                                    'items'=> $arrayA,
-                                    'tramites' => $tramite,
-                                    'user' => $usuarios
-                                ];
+                    'lista' => 'Id: ' . $turnoS->getId() . ' ' . $turnoS->__toString() . '| Prioritario',
+                    'cantidad' => count($result),
+                    'items' => $arrayA,
+                    'tramites' => $tramite,
+                    'user' => $usuarios,
+                    'letra' => $letra
+                ];
+
+                $tramite = array();
+                $letra = null;
+
+                foreach ($turnosTipoTramites as $turnoTipoTramite) {
+                    $tipoTramiteObj = $turnoTipoTramite->getTipoTramite();
+                    if (is_null($letra)) {
+                        $letra = $this->get('manager.turnos')->obtenerLetraTurnoSede($turnoS, $tipoTramiteObj->getId(), false);
+                    }
+                    $tramite[] = $tipoTramiteObj->getOpcionGeneral()->getDescripcion() . ' - ' . $tipoTramiteObj->getDescripcion();
+                }
 
                 $nombreLista = $turnoS->getSede()->getLetra() . '/' . $turnoS->getId();
                 $result = $redis->lRange($nombreLista, '0', '-1');
                 $arrayA = array();
-                foreach($result as $item ){
+                foreach ($result as $item) {
                     $explodeItem = explode('/', $item);
-                    if(isset($explodeItem[3])) {
+                    if (isset($explodeItem[3])) {
                         $string = ($explodeItem[3]) . ' - ' . ($explodeItem[4]);
-                    }else{
-                        $string='';
+                    } else {
+                        $string = '';
                     }
-                    $arrayA[]=$string;
+                    $arrayA[] = $string;
                 }
 
                 $resultArray[] = [
-                    'lista' => 'Id: '.$turnoS->getId().' '.$turnoS->__toString(),
-                    'cantidad'=> count($result),
-                    'items'=> $arrayA,
+                    'lista' => 'Id: ' . $turnoS->getId() . ' ' . $turnoS->__toString(),
+                    'cantidad' => count($result),
+                    'items' => $arrayA,
                     'tramites' => $tramite,
-                    'user' => $usuarios
+                    'user' => $usuarios,
+                    'letra' => $letra
                 ];
             }
 
-//        } catch (\Exception $ex) {
-//            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
 
-//        }
+        } catch (\Exception $ex) {
+            $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
+        }
         return $this->render('AdminBundle:estadofila:visualizacion.html.twig', array(
             'sede' => $sede,
             'result' => $resultArray
