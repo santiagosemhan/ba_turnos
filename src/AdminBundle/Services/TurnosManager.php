@@ -351,8 +351,8 @@ class TurnosManager
         $repositoryTS = $this->em->getRepository('AdminBundle:TurnoSede')->createQueryBuilder('ts')
             ->where('ts.sede = :sedeId AND ts.activo = true ')
             ->setParameter('sedeId', $turnoSede->getSede()->getid())
-            ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')
-            ->setParameter('horaTurno', $turno->getHoraTurno())
+            //->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')
+            //->setParameter('horaTurno', $turno->getHoraTurno())
             ->orderBy('ts.id');
         $turnosSede = $repositoryTS->getQuery()->getResult();
         $turnoSedeIndiceLetra =0;
