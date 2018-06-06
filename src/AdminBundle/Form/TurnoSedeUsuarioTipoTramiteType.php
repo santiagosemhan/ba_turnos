@@ -71,7 +71,8 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
         $repositoryTT = $this->em->getRepository('UserBundle:User')->createQueryBuilder('t')
             ->innerJoin('AdminBundle:UsuarioSede', 'us', 'WITH', 'us.usuario = t.id')
             ->where('us.activo = true')
-            ->andWhere('us.sede = :sedeId')->setParameter('sedeId', $turnoSede->getSede()->getId());
+            ->andWhere('us.sede = :sedeId')->setParameter('sedeId', $turnoSede->getSede()->getId())
+            ->addOrderBy('t.username');
 
         $usuariosPorSede= $repositoryTT->getQuery()->getResult();
 
@@ -109,13 +110,20 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
         return $array;
     }
 
+
     private function getChoiseTurnoTipoTramite($options)
     {
         $this->em  = $options['compound']['em'];
         $turnoSede = $options['data'];
         $array = array();
-        $repositoryTT = $this->em->getRepository('AdminBundle:TipoTramite')->createQueryBuilder('t')
-            ->where('t.activo = true');
+
+        $repositoryTT =
+                $this->em->getRepository('AdminBundle:TipoTramite')
+                    ->createQueryBuilder('t')
+                    ->where('t.activo = true')
+                    ->addOrderBy('t.opcionGeneral')
+                    ->addOrderBy('t.id');
+
         $tiposTramites= $repositoryTT->getQuery()->getResult();
 
         $turnoSede = $options['data'];
@@ -135,7 +143,7 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
                 $tipo->setTipoTramite($tipoTramite);
                 $tipo->setTurnoSede($turnoSede);
             }
-            $array[$tipoTramite->__toString()] = $tipo;
+            $array[$tipoTramite->__toString()] = $tipo  ;
         }
         return $array;
     }

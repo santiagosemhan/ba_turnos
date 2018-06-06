@@ -208,11 +208,12 @@ class TurnoBoxController extends Controller
                 $turnoSede = $turnoSede[0];
                 // controlar si existen elementos en la cola prioritarios
                 $nombreLista = $turnoSede->getSede()->getLetra() . '/' . $turnoSede->getId() . '/Prioritario';
+                //obtengo el primer elemento de la fila
                 $item = $redis->lpop($nombreLista);
 
                 if ($item == false) {
                     $nombreLista = $turnoSede->getSede()->getLetra() . '/' . $turnoSede->getId();
-                    //obtengo el ultimo elemento de la cola
+                    //obtengo el primer elemento de la fila
                     $item = $redis->lpop($nombreLista);
                     $turnoSedeItem = $turnoSede;
                 }
@@ -273,7 +274,7 @@ class TurnoBoxController extends Controller
 
                     //controlo que encontre algo para sacar
                     if (!is_null($nombreColaSacar)) {
-                        //obtengo el ultimo elemento de la cola
+                        //obtengo el primer elemento de la fila
                         $item = $redis->lpop($nombreColaSacar);
                     }
 

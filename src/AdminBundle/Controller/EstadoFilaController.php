@@ -17,14 +17,15 @@ class EstadoFilaController extends Controller
         } catch (\Exception $e) {
             throw new \Exception('Error 1000.TBC.STL No se encuentra el servicio para manejar las filas');
         }
+
         $resultArray = array();
+        $resultArrayPrioritario = array();
         try {
 
             $turnoSede = $this->get('manager.usuario')->getTurnoSede($this->getUser()->getId());
             foreach ($turnoSede as $turnoS) {
 
                 $this->getDoctrine()->getManager()->refresh($turnoS);
-
                 $turnosTipoTramites = $turnoS->getTurnoTipoTramite();
 
                 $tramite = array();
@@ -53,7 +54,7 @@ class EstadoFilaController extends Controller
                     $string = ($explodeItem[3]) . ' - ' . ($explodeItem[4]);
                     $arrayA[] = $string;
                 }
-                $resultArray[] = [
+                $resultArrayPrioritario[] = [
                     'lista' => 'Id: ' . $turnoS->getId() . ' ' . $turnoS->__toString() . '| Prioritario',
                     'cantidad' => count($result),
                     'items' => $arrayA,
@@ -76,10 +77,14 @@ class EstadoFilaController extends Controller
                 $nombreLista = $turnoS->getSede()->getLetra() . '/' . $turnoS->getId();
                 $result = $redis->lRange($nombreLista, '0', '-1');
                 $arrayA = array();
+
+                $date = new \DateTime();
+
                 foreach ($result as $item) {
                     $explodeItem = explode('/', $item);
                     if (isset($explodeItem[3])) {
-                        $string = ($explodeItem[3]) . ' - ' . ($explodeItem[4]);
+                        $hora = substr($explodeItem[1],0,2).':'.substr($explodeItem[1],2,2);
+                        $string = ($explodeItem[3]) . ' - ' . $explodeItem[4].' - '.$hora;
                     } else {
                         $string = '';
                     }
@@ -102,7 +107,8 @@ class EstadoFilaController extends Controller
         }
         return $this->render('AdminBundle:estadofila:visualizacion.html.twig', array(
             'sede' => $sede,
-            'result' => $resultArray
+            'resultNormal' => $resultArray,
+            'resultPrioritario' => $resultArrayPrioritario
         ));
     }
 

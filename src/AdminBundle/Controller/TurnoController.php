@@ -619,7 +619,7 @@ class TurnoController extends Controller
 
             $formatoLiso =
                 $cola->getNumero() . '/' .
-                $turno->getHoraTurno()->getTimestamp() . '/' .
+                $turno->getHoraTurno()->format('His') . '/' .
                 $turno->getId().'/'.
                 $cola->getLetraNumero().'/'.
                 $turno->getTipoTramite()->getDescripcion().'/';
@@ -652,8 +652,8 @@ class TurnoController extends Controller
                 $indiceInsert = null;
                 foreach ($result as $lista) {
                     $id = explode('/', $lista);
-                    $id = intval($id[0]);
-                    if ($id > $cola->getNumero()) {
+                    $id = intval($id[1]);
+                    if ($id > $turno->getHoraTurno()->format('His')) {
                         //Determino si el valor anterior es el primero
                         if (is_null($indiceInsert)) {
                             $indiceInsert = $lista;
@@ -675,7 +675,7 @@ class TurnoController extends Controller
 
                     } else {
                         //Inserto en el primer lugar que el valor es mayor al indice a guardar.
-                        //Ej.LINSERT mylist BEFORE "World" "There" para insertar "There" antes de "Word"
+                        //Ej.LINSERT mylist BEFORE "World" "Hello" para insertar "Hello" antes de "Word"
                         try {
                             $redis->lInsert($nombreLista, 'BEFORE', $indiceInsert, $formatoLiso);
                         } catch (\Exception $e) {

@@ -124,6 +124,7 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
 
             if ($editForm->isSubmitted() && $editForm->isValid()) {
                 try {
+
                     /*
                      *  Valida los TurnoTipoTramite que se sacaron
                      */
@@ -169,6 +170,7 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
                      */
                     $em->persist($turnoSede);
                     $em->flush();
+
                     // set flash messages
                     $this->get('session')->getFlashBag()->add('success', 'El registro se ha actualizado satisfactoriamente.');
                 } catch (\Exception $e) {
@@ -194,7 +196,8 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
         $repositoryTT = $em->getRepository('UserBundle:User')->createQueryBuilder('t')
             ->innerJoin('AdminBundle:UsuarioSede', 'us', 'WITH', 'us.usuario = t.id')
             ->where('us.activo = true')
-            ->andWhere('us.sede = :sedeId')->setParameter('sedeId', $turnoSede->getSede()->getId());
+            ->andWhere('us.sede = :sedeId')->setParameter('sedeId', $turnoSede->getSede()->getId())
+            ->addOrderBy('t.username');
 
         $usuariosPorSede = $repositoryTT->getQuery()->getResult();
 
@@ -222,11 +225,19 @@ class TurnoSedeUsuarioTipoTramiteController extends Controller
 
     private function getChoiseTurnoTipoTramite($turnoSede)
     {
+        //Busca los TurnosTipoTramites guardados en TurnoSede y compara con los recibidos por post
+
         $em = $this->get('doctrine')->getManager();
+
         $array = array();
-        $repositoryTT = $em->getRepository('AdminBundle:TipoTramite')->createQueryBuilder('t')
-            ->where('t.activo = true');
-        $tiposTramites = $repositoryTT->getQuery()->getResult();
+        $repositoryTT =
+            $em->getRepository('AdminBundle:TipoTramite')
+                ->createQueryBuilder('t')
+                ->where('t.activo = true')
+                ->addOrderBy('t.opcionGeneral')
+                ->addOrderBy('t.id');
+        $tiposTramites= $repositoryTT->getQuery()->getResult();
+
         $turnoSedeGuardado = $em->getRepository('AdminBundle:TurnoSede')->findOneById($turnoSede->getId());
         $tipostramitesPorTurno = $turnoSedeGuardado->getTurnoTipoTramite();
 
