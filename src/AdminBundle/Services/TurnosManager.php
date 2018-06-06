@@ -426,7 +426,7 @@ class TurnosManager
                                 WHERE (p.fechaTurno between :fecha_turno_desde and :fecha_turno_hasta)
                                   AND t.horaTurno = :horaTurno
                                   AND p.sede = :sedeId
-                                  AND t.tipoTramite = :tipoTramiteId ";
+                                  AND ts.id = :turnoSedeId ";
 
                     //'AND (:horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta) ";
 
@@ -436,7 +436,7 @@ class TurnosManager
                         ->setParameter('fecha_turno_hasta', $fecha . ' 23:59:59')
                         ->setParameter('horaTurno', $turno->getHoraTurno()->format('H:i:s'))
                         ->setParameter('sedeId', $cola->getSede()->getId())
-                        ->setParameter('tipoTramiteId', $turno->getTipoTramite()->getId());
+                        ->setParameter('turnoSedeId', $turnoSede->getId());
                     //->setParameter('horaTurno', $turno->getHoraTurno());
 
                     $db =  $query->execute();
