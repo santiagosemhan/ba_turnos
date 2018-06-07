@@ -767,6 +767,261 @@ class TurnosManager
                     case 32:
                         $letra = "OK";
                         break;
+                    /*
+                     * Lertra P
+                     */
+                    case 33:
+                        $letra = "PA";
+                        break;
+                    case 34:
+                        $letra = "PB";
+                        break;
+                    case 35:
+                        $letra = "PC";
+                        break;
+                    case 36:
+                        $letra = "PD";
+                        break;
+                    case 37:
+                        $letra = "PE";
+                        break;
+                    case 38:
+                        $letra = "PF";
+                        break;
+                    case 39:
+                        $letra = "PG";
+                        break;
+                    case 40:
+                        $letra = "PH";
+                        break;
+                    case 41:
+                        $letra = "PI";
+                        break;
+                    case 42:
+                        $letra = "PJ";
+                        break;
+                    case 43:
+                        $letra = "PK";
+                        break;
+                    /*
+                    * Lertra Q
+                    */
+                    case 44:
+                        $letra = "QA";
+                        break;
+                    case 45:
+                        $letra = "QB";
+                        break;
+                    case 46:
+                        $letra = "QC";
+                        break;
+                    case 47:
+                        $letra = "QD";
+                        break;
+                    case 48:
+                        $letra = "QE";
+                        break;
+                    case 49:
+                        $letra = "QF";
+                        break;
+                    case 50:
+                        $letra = "QG";
+                        break;
+                    case 51:
+                        $letra = "QH";
+                        break;
+                    case 52:
+                        $letra = "QI";
+                        break;
+                    case 53:
+                        $letra = "QJ";
+                        break;
+                    case 54:
+                        $letra = "QK";
+                        break;
+
+                    /*
+                    * Lertra R
+                    */
+                    case 55:
+                        $letra = "RA";
+                        break;
+                    case 56:
+                        $letra = "RB";
+                        break;
+                    case 57:
+                        $letra = "RC";
+                        break;
+                    case 58:
+                        $letra = "RD";
+                        break;
+                    case 59:
+                        $letra = "RE";
+                        break;
+                    case 60:
+                        $letra = "RF";
+                        break;
+                    case 61:
+                        $letra = "RG";
+                        break;
+                    case 62:
+                        $letra = "RH";
+                        break;
+                    case 63:
+                        $letra = "RI";
+                        break;
+                    case 64:
+                        $letra = "RJ";
+                        break;
+                    case 65:
+                        $letra = "RK";
+                        break;
+                    /*
+                    * Lertra H
+                    */
+                    case 66:
+                        $letra = "SA";
+                        break;
+                    case 67:
+                        $letra = "SB";
+                        break;
+                    case 68:
+                        $letra = "SC";
+                        break;
+                    case 69:
+                        $letra = "SD";
+                        break;
+                    case 70:
+                        $letra = "SE";
+                        break;
+                    case 71:
+                        $letra = "SF";
+                        break;
+                    case 72:
+                        $letra = "SG";
+                        break;
+                    case 73:
+                        $letra = "SH";
+                        break;
+                    case 74:
+                        $letra = "SI";
+                        break;
+                    case 75:
+                        $letra = "SJ";
+                        break;
+                    case 76:
+                        $letra = "SK";
+                        break;
+
+                    /*
+                    * Lertra T
+                    */
+                    case 77:
+                        $letra = "TA";
+                        break;
+                    case 78:
+                        $letra = "TB";
+                        break;
+                    case 79:
+                        $letra = "TC";
+                        break;
+                    case 80:
+                        $letra = "TD";
+                        break;
+                    case 81:
+                        $letra = "TE";
+                        break;
+                    case 82:
+                        $letra = "TF";
+                        break;
+                    case 83:
+                        $letra = "TG";
+                        break;
+                    case 84:
+                        $letra = "TH";
+                        break;
+                    case 85:
+                        $letra = "TI";
+                        break;
+                    case 86:
+                        $letra = "TJ";
+                        break;
+                    case 87:
+                        $letra = "TK";
+                        break;
+                    /*
+                    * Lertra J
+                    */
+                    case 88:
+                        $letra = "UA";
+                        break;
+                    case 89:
+                        $letra = "UB";
+                        break;
+                    case 90:
+                        $letra = "UC";
+                        break;
+                    case 91:
+                        $letra = "UD";
+                        break;
+                    case 92:
+                        $letra = "UE";
+                        break;
+                    case 93:
+                        $letra = "UF";
+                        break;
+                    case 94:
+                        $letra = "UG";
+                        break;
+                    case 95:
+                        $letra = "UH";
+                        break;
+                    case 96:
+                        $letra = "UI";
+                        break;
+                    case 97:
+                        $letra = "UJ";
+                        break;
+                    case 98:
+                        $letra = "UK";
+                        break;
+                    /*
+                    * Lertra K
+                    */
+                    case 99:
+                        $letra = "VA";
+                        break;
+                    case 100:
+                        $letra = "VB";
+                        break;
+                    case 101:
+                        $letra = "VC";
+                        break;
+                    case 102:
+                        $letra = "VD";
+                        break;
+                    case 103:
+                        $letra = "VE";
+                        break;
+                    case 104:
+                        $letra = "VF";
+                        break;
+                    case 105:
+                        $letra = "VG";
+                        break;
+                    case 106:
+                        $letra = "VH";
+                        break;
+                    case 107:
+                        $letra = "VI";
+                        break;
+                    case 108:
+                        $letra = "VJ";
+                        break;
+                    case 109:
+                        $letra = "VK";
+                        break;
+
                 }
             } else {
                 switch ($cantidad) {

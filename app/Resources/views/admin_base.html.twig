@@ -141,13 +141,6 @@
                         <i class="fa fa-th"></i> <span>Administrar Box</span>
                     </a>
                 </li>
-                {% endif %}
-                {% endfor %}
-
-
-
-                {% for permiso in permisos %}
-                {% if permiso == 'ROLE_PARAMETRIZAR' %}
 
                 {% if currentPath == 'app_estado_fila_visualizar' %}
                     <li class="active treeview">
@@ -158,6 +151,16 @@
                     <i class="fa fa-refresh"></i> <span>Estado de la Fila</span>
                 </a>
                 </li>
+
+                {% endif %}
+                {% endfor %}
+
+
+
+                {% for permiso in permisos %}
+                {% if permiso == 'ROLE_PARAMETRIZAR' %}
+
+
 
                 {% if currentPath == 'cancelacionmasiva_index' %}
                 <li class="active treeview">
