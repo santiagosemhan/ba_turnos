@@ -1989,15 +1989,26 @@ class TurnosManager
     }
 
     public function marcarAtendidoTurno($turno){
+
+        $this->em->refresh($turno);
         $cola = $turno->getColaTurno();
-        $cola = $cola[0];
-        $cola->setAtendido(true);
-        $this->em->persist($cola);
+        $colaS = $cola[0];
+
+        $colaSave = $this->em
+            ->getRepository('AdminBundle:ColaTurno')
+            ->findOneBy(array('letra' => $colaS->getLetra(), 'numero' => $colaS->getNumero()));
+
+        $colaSave->setAtendido(true);
+        $colaSave->setFechaAtendido(new \DateTime("now"));
+
+        $this->em->persist($colaSave);
         $this->em->flush();
     }
 
     public function marcarLlamadoTurno($turno, $box, $usuario)
     {
+        $this->em->refresh($turno);
+
         $cola = $turno->getColaTurno();
         $colaS = $cola[0];
 
