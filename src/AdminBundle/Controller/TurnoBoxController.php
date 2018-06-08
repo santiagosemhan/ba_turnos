@@ -79,11 +79,16 @@ class TurnoBoxController extends Controller
             return $this->redirectToRoute('app_box_atencion_seleccion_box');
         }
 
-        $turno = $this->get('session')->get('turno');
+        $turnoId = $this->get('session')->get('turno');
         $conTurno = true;
-        if (is_null($turno)) {
+        if (is_null($turnoId)) {
             $conTurno = false;
         }
+        if(is_object($turnoId)){
+            $turnoId = $turnoId->getId();
+        }
+        $turno = $this->getDoctrine()->getManager()->getRepository('AdminBundle:Turno')->findOneById($turnoId);
+
 
         return $this->render('AdminBundle:turnoBox:administrar.html.twig', array(
             'box' => 'Administrar ' . $box,
@@ -116,7 +121,7 @@ class TurnoBoxController extends Controller
             if ($turno[0]) {
                 $conTurno = true;
                 $turno = $turno[1];
-                $this->get('session')->set('turno', $turno);
+                $this->get('session')->set('turno', $turno->getId());
                 $this->get('session')->getFlashBag()->add('success', 'Se llamo por monitor al próximo número');
             } else {
                 $conTurno = false;
@@ -159,13 +164,20 @@ class TurnoBoxController extends Controller
                 return $this->redirectToRoute('app_box_atencion_seleccion_box');
             }
 
-            $turno = $this->get('session')->get('turno');
+            $turnoId = $this->get('session')->get('turno');
             $conTurno = true;
-            if (is_null($turno)) {
+            if (is_null($turnoId)) {
                 $conTurno = false;
                 $this->get('session')->getFlashBag()->add('error', 'No se encuentra el turno');
             } else {
                 $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+                if(is_object($turnoId)){
+                    $turnoId = $turnoId->getId();
+                }
+
+                $turno = $this->getDoctrine()->getManager()->getRepository('AdminBundle:Turno')->findOneById($turnoId);
+
                 $this->get('manager.turnos')->marcarLlamadoTurno($turno,$box,$user);
 
                 $this->informaCambioMonitor($turno, $box);
@@ -294,6 +306,8 @@ class TurnoBoxController extends Controller
                 if (count($turnos) > 0) {
                     //genero los datos para enviar al monitor
                     $turno = $turnos[0];
+
+                    $this->getDoctrine()->getManager()->refresh($turno);
 
                     $user = $this->container->get('security.token_storage')->getToken()->getUser();
                     $this->get('manager.turnos')->marcarLlamadoTurno($turno,$box,$user);
