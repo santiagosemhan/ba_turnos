@@ -1386,6 +1386,42 @@ class TurnosManager
                     case 109:
                         $letra = "KK";
                         break;
+                /*
+                * Letra L
+                */
+                    case 110:
+                        $letra = "LA";
+                        break;
+                    case 111:
+                        $letra = "LB";
+                        break;
+                    case 112:
+                        $letra = "LC";
+                        break;
+                    case 113:
+                        $letra = "LD";
+                        break;
+                    case 114:
+                        $letra = "LE";
+                        break;
+                    case 115:
+                        $letra = "LF";
+                        break;
+                    case 116:
+                        $letra = "LG";
+                        break;
+                    case 117:
+                        $letra = "LH";
+                        break;
+                    case 118:
+                        $letra = "LI";
+                        break;
+                    case 119:
+                        $letra = "LJ";
+                        break;
+                    case 120:
+                        $letra = "LK";
+                        break;
                 }
             }
             return $letra;
