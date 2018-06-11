@@ -1466,18 +1466,18 @@ class TurnosManager
 
                             //Luego de confirmar los datos, envio el mail y guardo los cambios
                             //Creo el mail con los datos del turno y comprobante para guardarlo
-                            $mail = new Mail();
-                            $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
-                            $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
-                            $mail->setTurno($turno);
-                            $mail->setEmail($turno->getMail1());
-                            $mail->setNombre($turno->getNombreApellido());
-                            $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(),'',true));
-                            $mail->setEnviado($this->sendEmail($mail));
-                            if ($mail->getEnviado()) {
-                                $mail->setFechaEnviado(new \DateTime("now"));
-                            }
-                            $this->em->persist($mail);
+//                            $mail = new Mail();
+//                            $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
+//                            $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
+//                            $mail->setTurno($turno);
+//                            $mail->setEmail($turno->getMail1());
+//                            $mail->setNombre($turno->getNombreApellido());
+//                            $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(),'',true));
+//                            $mail->setEnviado($this->sendEmail($mail));
+//                            if ($mail->getEnviado()) {
+//                                $mail->setFechaEnviado(new \DateTime("now"));
+//                            }
+//                            $this->em->persist($mail);
                             $this->em->flush();
 
                         } catch (Exception $e) {
@@ -1518,20 +1518,22 @@ class TurnosManager
                                 $this->em->flush();
                                 $this->em->getConnection()->commit();
 
-                                //Luego de confirmar los datos, envio el mail y guardo los cambios
-                                //Creo el mail con los datos del turno y comprobante para guardarlo
-                                $mail = new Mail();
-                                $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
-                                $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
-                                $mail->setTurno($turno);
-                                $mail->setEmail($turno->getMail1());
-                                $mail->setNombre($turno->getNombreApellido());
-                                $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
-                                $mail->setEnviado($this->sendEmail($mail));
-                                if ($mail->getEnviado()) {
-                                    $mail->setFechaEnviado(new \DateTime("now"));
+                                if($turno->getViaMostrador() == false) {
+                                    //Luego de confirmar los datos, envio el mail y guardo los cambios
+                                    //Creo el mail con los datos del turno y comprobante para guardarlo
+                                    $mail = new Mail();
+                                    $mail->setTextoMail($this->getCuerpoMail(1 /*Nuevo Turno*/));
+                                    $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
+                                    $mail->setTurno($turno);
+                                    $mail->setEmail($turno->getMail1());
+                                    $mail->setNombre($turno->getNombreApellido());
+                                    $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto()));
+                                    $mail->setEnviado($this->sendEmail($mail));
+                                    if ($mail->getEnviado()) {
+                                        $mail->setFechaEnviado(new \DateTime("now"));
+                                    }
+                                    $this->em->persist($mail);
                                 }
-                                $this->em->persist($mail);
                                 $this->em->flush();
 
                             } catch (Exception $e) {
@@ -1650,21 +1652,23 @@ class TurnosManager
                     $tipoMail = 3;
                 }
                 $this->em->persist($turno);
-                
-                $mail = new Mail();
-                $mail->setTextoMail($this->getCuerpoMail($tipoMail));
-                $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
-                $mail->setTurno($turno);
-                $mail->setEmail($turno->getMail1());
-                $mail->setNombre($turno->getNombreApellido());
-                $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(),$motivoCancelacion));
 
-                $mail->setEnviado($this->sendEmail($mail));
-                if ($mail->getEnviado()) {
-                    $mail->setFechaEnviado(new \DateTime("now"));
+                if($turno->getViaMostrador() == false) {
+                    $mail = new Mail();
+                    $mail->setTextoMail($this->getCuerpoMail($tipoMail));
+                    $mail->setAsunto($this->formateTexto($turno, $mail->getTextoMail()->getAsunto()));
+                    $mail->setTurno($turno);
+                    $mail->setEmail($turno->getMail1());
+                    $mail->setNombre($turno->getNombreApellido());
+                    $mail->setTexto($this->formateTexto($mail->getTurno(), $mail->getTextoMail()->getTexto(), $motivoCancelacion));
+
+                    $mail->setEnviado($this->sendEmail($mail));
+                    if ($mail->getEnviado()) {
+                        $mail->setFechaEnviado(new \DateTime("now"));
+                    }
+
+                    $this->em->persist($mail);
                 }
-
-                $this->em->persist($mail);
                 $this->em->flush();
             }
 
@@ -1709,6 +1713,7 @@ class TurnosManager
                 return false;
             }
         }catch (\Exception $e){
+
             $exp = new \Exception('Error 2.TM.SE No se pudo enviar el mail');
             throw $exp;
         }
@@ -2032,7 +2037,7 @@ class TurnosManager
 
         $colaSave = $this->em
             ->getRepository('AdminBundle:ColaTurno')
-            ->findOneBy(array('letra' => $colaS->getLetra(), 'numero' => $colaS->getNumero()));
+            ->findOneById($colaS->getId());
 
         $colaSave->setAtendido(true);
         $colaSave->setFechaAtendido(new \DateTime("now"));
