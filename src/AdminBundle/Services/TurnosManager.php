@@ -2050,11 +2050,11 @@ class TurnosManager
 
         $colaSave = $this->em
             ->getRepository('AdminBundle:ColaTurno')
-            ->findOneBy(array('letra' => $colaS->getLetra(), 'numero' => $colaS->getNumero()));
+            ->findOneById($colaS->getId());
 
         $boxs= $this->em
             ->getRepository('AdminBundle:Box')
-            ->findOneBy(array('descripcion' => $box->getDescripcion()));
+            ->findOneById($box->getId());
 
         $colaSave->setLlamado(true);
         $colaSave->setFechaLlamado(new \DateTime("now"));
