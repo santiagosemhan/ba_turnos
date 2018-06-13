@@ -365,16 +365,26 @@ class TurnosManager
             }
             //inicilizo la cantidad
             $cantidadTurnosSegudo = 1;
+            $cantidadTurnos = 0;
             $horaDesde = $turnoSedeO->getHoraTurnosDesde();
             $horaHasta = $turnoSedeO->getHoraTurnosHasta();
             //Obtengo la clase DateInterval en base a la diferencia desde el inicio y fin de la Agenda
             $horasTurno = $horaHasta->diff($horaDesde);
             $difHoras = intval($horasTurno->format('%H'));
             $difMinutos = intval($horasTurno->format('%i'));
-            //cantidad Minutos dentro del horario de antención de la Agenda
-            $difMinutos = $difMinutos + ($difHoras * 60);
-            //Cantidad de Turnos disponibles por Agenda
-            $cantidadTurnos = ($difMinutos / $turnoSedeO->getCantidadFrecuencia());
+
+            if ($turnoSedeO->getFrecunciaTurnoControl() == 'minutos') {
+                //cantidad Minutos dentro del horario de antención de la Agenda
+                $difMinutos = $difMinutos + ($difHoras / 60);
+                //Cantidad de Turnos disponibles por Agenda
+                $cantidadTurnos = ($difMinutos / $turnoSedeO->getCantidadFrecuencia());
+            }else{
+                //cantidad Minutos dentro del horario de antención de la Agenda
+                $difHoras = $difHoras + ($difMinutos / 60);
+                //Cantidad de Turnos disponibles por Agenda
+                $cantidadTurnos = ($difHoras / $turnoSede->getCantidadFrecuencia());
+            }
+
             //coloco la parte entera de la cantidad de turnos que se atiende por agenda
             $turnoSedeCantidadTurnos[$turnoSedeO->getId()] = intval($cantidadTurnos);
             //coloco la frencia de los turnos por agenda
@@ -548,18 +558,28 @@ class TurnosManager
             if ($turnoSede->getId() == $turnoSedeO->getId()) {
                 $turnoSedeIndiceLetra = $indice;
             }
+
             //inicilizo la cantidad
             $cantidadTurnosSegudo = 1;
+            $cantidadTurnos =0;
             $horaDesde = $turnoSedeO->getHoraTurnosDesde();
             $horaHasta = $turnoSedeO->getHoraTurnosHasta();
             //Obtengo la clase DateInterval en base a la diferencia desde el inicio y fin de la Agenda
             $horasTurno = $horaHasta->diff($horaDesde);
             $difHoras = intval($horasTurno->format('%H'));
             $difMinutos = intval($horasTurno->format('%i'));
-            //cantidad Minutos dentro del horario de antención de la Agenda
-            $difMinutos = $difMinutos + ($difHoras * 60);
-            //Cantidad de Turnos disponibles por Agenda
-            $cantidadTurnos = ($difMinutos / $turnoSedeO->getCantidadFrecuencia());
+            if ($turnoSedeO->getFrecunciaTurnoControl() == 'minutos') {
+                //cantidad Minutos dentro del horario de antención de la Agenda
+                $difMinutos = $difMinutos + ($difHoras / 60);
+                //Cantidad de Turnos disponibles por Agenda
+                $cantidadTurnos = ($difMinutos / $turnoSedeO->getCantidadFrecuencia());
+            }else{
+                //cantidad Minutos dentro del horario de antención de la Agenda
+                $difHoras = $difHoras + ($difMinutos / 60);
+                //Cantidad de Turnos disponibles por Agenda
+                $cantidadTurnos = ($difHoras / $turnoSede->getCantidadFrecuencia());
+            }
+
             //coloco la parte entera de la cantidad de turnos que se atiende por agenda
             $turnoSedeCantidadTurnos[$turnoSedeO->getId()] = intval($cantidadTurnos);
             //coloco la frencia de los turnos por agenda
