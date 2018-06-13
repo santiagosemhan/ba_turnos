@@ -72,6 +72,10 @@ class TurnoSedeController extends Controller
                 $turnoSede->setHoraTurnosDesde($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosDesde()));
                 $turnoSede->setHoraTurnosHasta($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosHasta()));
 
+                if($turnoSede->getSoloPresencial()){
+                    $turnoSede->setCantidadTurnos(0);
+                }
+
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($turnoSede);
                 $em->flush();
@@ -144,6 +148,10 @@ class TurnoSedeController extends Controller
 
                 $turnoSede->setHoraTurnosDesde($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosDesde()));
                 $turnoSede->setHoraTurnosHasta($this->get('manager.util')->getHoraDateTime($turnoSede->getHoraTurnosHasta()));
+
+                if($turnoSede->getSoloPresencial()){
+                    $turnoSede->setCantidadTurnos(0);
+                }
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($turnoSede);

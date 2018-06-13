@@ -5,6 +5,7 @@ namespace AdminBundle\Services;
 
 use AdminBundle\Entity\Turnos;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Validator\Constraints\Date;
 
 class DisponibilidadManager
 {
@@ -54,6 +55,19 @@ class DisponibilidadManager
         $opcionesGenerales= $this->em->getRepository('AdminBundle:OpcionGeneral');
         return $opcionGeneral = $opcionesGenerales->getOpcionesGenerales($hydrate_array);
     }
+
+    /**
+     * obtiene las opciones Generales guardadas para la web, devuelve en array si se al parametro es = true
+     * @param bool $hydrate_array
+     * @return array|Collection
+     */
+    public function getOpcionesGeneralesWeb($hydrate_array = false)
+    {
+        $opcionesGenerales= $this->em->getRepository('AdminBundle:OpcionGeneral');
+        return $opcionGeneral = $opcionesGenerales->getOpcionesGeneralesConTramiteSoloWeb($hydrate_array);
+    }
+
+
 
     /**
      * Se obtiene los tipos de tramite en base a la opcion general pasada, devuelve en array si el parametro $hydrate_array = true
@@ -803,9 +817,39 @@ class DisponibilidadManager
                     }
                 }
                 $difHoras = $difHoras + ($difMinutos / 60);
-                $cantidadTurnos = ($difMinutos / $turnoSede->getCantidadFrecuencia());
+                $cantidadTurnos = ($difHoras / $turnoSede->getCantidadFrecuencia());
+                if( (floor($cantidadTurnos) > 01) AND (floor($cantidadTurnos) < 49) ) {
+                    $cantidadTurnos = round($cantidadTurnos) + 1;
+                }else{
+                    $cantidadTurnos = round($cantidadTurnos);
+                }
                 $intervalo = new \DateInterval('PT' . $turnoSede->getCantidadFrecuencia() . 'H');
                 if ($cantidadTurnos > 0) {
+                    if ($diaActual) {
+                        //si debo informar todos los dias, no hago un control, simplemente lo agrego
+                        if($informarTodosLosTurnos){
+                            $turnosHora[$horaDesde->format('H:i')] = $cantidad;
+                        }else {
+                            //controlo que la fecha no se haya vencido
+                            if($turnoSede->getsoloPresencial()){
+                                //Si es solo presencial, determino si el turno que estoy sacando esta dentro del intervalo de atencion
+                                $horaHastaIntervalo = new \DateTime('1970-01-01' . ' ' . ($horaDesde->format('H') + $intervalo->h) . ':' . $horaDesde->format('i') . ':00');
+                                if (($horaDesde > $fechaActual) or ($fechaActual < $horaHastaIntervalo)) {
+                                    $turnosHora[$horaDesde->format('H:i')] = $cantidad;
+                                }
+                            }else{
+                                if (($horaDesde > $fechaActual) ) {
+                                    $turnosHora[$horaDesde->format('H:i')] = $cantidad;
+                                }
+                            }
+                        }
+                    } else {
+                        $turnosHora[$horaDesde->format('H:i')] = $cantidad;
+                    }
+                    $cantidadTurnos--;
+                }
+                while ($cantidadTurnos > 0) {
+                    $horaDesde->add($intervalo);
                     if ($diaActual) {
                         if (($horaDesde > $fechaActual)) {
                             $turnosHora[$horaDesde->format('H:i')] = $cantidad;
@@ -815,17 +859,8 @@ class DisponibilidadManager
                     }
                     $cantidadTurnos--;
                 }
-                while ($cantidadTurnos > 0) {
-                    $horaDesde->add($intervalo);
-                    if ($horaDesde>$fechaActual or $diaActual) {
-                        $turnosHora[$horaDesde->format('H:i')] = $cantidad;
-                    }
-                    $cantidadTurnos--;
-                }
             }
         }
-
-
 
         //Actualizo el array$cantidadDiaTurno con los nuevos datos del turnoSede
         if (count($cantidadDiaTurno)>0) {
@@ -851,7 +886,12 @@ class DisponibilidadManager
 
     private function verificaTipoTurnoTipoDia($turnoSede, $dia, $mes, $anio)
     {
-        $control = false;
+
+        //$control = false;
+
+        //Para debugar
+        $control = true;
+
         if ($turnoSede->getLunes()) {
             if ($this->util->getDiaSemana($dia, $mes, $anio) == 1) {
                 $control = true;
@@ -953,5 +993,201 @@ class DisponibilidadManager
             return true;
         }
     }
+
+    /**
+     * Procedmiento que permite obtener los horarios diponible de una sede/tipo de tramite para un dia en particular de forma Presencial
+     *
+     * @param $dia
+     * @param $mes
+     * @param $anio
+     * @param $tipoTurnoId
+     * @param $sedeId
+     * @param bool $conTurnoSede
+     * @param bool $contabilizarSoloSinTurno
+     * @return array
+     */
+    public function getHorasDisponiblesPresencial($dia, $mes, $anio, $tipoTurnoId, $sedeId, $conTurnoSede = false,$contabilizarSoloSinTurno=false)
+    {
+        $busca =false;
+        $horasHabiles = array();
+        $diaDesde = $this->util->getFechaDateTime(sprintf("%02d", $dia) . '/' . sprintf("%02d", $mes) . '/' . $anio, '00:00:00');
+        $diaHasta = $this->util->getFechaDateTime(sprintf("%02d", $dia) . '/' .sprintf("%02d", $mes) . '/' . $anio, '23:59:59');
+
+        //busca si la fecha actual no sea del pasado
+        if(intval(date('Y') == $anio)){
+            if (intval(date('m')) == $mes) {
+                if (intval(date('d')) <= $dia) {
+                    $busca = true;
+                } else {
+                    $busca = false;
+                }
+            } elseif ($mes > intval(date('m'))) {
+                $busca = true;
+            } else {
+                $busca = false;
+            }
+        }elseif(intval( $anio > date('Y') )){
+            $busca = true;
+        }else {
+            $busca = false;
+        }
+
+        if ($busca) {
+
+            //busco la parametrización las Agendas del día (teniendo en cuenta las vigencias)
+            $repositoryTS = $this->em
+                ->getRepository('AdminBundle:TurnoSede')
+                ->createQueryBuilder('ts')
+                ->where('ts.sede = :sedeId AND ts.activo = true ')
+                ->setParameter('sedeId', $sedeId);
+
+            $turnosSedes = $repositoryTS->getQuery()->getResult();
+
+            $turnosSedeArray = array();
+            $turnosDeldia = array();
+            $turnosSedeUtilizados  = array();
+            $existe = false;
+
+            //recorro todos las agendas cargadas
+            foreach ($turnosSedes as $turnoSede) {
+
+                $diaActual = false;
+                if (intval(date('d')) == $dia) {
+                    $diaActual = true;
+                }
+
+                //$tempHora = ($this->util->getHoraDateTime($turnoSede->getHoraTurnosDesde()->format('H:i: A')));
+                //$temp2Hora = ($this->util->getHoraDateTime($turnoSede->getHoraTurnosHasta()->format('H:i: A')));
+                //$tempFrecuencia = $turnoSede->getCantidadFrecuencia();
+
+                $turnoSedeDefineTramite = false;
+                //controla si la Agenda tiene Tipos de Tramites asignados
+                if (count($turnoSede->getTurnoTipoTramite())>0) {
+                    foreach ($turnoSede->getTurnoTipoTramite() as $tipoTramiteTurno) {
+                        if ($tipoTramiteTurno->getTipoTramite()->getId() == $tipoTurnoId) {
+                            $existeTipoTramiteSede = true;
+                            $turnoSedeDefineTramite = true;
+                        }
+                    }
+                    if ($turnoSedeDefineTramite) {
+                        $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,false,$contabilizarSoloSinTurno);
+
+                        if ($conTurnoSede) {
+                            $turnosSedeUtilizados[] = array('turnoSede' => $turnoSede, 'tipoTramite'=> $tipoTurnoId, 'turnosDeldia' => $turnosDeldia);
+                        } else {
+                            $turnosSedeUtilizados[] = $turnoSede;
+                        }
+                    }
+                } else {
+                    $turnosDeldia = $this->getCantidadHoraTurno($tipoTurnoId, $turnoSede, $turnosDeldia, $dia, $mes, $anio, $diaActual,false,$contabilizarSoloSinTurno);
+
+                    if ($conTurnoSede) {
+                        $turnosSedeUtilizados[] = array('turnoSede' => $turnoSede,  'tipoTramite'=> false, 'turnosDeldia' => $turnosDeldia);
+                    } else {
+                        $turnosSedeUtilizados[] = $turnosDeldia;
+                    }
+                }
+            }
+
+            //Busca los turnos reservados que no sean sacados en la recepcion
+            $repositoryT = $this->em->getRepository('AdminBundle:Turno', 'p')->createQueryBuilder('p')
+                ->where('p.sede = :sedeId')
+                ->setParameter('sedeId', $sedeId)
+                ->andWhere('p.fechaTurno between  :fecha_turno_desde  and :fecha_turno_hasta')
+                ->andWhere('p.fechaCancelado IS NULL')
+                ->setParameter('fecha_turno_desde', $diaDesde)
+                ->setParameter('fecha_turno_hasta', $diaHasta);
+
+            //Para determinar que turnos entregados (turnos entregados sin turnos previo) debo contabilizar
+            if($contabilizarSoloSinTurno == true){
+                $repositoryT->andWhere('p.viaMostrador = true');
+            }else{
+                $repositoryT->andWhere('p.viaMostrador = false');
+            }
+
+            //Si corresponde a un tipo de tramite  seleccionando
+            if ($existe) {
+                $repositoryT->andWhere('p.tipoTramite = :tipo_tramite')->setParameter('tipo_tramite', $tipoTurnoId);
+            }
+            //Obtengo los turnos para contabilizar
+            $turnos = $repositoryT->getQuery()->getResult();
+            foreach ($turnos as $turno) {
+
+                if (isset($turnosDeldia[$turno->getHoraTurno()->format('H:i')])) {
+                    $turnosDeldia[$turno->getHoraTurno()->format('H:i')] = $turnosDeldia[$turno->getHoraTurno()->format('H:i')] - 1;
+                }
+
+                //Controlo si el turno pase mas de un slot
+                $repositoryTT = $this->em->getRepository('AdminBundle:TurnoTipoTramite')->createQueryBuilder('tt')
+                    ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnoSede = ts.id')
+                    ->where('(tt.tipoTramite = :tipoTramite) AND tt.activo = true')
+                    ->setParameter('tipoTramite', $tipoTurnoId)
+                    ->andWhere('(ts.sede = :sedeId) AND ts.activo = true ')
+                    ->setParameter('sedeId', $sedeId)
+                    ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')
+                    ->setParameter('horaTurno', $this->util->getHoraString($turno->getHoraTurno()))
+                ;
+                $turnosTramites = $repositoryTT->getQuery()->getResult();
+
+                //Controlo que sea con regla de un tipoTurno o global
+                if (count($turnosTramites) > 0) { //corresponde a uno que tiene defino
+                    foreach ($turnosTramites as $turnoTramite) {
+                        $slot = $turnoTramite->getCantidadSlot();
+                        $intervalo = new \DateInterval('PT' . $turnoTramite->getTurnoSede()->getCantidadFrecuencia() . 'M');
+                        $horaDesde = $turno->getHoraTurno();
+                        while ($slot > 1) {
+                            $horaDesde->add($intervalo);
+                            if (isset($turnosDeldia[$horaDesde->format('H:i')])) {
+                                $turnosDeldia[$horaDesde->format('H:i')] = $turnosDeldia[$horaDesde->format('H:i')] - 1;
+                            }
+                            $slot --;
+                        }
+                    }
+                } else { //como no tiene definido un tiempo por tipo de tramite. Busco todos los turnos que tiene ocupan slots
+                    //Controlo si el turno pase mas de un slot
+                    $repositoryTT = $this->em->getRepository('AdminBundle:TurnoTipoTramite')->createQueryBuilder('tt')
+                        ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'tt.turnoSede = ts.id')
+                        ->where('tt.activo = true')
+                        ->andWhere('(ts.sede = :sedeId) AND ts.activo = true ')->setParameter('sedeId', $sedeId)
+                        ->andWhere(' :horaTurno between  ts.horaTurnosDesde and ts.horaTurnosHasta')->setParameter('horaTurno', $this->util->getHoraString($turno->getHoraTurno()))
+                    ;
+                    $turnosTramites = $repositoryTT->getQuery()->getResult();
+
+                    foreach ($turnosTramites as $turnoTramite) {
+                        $slot = $turnoTramite->getCantidadSlot();
+                        $intervalo = new \DateInterval('PT' . $turnoTramite->getTurnoSede()->getCantidadFrecuencia() . 'M');
+                        $horaDesde = $turno->getHoraTurno();
+                        while ($slot > 1) {
+                            $horaDesde->add($intervalo);
+                            if (isset($turnosDeldia[$horaDesde->format('H:i')])) {
+                                $turnosDeldia[$horaDesde->format('H:i')] = $turnosDeldia[$horaDesde->format('H:i')] - 1;
+                            }
+                            $slot --;
+                        }
+                    }
+                }
+            }
+
+            //Controlo si tiene asociado un Tipo Tramite que ocupa varios slots
+            $turnosDeldia = $this->controlaDisponibilidadTipoTramiteConSlot($dia, $mes, $anio, $sedeId, $tipoTurnoId, $turnosDeldia, $turnosSedeArray);
+
+
+            foreach ($turnosDeldia as $clave => $valor) {
+                if ($valor > 0) {
+                    $horasHabiles[] = $clave;
+                }
+            }
+            if ($conTurnoSede) {
+                $horasHabiles = array( 'horasHabiles' => $horasHabiles, 'turnosSedeUtilizados'=>$turnosSedeUtilizados);
+            } else {
+                $horasHabiles = array( 'horasHabiles' => $horasHabiles);
+            }
+        }else{
+            $horasHabiles = array( 'horasHabiles' => []);
+        }
+
+        return $horasHabiles;
+    }
+
 
 }

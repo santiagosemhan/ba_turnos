@@ -10,7 +10,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                                <th>Id</th>
+                                <th>Descripcion</th>
                                 <th>Sede</th>
                                 <th>Días</th>
                                 <th>Hora desde</th>
@@ -27,7 +27,11 @@
                         <tbody>
                         {% for turnosSede in turnosSedes %}
                         <tr>
-                                    <td><a href="{{ path('turnosede_show', { 'id': turnosSede.id }) }}">{{ turnosSede.id }}</a></td>
+                                    <td>
+                                        <a href="{{ path('turnosede_show', { 'id': turnosSede.id }) }}">
+                                            {% if turnosSede.descripcion %}{{ turnosSede.descripcion }}{% else %}{{ turnosSede.id  }}{% endif %}
+                                        </a>
+                                    </td>
                                     <td>{{ turnosSede.sede }}</td>
                                     <td>{{ turnosSede.diasAtiende }}</td>
                                     <td>{% if turnosSede.horaTurnosDesde %}{{ turnosSede.horaTurnosDesde|date('H:i A')  }}{% endif %}</td>

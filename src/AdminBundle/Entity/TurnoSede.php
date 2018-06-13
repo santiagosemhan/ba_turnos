@@ -19,6 +19,16 @@ class TurnoSede extends BaseClass
     private $id;
 
     /**
+     * @ORM\Column(name="descripcion",type="string", length=250, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @ORM\Column(name="solo_presencial",type="boolean", nullable=true)
+     */
+    private $soloPresencial;
+
+    /**
      * @ORM\Column(name="lunes",type="boolean", nullable=true)
      */
     private $lunes;
@@ -127,6 +137,55 @@ class TurnoSede extends BaseClass
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return OpcionGeneral
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+
+    /**
+     * Set SoloPresencial
+     *
+     * @param boolean $soloPresencial
+     *
+     * @return TurnoSede
+     */
+    public function setSoloPresencial($soloPresencial)
+    {
+        $this->soloPresencial = $soloPresencial;
+
+        return $this;
+    }
+
+    /**
+     * Get SoloPresencial
+     *
+     * @return boolean
+     */
+    public function getSoloPresencial()
+    {
+        return $this->soloPresencial;
     }
 
     /**
@@ -617,7 +676,11 @@ class TurnoSede extends BaseClass
 
     public function __toString()
     {
-        return $this->sede->getSede().' | Dias:'.$this->getDiasAtiende().' | '.$this->getHorasAtiende().' | '.$this->getVigenciasTurno();
+        $str =$this->sede->getSede().' | Dias:'.$this->getDiasAtiende().' | '.$this->getHorasAtiende().' | '.$this->getVigenciasTurno();
+        if($this->descripcion){
+            $str = $this->descripcion.' | '.$str;
+        }
+        return $str;
     }
 
 

@@ -44,6 +44,7 @@ class TipoTramiteRepository extends EntityRepository
             ->innerJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')
             ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'ts.id = tt.turnoSede')
             ->where('ts.sede = :sede AND tr.activo = true')
+            ->andWhere('ts.cantidadSinTurnos > 0')
             ->addOrderBy('tr.opcionGeneral')
             ->addOrderBy('tr.descripcion')
             ->setParameter("sede", $sede);

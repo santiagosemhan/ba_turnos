@@ -18,7 +18,8 @@ class TurnoSedeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('lunes')
+        $builder->add('descripcion',TextType::class,array('required'=>true,'label'=>'Descripción'))
+                ->add('lunes')
                 ->add('martes')
                 ->add('miercoles')
                 ->add('jueves')
@@ -26,6 +27,7 @@ class TurnoSedeType extends AbstractType
                 ->add('sabado')
                 ->add('horaTurnosDesde',TextType::class, array('attr'  => array('class'=>"timepicker"),'required'=>true,'label'=>'Hora Desde'))
                 ->add('horaTurnosHasta',TextType::class, array('attr'  => array('class'=>"timepicker"),'required'=>true,'label'=>'Hora Hasta'))
+                ->add('soloPresencial')
                 ->add('cantidadTurnos',IntegerType::class,array('required'=>true,'label'=>'Cantidad Turnos'))
                 ->add('cantidadSinTurnos',IntegerType::class,array('required'=>true,'label'=>'Cantidad  Sin Turnos'))
                 ->add('cantidadFrecuencia',IntegerType::class,array('required'=>true,'label'=>'Cantidad Frecuencia'))

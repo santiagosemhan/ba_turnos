@@ -15,7 +15,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        $opcionesGenerales = $this->get('manager.disponibilidad')->getOpcionesGenerales();
+        $opcionesGenerales = $this->get('manager.disponibilidad')->getOpcionesGeneralesWeb();
 
         $opciones = [];
 

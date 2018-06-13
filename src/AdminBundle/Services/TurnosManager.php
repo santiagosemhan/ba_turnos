@@ -1024,403 +1024,621 @@ class TurnosManager
 
                 }
             } else {
+//                $primeraLetra = 'A';
+//                $saltoPrimerLetra = 0;
+//                $segundaLetra = 'A';
+//                $saltoSegundaLetra= 0;
+//                $terceraLetra = 'A';
+//                $saltoTerceraLetra= 0;
+//
+//                $indice = 0;
+//                while ($indice < $cantidad){
+//                    if($saltoTerceraLetra < 12 ){
+//                        $terceraLetra++;
+//                        $saltoTerceraLetra++;
+//                    }else{
+//                        if($saltoSegundaLetra < 121) {
+//                            $terceraLetra = 'A';
+//                            $saltoTerceraLetra = 0;
+//
+//                            $segundaLetra++;
+//                            $saltoSegundaLetra++;
+//
+//                        }else{
+//                            $terceraLetra = 'A';
+//                            $saltoTerceraLetra = 0;
+//
+//                            $segundaLetra= 'A';
+//                            $saltoSegundaLetra = 0;
+//
+//                            $primeraLetra++;
+//                            $saltoPrimerLetra++;
+//                        }
+//                    }
+//                    $indice++;
+//                }
+//                $letra = $primeraLetra.$segundaLetra.$terceraLetra;
+
+
                 switch ($cantidad) {
                     /*
                      * Letra A
                      */
                     case 0:
-                        $letra = "AA";
+                        $letra = "AAA";
                         break;
                     case 1:
-                        $letra = "AB";
+                        $letra = "AAB";
                         break;
                     case 2:
-                        $letra = "AC";
+                        $letra = "AAC";
                         break;
                     case 3:
-                        $letra = "AD";
+                        $letra = "AAD";
                         break;
                     case 4:
-                        $letra = "AE";
+                        $letra = "AAE";
                         break;
                     case 5:
-                        $letra = "AF";
+                        $letra = "AAF";
                         break;
                     case 6:
-                        $letra = "AG";
+                        $letra = "AAG";
                         break;
                     case 7:
-                        $letra = "AH";
+                        $letra = "AAH";
                         break;
                     case 8:
-                        $letra = "AI";
+                        $letra = "AAI";
                         break;
                     case 9:
-                        $letra = "AJ";
+                        $letra = "AAJ";
                         break;
                     case 10:
-                        $letra = "AK";
+                        $letra = "AAK";
                         break;
                     /*
                      * Letra B
                      */
                     case 11:
-                        $letra = "BA";
+                        $letra = "ABA";
                         break;
                     case 12:
-                        $letra = "BB";
+                        $letra = "ABB";
                         break;
                     case 13:
-                        $letra = "BC";
+                        $letra = "ABC";
                         break;
                     case 14:
-                        $letra = "BD";
+                        $letra = "ABD";
                         break;
                     case 15:
-                        $letra = "BE";
+                        $letra = "ABE";
                         break;
                     case 16:
-                        $letra = "BF";
+                        $letra = "ABF";
                         break;
                     case 17:
-                        $letra = "BG";
+                        $letra = "ABG";
                         break;
                     case 18:
-                        $letra = "BH";
+                        $letra = "ABH";
                         break;
                     case 19:
-                        $letra = "BI";
+                        $letra = "ABI";
                         break;
                     case 20:
-                        $letra = "BJ";
+                        $letra = "ABJ";
                         break;
                     case 21:
-                        $letra = "BK";
+                        $letra = "ABK";
                         break;
                     /*
                      * Lertra C
                      */
                     case 22:
-                        $letra = "CA";
+                        $letra = "ACA";
                         break;
                     case 23:
-                        $letra = "CB";
+                        $letra = "ACB";
                         break;
                     case 24:
-                        $letra = "CC";
+                        $letra = "ACC";
                         break;
                     case 25:
-                        $letra = "CD";
+                        $letra = "ACD";
                         break;
                     case 26:
-                        $letra = "CE";
+                        $letra = "ACE";
                         break;
                     case 27:
-                        $letra = "CF";
+                        $letra = "ACF";
                         break;
                     case 28:
-                        $letra = "CG";
+                        $letra = "ACG";
                         break;
                     case 29:
-                        $letra = "CH";
+                        $letra = "ACH";
                         break;
                     case 30:
-                        $letra = "CI";
+                        $letra = "ACI";
                         break;
                     case 31:
-                        $letra = "CJ";
+                        $letra = "ACJ";
                         break;
                     case 32:
-                        $letra = "CK";
+                        $letra = "ACK";
                         break;
                     /*
                      * Lertra D
                      */
                     case 33:
-                        $letra = "DA";
+                        $letra = "ADA";
                         break;
                     case 34:
-                        $letra = "DB";
+                        $letra = "ADB";
                         break;
                     case 35:
-                        $letra = "DC";
+                        $letra = "ADC";
                         break;
                     case 36:
-                        $letra = "DD";
+                        $letra = "ADD";
                         break;
                     case 37:
-                        $letra = "DE";
+                        $letra = "ADE";
                         break;
                     case 38:
-                        $letra = "DF";
+                        $letra = "ADF";
                         break;
                     case 39:
-                        $letra = "DG";
+                        $letra = "ADG";
                         break;
                     case 40:
-                        $letra = "DH";
+                        $letra = "ADH";
                         break;
                     case 41:
-                        $letra = "DI";
+                        $letra = "ADI";
                         break;
                     case 42:
-                        $letra = "DJ";
+                        $letra = "ADJ";
                         break;
                     case 43:
-                        $letra = "DK";
+                        $letra = "ADK";
                         break;
                     /*
                     * Lertra F
                     */
                     case 44:
-                        $letra = "FA";
+                        $letra = "AFA";
                         break;
                     case 45:
-                        $letra = "FB";
+                        $letra = "AFB";
                         break;
                     case 46:
-                        $letra = "FC";
+                        $letra = "AFC";
                         break;
                     case 47:
-                        $letra = "FD";
+                        $letra = "AFD";
                         break;
                     case 48:
-                        $letra = "FE";
+                        $letra = "AFE";
                         break;
                     case 49:
-                        $letra = "FF";
+                        $letra = "AFF";
                         break;
                     case 50:
-                        $letra = "FG";
+                        $letra = "AFG";
                         break;
                     case 51:
-                        $letra = "FH";
+                        $letra = "AFH";
                         break;
                     case 52:
-                        $letra = "FI";
+                        $letra = "AFI";
                         break;
                     case 53:
-                        $letra = "FJ";
+                        $letra = "AFJ";
                         break;
                     case 54:
-                        $letra = "CK";
+                        $letra = "ACK";
                         break;
 
                     /*
                     * Lertra G
                     */
                     case 55:
-                        $letra = "GA";
+                        $letra = "AGA";
                         break;
                     case 56:
-                        $letra = "GB";
+                        $letra = "AGB";
                         break;
                     case 57:
-                        $letra = "GC";
+                        $letra = "AGC";
                         break;
                     case 58:
-                        $letra = "GD";
+                        $letra = "AGD";
                         break;
                     case 59:
-                        $letra = "GE";
+                        $letra = "AGE";
                         break;
                     case 60:
-                        $letra = "GF";
+                        $letra = "AGF";
                         break;
                     case 61:
-                        $letra = "GG";
+                        $letra = "AGG";
                         break;
                     case 62:
-                        $letra = "GH";
+                        $letra = "AGH";
                         break;
                     case 63:
-                        $letra = "GI";
+                        $letra = "AGI";
                         break;
                     case 64:
-                        $letra = "GJ";
+                        $letra = "AGJ";
                         break;
                     case 65:
-                        $letra = "GK";
+                        $letra = "AGK";
                         break;
                     /*
                     * Lertra H
                     */
                     case 66:
-                        $letra = "HA";
+                        $letra = "AHA";
                         break;
                     case 67:
-                        $letra = "HB";
+                        $letra = "AHB";
                         break;
                     case 68:
-                        $letra = "HC";
+                        $letra = "AHC";
                         break;
                     case 69:
-                        $letra = "HD";
+                        $letra = "AHD";
                         break;
                     case 70:
-                        $letra = "HE";
+                        $letra = "AHE";
                         break;
                     case 71:
-                        $letra = "HF";
+                        $letra = "AHF";
                         break;
                     case 72:
-                        $letra = "HG";
+                        $letra = "AHG";
                         break;
                     case 73:
-                        $letra = "HH";
+                        $letra = "AHH";
                         break;
                     case 74:
-                        $letra = "HI";
+                        $letra = "AHI";
                         break;
                     case 75:
-                        $letra = "HJ";
+                        $letra = "AHJ";
                         break;
                     case 76:
-                        $letra = "HK";
+                        $letra = "AHK";
                         break;
                     /*
                     * Lertra I
                     */
                     case 77:
-                        $letra = "IA";
+                        $letra = "AIA";
                         break;
                     case 78:
-                        $letra = "IB";
+                        $letra = "AIB";
                         break;
                     case 79:
-                        $letra = "IC";
+                        $letra = "AIC";
                         break;
                     case 80:
-                        $letra = "ID";
+                        $letra = "AID";
                         break;
                     case 81:
-                        $letra = "IE";
+                        $letra = "AIE";
                         break;
                     case 82:
-                        $letra = "IF";
+                        $letra = "AIF";
                         break;
                     case 83:
-                        $letra = "IG";
+                        $letra = "AIG";
                         break;
                     case 84:
-                        $letra = "IH";
+                        $letra = "AIH";
                         break;
                     case 85:
-                        $letra = "II";
+                        $letra = "AII";
                         break;
                     case 86:
-                        $letra = "IJ";
+                        $letra = "AIJ";
                         break;
                     case 87:
-                        $letra = "IK";
+                        $letra = "AIK";
                         break;
                     /*
                     * Lertra J
                     */
                     case 88:
-                        $letra = "JA";
+                        $letra = "AJA";
                         break;
                     case 89:
-                        $letra = "JB";
+                        $letra = "AJB";
                         break;
                     case 90:
-                        $letra = "JC";
+                        $letra = "AJC";
                         break;
                     case 91:
-                        $letra = "JD";
+                        $letra = "AJD";
                         break;
                     case 92:
-                        $letra = "JE";
+                        $letra = "AJE";
                         break;
                     case 93:
-                        $letra = "JF";
+                        $letra = "AJF";
                         break;
                     case 94:
-                        $letra = "JG";
+                        $letra = "AJG";
                         break;
                     case 95:
-                        $letra = "JH";
+                        $letra = "AJH";
                         break;
                     case 96:
-                        $letra = "JI";
+                        $letra = "AJI";
                         break;
                     case 97:
-                        $letra = "JJ";
+                        $letra = "AJJ";
                         break;
                     case 98:
-                        $letra = "JK";
+                        $letra = "AJK";
                         break;
                     /*
                     * Lertra K
                     */
                     case 99:
-                        $letra = "KA";
+                        $letra = "AKA";
                         break;
                     case 100:
-                        $letra = "KB";
+                        $letra = "AKB";
                         break;
                     case 101:
-                        $letra = "KC";
+                        $letra = "AKC";
                         break;
                     case 102:
-                        $letra = "KD";
+                        $letra = "AKD";
                         break;
                     case 103:
-                        $letra = "KE";
+                        $letra = "AKE";
                         break;
                     case 104:
-                        $letra = "KF";
+                        $letra = "AKF";
                         break;
                     case 105:
-                        $letra = "KG";
+                        $letra = "AKG";
                         break;
                     case 106:
-                        $letra = "KH";
+                        $letra = "AKH";
                         break;
                     case 107:
-                        $letra = "KI";
+                        $letra = "AKI";
                         break;
                     case 108:
-                        $letra = "KJ";
+                        $letra = "AKJ";
                         break;
                     case 109:
-                        $letra = "KK";
+                        $letra = "AKK";
                         break;
                 /*
                 * Letra L
                 */
                     case 110:
-                        $letra = "LA";
+                        $letra = "ALA";
                         break;
                     case 111:
-                        $letra = "LB";
+                        $letra = "ALB";
                         break;
                     case 112:
-                        $letra = "LC";
+                        $letra = "ALC";
                         break;
                     case 113:
-                        $letra = "LD";
+                        $letra = "ALD";
                         break;
                     case 114:
-                        $letra = "LE";
+                        $letra = "ALE";
                         break;
                     case 115:
-                        $letra = "LF";
+                        $letra = "ALF";
                         break;
                     case 116:
-                        $letra = "LG";
+                        $letra = "ALG";
                         break;
                     case 117:
-                        $letra = "LH";
+                        $letra = "ALH";
                         break;
                     case 118:
-                        $letra = "LI";
+                        $letra = "ALI";
                         break;
                     case 119:
-                        $letra = "LJ";
+                        $letra = "ALJ";
                         break;
                     case 120:
-                        $letra = "LK";
+                        $letra = "ALK";
+                        break;
+                    /*
+                     * SALTO B
+                     *
+                     * Letra A
+                    */
+                    case 121:
+                        $letra = "BAA";
+                        break;
+                    case 122:
+                        $letra = "BAB";
+                        break;
+                    case 123:
+                        $letra = "BAC";
+                        break;
+                    case 124:
+                        $letra = "BAD";
+                        break;
+                    case 125:
+                        $letra = "BAE";
+                        break;
+                    case 126:
+                        $letra = "BAF";
+                        break;
+                    case 127:
+                        $letra = "BAG";
+                        break;
+                    case 128:
+                        $letra = "BAH";
+                        break;
+                    case 129:
+                        $letra = "BAI";
+                        break;
+                    case 130:
+                        $letra = "BAJ";
+                        break;
+                    case 131:
+                        $letra = "BAK";
+                        break;
+                    /*
+                     * Letra B
+                     */
+                    case 132:
+                        $letra = "BBA";
+                        break;
+                    case 133:
+                        $letra = "BBB";
+                        break;
+                    case 134:
+                        $letra = "BBC";
+                        break;
+                    case 135:
+                        $letra = "BBD";
+                        break;
+                    case 136:
+                        $letra = "BBE";
+                        break;
+                    case 137:
+                        $letra = "BBF";
+                        break;
+                    case 138:
+                        $letra = "BBG";
+                        break;
+                    case 139:
+                        $letra = "BBH";
+                        break;
+                    case 140:
+                        $letra = "BBI";
+                        break;
+                    case 141:
+                        $letra = "BBJ";
+                        break;
+                    case 142:
+                        $letra = "BBK";
+                        break;
+                    /*
+                     * Lertra C
+                     */
+                    case 143:
+                        $letra = "BCA";
+                        break;
+                    case 144:
+                        $letra = "BCB";
+                        break;
+                    case 145:
+                        $letra = "BCC";
+                        break;
+                    case 146:
+                        $letra = "BCD";
+                        break;
+                    case 147:
+                        $letra = "BCE";
+                        break;
+                    case 148:
+                        $letra = "BCF";
+                        break;
+                    case 149:
+                        $letra = "BCG";
+                        break;
+                    case 150:
+                        $letra = "BCH";
+                        break;
+                    case 151:
+                        $letra = "BCI";
+                        break;
+                    case 152:
+                        $letra = "BCJ";
+                        break;
+                    case 153:
+                        $letra = "BCK";
+                        break;
+                    /*
+                     * Lertra D
+                     */
+                    case 154:
+                        $letra = "BDA";
+                        break;
+                    case 155:
+                        $letra = "BDB";
+                        break;
+                    case 156:
+                        $letra = "BDC";
+                        break;
+                    case 157:
+                        $letra = "BDD";
+                        break;
+                    case 158:
+                        $letra = "BDE";
+                        break;
+                    case 159:
+                        $letra = "BDF";
+                        break;
+                    case 160:
+                        $letra = "BDG";
+                        break;
+                    case 161:
+                        $letra = "BDH";
+                        break;
+                    case 162:
+                        $letra = "BDI";
+                        break;
+                    case 163:
+                        $letra = "BDJ";
+                        break;
+                    case 164:
+                        $letra = "BDK";
+                        break;
+                    /*
+                    * Lertra F
+                    */
+                    case 165:
+                        $letra = "BFA";
+                        break;
+                    case 166:
+                        $letra = "BFB";
+                        break;
+                    case 166:
+                        $letra = "BFC";
+                        break;
+                    case 167:
+                        $letra = "BFD";
+                        break;
+                    case 168:
+                        $letra = "BFE";
+                        break;
+                    case 169:
+                        $letra = "BFF";
+                        break;
+                    case 170:
+                        $letra = "BFG";
+                        break;
+                    case 171:
+                        $letra = "BFH";
+                        break;
+                    case 172:
+                        $letra = "BFI";
+                        break;
+                    case 173:
+                        $letra = "BFJ";
+                        break;
+                    case 174:
+                        $letra = "BCK";
                         break;
                 }
             }

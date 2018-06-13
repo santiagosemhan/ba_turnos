@@ -143,7 +143,7 @@ class TurnoSedeUsuarioTipoTramiteType extends AbstractType
                 $tipo->setTipoTramite($tipoTramite);
                 $tipo->setTurnoSede($turnoSede);
             }
-            $array[$tipoTramite->__toString()] = $tipo  ;
+            $array[$tipoTramite->getId().' - '. $tipoTramite->__toString()] = $tipo  ;
         }
         return $array;
     }

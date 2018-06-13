@@ -184,6 +184,8 @@ class TurnoController extends Controller
         } catch (\Exception $ex) {
             $this->get('session')->getFlashBag()->add('error', $ex->getMessage());
         }
+        return $this->redirectToRoute('turno_cancelar', array('id' => $turno->getId()));
+
 
     }
 
@@ -244,27 +246,11 @@ class TurnoController extends Controller
 
                 $turnoGuardado = $this->get('manager.turnos')->guardarTurno($turno,true);
 
-                //determino el turnoSede
-                //$status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
                 if ($turnoGuardado) {
 
-                    /*$turno->setTurnoSede($status['data']);
+                    $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), false);
+                    $this->agregarTurnoLista($turno, false);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($turno);
-
-                    $comprobante = new Comprobante();
-                    $comprobante->setTurno($turno);
-                    $comprobante->setSede($sede);
-                    $comprobante->setLetra($sede->getLetra());
-                    $comprobante->setNumero($turno->getNumero());
-                    $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
-                    $em->persist($comprobante);
-
-                    $em->flush();*/
-
-                    //$this->get('manager.turnos')->confirmarTurno($turnoGuardado, $this->getUser(), false);
-                    //$this->agregarTurnoLista($turnoGuardado, false);
                     return $this->redirectToRoute('turno_show', array('id' => $turnoGuardado->getId()));
 
                 } else {
@@ -317,8 +303,6 @@ class TurnoController extends Controller
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                //$em = $this->getDoctrine()->getManager();
-                //$em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
 
                     $turno->setSede($sede);
@@ -328,27 +312,10 @@ class TurnoController extends Controller
 
                     $turnoGuardado = $this->get('manager.turnos')->guardarTurno($turno,true);
 
-                    //determino el turnoSede
-                    //$status = $this->get('manager.disponibilidad')->controlaDisponibilidad($turno->getFechaTurno(), $turno->getHoraTurno(), $turno->getTipoTramite()->getId(), $sede->getId());
                     if ($turnoGuardado) {
 
-                        /*$turno->setTurnoSede($status['data']);
-
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($turno);
-
-                        $comprobante = new Comprobante();
-                        $comprobante->setTurno($turno);
-                        $comprobante->setSede($sede);
-                        $comprobante->setLetra($sede->getLetra());
-                        $comprobante->setNumero($turno->getNumero());
-                        $comprobante->setTipoTramite($turno->getTipoTramite()->getDescripcion());
-                        $em->persist($comprobante);
-
-                        $em->flush();*/
-
-                        //$this->get('manager.turnos')->confirmarTurno($turnoGuardado, $this->getUser(), true);
-                        //$this->agregarTurnoLista($turnoGuardado, true);
+                        $this->get('manager.turnos')->confirmarTurno($turno, $this->getUser(), true);
+                        $this->agregarTurnoLista($turno, true);
 
                         return $this->redirectToRoute('turno_show', array('id' => $turnoGuardado->getId()));
 
@@ -391,10 +358,12 @@ class TurnoController extends Controller
             if (is_null($sede)) {
                 return new JsonResponse('No tiene seleccionado una sede', 404);
             } else {
-                $horas = $this->get('manager.disponibilidad')->getHorasDisponibles(
+                $horas = $this->get('manager.disponibilidad')->getHorasDisponiblesPresencial(
                     date('d'), date('m'), date('Y'),
                     $tipoTramiteId, $sede,
                     false, true);
+
+
                 if (count($horas['horasHabiles']) > 0) {
                     $result = $horas['horasHabiles'];
                 } else {
@@ -552,6 +521,8 @@ class TurnoController extends Controller
 
     }
 
+
+
     public function procesarCambioTurnoPrioritarioAction(Turno $turno)
     {
         try {
@@ -605,24 +576,34 @@ class TurnoController extends Controller
     {
 
         try {
+            $tSede = $turno->getTurnoSede();
             //genero el nombre de la lista
             if ($prioritario) {
-                $nombreLista = $turno->getTurnoSede()->getSede()->getLetra() . '/' . $turno->getTurnoSede()->getId() . '/Prioritario';
+                $nombreLista = $tSede->getSede()->getLetra() . '/' . $turno->getTurnoSede()->getId() . '/Prioritario';
             } else {
-                $nombreLista = $turno->getTurnoSede()->getSede()->getLetra() . '/' . $turno->getTurnoSede()->getId();
+                $nombreLista = $tSede->getSede()->getLetra() . '/' . $turno->getTurnoSede()->getId();
             }
             //creo el formato del texto a guardar
-            $colaTurno= $this->getDoctrine()->getManager()->getRepository('AdminBundle:ColaTurno');
+            $colaTurno = $this->getDoctrine()->getManager()->getRepository('AdminBundle:ColaTurno');
             $cola = $colaTurno->getTurno($turno);
             $cola = $cola[0];
             //$formatoLiso = $cola->getNumero() . '/' . $turno->getHoraTurno()->getTimestamp() . '/' . $turno->getId();
 
-            $formatoLiso =
-                $cola->getNumero() . '/' .
-                $turno->getHoraTurno()->format('His') . '/' .
-                $turno->getId().'/'.
-                $cola->getLetraNumero().'/'.
-                $turno->getTipoTramite()->getDescripcion().'/';
+            if ($tSede->getSoloPresencial()) {
+                $formatoLiso =
+                    $cola->getNumero() . '/' .
+                    $turno->getFechaConfirmacion()->format('His') . '/' .
+                    $turno->getId() . '/' .
+                    $cola->getLetraNumero() . '/' .
+                    $turno->getTipoTramite()->getDescripcion() . '/';
+            } else {
+                $formatoLiso =
+                    $cola->getNumero() . '/' .
+                    $turno->getHoraTurno()->format('His') . '/' .
+                    $turno->getId() . '/' .
+                    $cola->getLetraNumero() . '/' .
+                    $turno->getTipoTramite()->getDescripcion() . '/';
+            }
 
             //obtengo la clase redis
             try {
@@ -653,11 +634,24 @@ class TurnoController extends Controller
                 foreach ($result as $lista) {
                     $id = explode('/', $lista);
                     $id = intval($id[1]);
-                    if ($id > $turno->getHoraTurno()->format('His')) {
-                        //Determino si el valor anterior es el primero
-                        if (is_null($indiceInsert)) {
-                            $indiceInsert = $lista;
-                            break;
+                    if ($tSede->getSoloPresencial()) {
+                        if ($id > $turno->getFechaConfirmacion()->format('His')) {
+                            if (is_null($indiceInsert)) {
+                                $indiceInsert = $lista;
+                                break;
+                            }
+                        }
+                    }else {
+                        if ($id > $turno->getHoraTurno()->format('His')) {
+                            //Determino si el valor anterior es el primero
+                            //ID 140000 (14:00:00) y turno 141500 (14:15:00)
+                            // NO
+                            //ID 143000 (14:30:00) y turno 141500 (14:15:00)
+                            // Si .. lo inserto antes de de 14:30:00
+                            if (is_null($indiceInsert)) {
+                                $indiceInsert = $lista;
+                                break;
+                            }
                         }
                     }
                 }
