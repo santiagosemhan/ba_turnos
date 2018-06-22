@@ -222,6 +222,9 @@ class TurnoBoxController extends Controller
                 $nombreLista = $turnoSede->getSede()->getLetra() . '/' . $turnoSede->getId() . '/Prioritario';
                 //obtengo el primer elemento de la fila
                 $item = $redis->lpop($nombreLista);
+                if($item){
+                    $turnoSedeItem = $turnoSede;
+                }
 
                 if ($item == false) {
                     $nombreLista = $turnoSede->getSede()->getLetra() . '/' . $turnoSede->getId();
