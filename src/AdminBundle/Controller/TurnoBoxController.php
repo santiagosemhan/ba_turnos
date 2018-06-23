@@ -259,6 +259,11 @@ class TurnoBoxController extends Controller
                                     $nombreColaSacar = $nombreLista;
                                     $fechaTurnoSacar = intval($id[1]);
                                     $turnoSedeItem = $turnoS;
+                                }else{
+                                    $nombreColaSacar = $nombreLista;
+                                    $fechaTurnoSacar = intval($id[1]);
+                                    $turnoSedeItem = $turnoS;
+                                    break;
                                 }
                             }
 

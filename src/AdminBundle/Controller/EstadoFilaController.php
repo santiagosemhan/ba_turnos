@@ -51,7 +51,12 @@ class EstadoFilaController extends Controller
                 $arrayA = array();
                 foreach ($result as $item) {
                     $explodeItem = explode('/', $item);
-                    $string = ($explodeItem[3]) . ' - ' . ($explodeItem[4]);
+                    if (isset($explodeItem[3])) {
+                        $hora = substr($explodeItem[1],0,2).':'.substr($explodeItem[1],2,2);
+                        $string = ($explodeItem[3]) . ' - ' . $explodeItem[4].' - '.$hora;
+                    } else {
+                        $string = '';
+                    }
                     $arrayA[] = $string;
                 }
                 $resultArrayPrioritario[] = [
