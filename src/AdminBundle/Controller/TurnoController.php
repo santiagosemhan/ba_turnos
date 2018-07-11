@@ -241,7 +241,6 @@ class TurnoController extends Controller
 
                 $turno->setSede($sede);
                 $turno->setFechaTurno(new \DateTime("now"));
-                $turno->setNumero($this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()));
                 $turno->setHoraTurno(new \DateTime($turno->getHoraTurno()->format('H:i') . ':00'));
 
                 $turnoGuardado = $this->get('manager.turnos')->guardarTurno($turno,true);
@@ -307,7 +306,6 @@ class TurnoController extends Controller
 
                     $turno->setSede($sede);
                     $turno->setFechaTurno(new \DateTime("now"));
-                    $turno->setNumero($this->get('manager.turnos')->obtenerProximoTurnoSede($sede->getId()));
                     $turno->setHoraTurno(new \DateTime($turno->getHoraTurno()->format('H:i') . ':00'));
 
                     $turnoGuardado = $this->get('manager.turnos')->guardarTurno($turno,true);
