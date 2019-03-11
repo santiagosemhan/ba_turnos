@@ -39,6 +39,17 @@ class TipoTramiteRepository extends EntityRepository
         return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
     }
 
+    public function getTipoTramiteByOpcionesGeneralesWeb($id, $hidrate_array = false)
+    {
+        $qb = $this->createQueryBuilder('tr')
+            ->innerJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')
+            ->innerJoin('AdminBundle:TurnoSede', 'ts', 'WITH', 'ts.id = tt.turnoSede')
+            ->where('tr.opcionGeneral = :opcionGeneral AND tr.activo = true AND ts.soloPresencial != true')
+            ->setParameter("opcionGeneral", $id)
+            ->getQuery();
+        return $hidrate_array ? $qb->getArrayResult() : $qb->getResult();
+    }
+
     public function getTramitesPorSede($sede) {
         $qb = $this->createQueryBuilder('tr')
             ->innerJoin('AdminBundle:TurnoTipoTramite', 'tt', 'WITH', 'tt.tipoTramite = tr.id')

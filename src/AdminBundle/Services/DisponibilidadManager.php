@@ -82,6 +82,20 @@ class DisponibilidadManager
     }
 
     /**
+     * Se obtiene los tipos de tramite en base a la opcion general pasada para la wev, devuelve en array si el parametro $hydrate_array = true
+     * @param $opcionGeneralId
+     * @param bool $hydrate_array
+     * @return array|Collection
+     */
+    public function obtenerTipoTramiteWeb($opcionGeneralId, $hydrate_array=false)
+    {
+        $tiposTramites= $this->em->getRepository('AdminBundle:TipoTramite');
+        return $opcionGeneral = $tiposTramites->getTipoTramiteByOpcionesGeneralesWeb($opcionGeneralId, $hydrate_array);
+    }
+
+
+
+    /**
      * Obtiene las sedes que utilizan un tipo de tramite, devuelve en array si el parametro $hydrate_array = true
      * @param $tipoTramiteId
      * @param bool $hydrate_array

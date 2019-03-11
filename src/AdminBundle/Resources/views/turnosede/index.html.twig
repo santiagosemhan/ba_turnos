@@ -15,11 +15,12 @@
                                 <th>Días</th>
                                 <th>Hora desde</th>
                                 <th>Hora hasta</th>
-                                <th>Cantidad</th>
+                                <th>Cant.</th>
                                 <th>Cant. Frecuencia</th>
-                                <th>Frecuncia</th>
+                                <th>Frecuencia</th>
                                 <th>Vigencia Desde</th>
                                 <th>Vigencia Hasta</th>
+                                <th>Solo Presencial</th>
                                 <th>Activo</th>
                             <th>Acciones</th>
                         </tr>
@@ -41,6 +42,7 @@
                                     <td>{{ turnosSede.frecunciaTurnoControl }}</td>
                                     <td>{% if turnosSede.vigenciaDesde %}{{ turnosSede.vigenciaDesde|date('d/m/Y H:i:s') }}{% endif %}</td>
                                     <td>{% if turnosSede.vigenciaHasta %}{{ turnosSede.vigenciaHasta|date('d/m/Y H:i:s') }}{% endif %}</td>
+                                    <td>{% if turnosSede.soloPresencial %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
                                     <td>{% if turnosSede.activo %}<span class="label label-success">Si</span{% else %}<span class="label label-danger">No</span>{% endif %}</td>
                                     <td>
                                         <a title="Editar"   class="btn btn-default btn-sm" href="{{ path('turnosede_edit', { 'id': turnosSede.id }) }}"><i class="glyphicon glyphicon-pencil"></i></a>

@@ -38,7 +38,7 @@ class DefaultController extends Controller
         $tipoTramiteRepository = $this->getDoctrine()->getRepository('AdminBundle:TipoTramite');
 
         if ($opcion) {
-            $tiposTramites = $this->get('manager.disponibilidad')->obtenerTipoTramite($opcion->getId());
+            $tiposTramites = $this->get('manager.disponibilidad')->obtenerTipoTramiteWeb($opcion->getId());
 
             $helper = $this->get('vich_uploader.templating.helper.uploader_helper');
 
